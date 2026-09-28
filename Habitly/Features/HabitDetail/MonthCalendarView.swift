@@ -78,7 +78,13 @@ struct MonthCalendarView: View {
                 let isFuture = day > today
                 let isToday = calendar.isDate(day, inSameDayAs: today)
                 let isCompleted = habit.isCompleted(on: day, calendar: calendar)
+                let isFrozen = habit.log(on: day, calendar: calendar)?.isFrozen == true
                 let isScheduled = habit.schedule.isActive(on: day, calendar: calendar) && day >= calendar.startOfDay(for: habit.createdAt)
+                let fillStyle: AnyShapeStyle = {
+                    if isFrozen { return AnyShapeStyle(Color(hex: "3ABEEB")) }
+                    if isCompleted { return AnyShapeStyle(habit.accentColor.gradient) }
+                    return AnyShapeStyle(Color.gray.opacity(isScheduled ? 0.15 : 0.05))
+                }()
 
                 Button {
                     guard !isFuture else { return }
@@ -86,14 +92,19 @@ struct MonthCalendarView: View {
                     onSelectDay(day)
                 } label: {
                     ZStack {
-                        Circle()
-                            .fill(isCompleted ? AnyShapeStyle(habit.accentColor.gradient) : AnyShapeStyle(Color.gray.opacity(isScheduled ? 0.15 : 0.05)))
+                        Circle().fill(fillStyle)
                         if isToday {
                             Circle().strokeBorder(Theme.brandGradient, lineWidth: 1.5)
                         }
-                        Text("\(calendar.component(.day, from: day))")
-                            .font(Typography.caption)
-                            .foregroundStyle(isCompleted ? .white : Theme.primaryText(for: scheme).opacity(isFuture ? 0.25 : 1))
+                        if isFrozen {
+                            Image(systemName: "snowflake")
+                                .font(.system(size: 12, weight: .bold))
+                                .foregroundStyle(.white)
+                        } else {
+                            Text("\(calendar.component(.day, from: day))")
+                                .font(Typography.caption)
+                                .foregroundStyle(isCompleted ? .white : Theme.primaryText(for: scheme).opacity(isFuture ? 0.25 : 1))
+                        }
                     }
                     .frame(height: 34)
                 }

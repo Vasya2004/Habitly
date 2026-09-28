@@ -20,6 +20,20 @@ extension Habit {
         logs.first { calendar.isDate($0.date, inSameDayAs: date) }
     }
 
+    func isLogCompleted(_ log: HabitLog) -> Bool {
+        guard !log.isSkipped else { return false }
+        switch type {
+        case .boolean: return log.value >= 1
+        case .count, .timer: return log.value >= goalValue
+        }
+    }
+
+    /// Стрик с учётом дней, защищённых заморозкой (HabitLog.isFrozen).
+    func streakStatsWithFreezes(asOf: Date = .now, calendar: Calendar = .current) -> StreakStats {
+        let frozen = Set(logs.filter(\.isFrozen).map { calendar.startOfDay(for: $0.date) })
+        return streakStats(asOf: asOf, calendar: calendar, frozenDates: frozen)
+    }
+
     func isCompleted(on date: Date, calendar: Calendar = .current) -> Bool {
         guard let entry = log(on: date, calendar: calendar), !entry.isSkipped else { return false }
         switch type {

@@ -86,6 +86,16 @@ struct TodayView: View {
         .sheet(item: $habitPendingEdit) { habit in
             HabitEditorView(mode: .edit(habit))
         }
+        .fullScreenCover(isPresented: Binding(
+            get: { !viewModel.pendingAchievements.isEmpty },
+            set: { if !$0 { viewModel.pendingAchievements.removeFirst() } }
+        )) {
+            if let kind = viewModel.pendingAchievements.first {
+                AchievementUnlockedView(kind: kind) {
+                    viewModel.pendingAchievements.removeFirst()
+                }
+            }
+        }
     }
 
     private var content: some View {
@@ -201,13 +211,13 @@ struct TodayView: View {
             title: habit.name,
             subtitle: viewModel.progressText(for: habit),
             color: habit.accentColor,
-            streak: habit.streakStats(asOf: viewModel.selectedDate).currentStreak,
+            streak: habit.streakStatsWithFreezes(asOf: viewModel.selectedDate).currentStreak,
             progress: viewModel.progress(for: habit),
             isCompleted: viewModel.isCompleted(habit),
             showsStepper: habit.type != .boolean,
-            onIncrement: { viewModel.increment(habit, context: modelContext, allHabits: habits) },
-            onDecrement: { viewModel.decrement(habit, context: modelContext) },
-            onToggle: { viewModel.toggleBoolean(habit, context: modelContext, allHabits: habits) }
+            onIncrement: { viewModel.increment(habit, context: modelContext, allHabits: habits, profile: profile) },
+            onDecrement: { viewModel.decrement(habit, context: modelContext, profile: profile) },
+            onToggle: { viewModel.toggleBoolean(habit, context: modelContext, allHabits: habits, profile: profile) }
         )
         .contentShape(Rectangle())
         .onTapGesture {
@@ -216,9 +226,9 @@ struct TodayView: View {
         .swipeActions(edge: .leading, allowsFullSwipe: true) {
             Button {
                 if habit.type == .boolean {
-                    viewModel.toggleBoolean(habit, context: modelContext, allHabits: habits)
+                    viewModel.toggleBoolean(habit, context: modelContext, allHabits: habits, profile: profile)
                 } else {
-                    viewModel.increment(habit, context: modelContext, allHabits: habits)
+                    viewModel.increment(habit, context: modelContext, allHabits: habits, profile: profile)
                 }
             } label: {
                 Label("Выполнить", systemImage: "checkmark")

@@ -7,6 +7,7 @@ final class TodayViewModel {
     var selectedDate: Date = Calendar.current.startOfDay(for: .now)
     var collapsedSections: Set<TimeOfDay> = []
     var celebrationTrigger: Int = 0
+    var pendingAchievements: [AchievementKind] = []
 
     private let calendar = Calendar.current
 
@@ -80,31 +81,35 @@ final class TodayViewModel {
         return newLog
     }
 
-    func toggleBoolean(_ habit: Habit, context: ModelContext, allHabits: [Habit]) {
+    func toggleBoolean(_ habit: Habit, context: ModelContext, allHabits: [Habit], profile: Profile?) {
         let wasCompleted = isCompleted(habit)
         let entry = existingOrNewLog(for: habit, context: context)
         entry.isSkipped = false
         entry.value = wasCompleted ? 0 : 1
-        try? context.save()
+        applyGamification(habit: habit, entry: entry, isCompletedNow: !wasCompleted, context: context, profile: profile, allHabits: allHabits)
         checkCelebration(allHabits: allHabits)
         if !wasCompleted { cancelTodayNotificationIfNeeded(for: habit) }
     }
 
-    func increment(_ habit: Habit, context: ModelContext, allHabits: [Habit]) {
+    func increment(_ habit: Habit, context: ModelContext, allHabits: [Habit], profile: Profile?) {
         let wasCompleted = isCompleted(habit)
         let entry = existingOrNewLog(for: habit, context: context)
         entry.isSkipped = false
         let step = habit.type == .timer ? min(5, habit.goalValue) : 1
         entry.value = min(entry.value + step, habit.goalValue)
-        try? context.save()
+        let nowCompleted = isCompleted(habit)
+        applyGamification(habit: habit, entry: entry, isCompletedNow: nowCompleted, context: context, profile: profile, allHabits: allHabits)
         checkCelebration(allHabits: allHabits)
-        if !wasCompleted, isCompleted(habit) { cancelTodayNotificationIfNeeded(for: habit) }
+        if !wasCompleted, nowCompleted { cancelTodayNotificationIfNeeded(for: habit) }
     }
 
-    func decrement(_ habit: Habit, context: ModelContext) {
+    func decrement(_ habit: Habit, context: ModelContext, profile: Profile?) {
         guard let entry = log(for: habit) else { return }
         let step = habit.type == .timer ? min(5, habit.goalValue) : 1
         entry.value = max(entry.value - step, 0)
+        if let profile {
+            GamificationService.applyCompletion(isCompleted: habit.isLogCompleted(entry), to: entry, profile: profile)
+        }
         try? context.save()
     }
 
@@ -130,6 +135,25 @@ final class TodayViewModel {
         Task { await NotificationService.shared.cancelNotifications(for: habit) }
         context.delete(habit)
         try? context.save()
+    }
+
+    private func applyGamification(habit: Habit, entry: HabitLog, isCompletedNow: Bool, context: ModelContext, profile: Profile?, allHabits: [Habit]) {
+        guard let profile else {
+            try? context.save()
+            return
+        }
+        GamificationService.applyCompletion(isCompleted: isCompletedNow, to: entry, profile: profile)
+        try? context.save()
+        guard isCompletedNow else { return }
+
+        let existingKinds = Set((try? context.fetch(FetchDescriptor<Achievement>()))?.map(\.kind) ?? [])
+        let newlyUnlocked = GamificationService.checkAchievements(profile: profile, habits: allHabits, unlockedKinds: existingKinds)
+        guard !newlyUnlocked.isEmpty else { return }
+        for kind in newlyUnlocked {
+            context.insert(Achievement(kind: kind))
+        }
+        try? context.save()
+        pendingAchievements.append(contentsOf: newlyUnlocked)
     }
 
     private func cancelTodayNotificationIfNeeded(for habit: Habit) {

@@ -26,7 +26,7 @@ struct HabitDetailView: View {
         var id: TimeInterval { date.timeIntervalSinceReferenceDate }
     }
 
-    private var stats: StreakStats { habit.streakStats() }
+    private var stats: StreakStats { habit.streakStatsWithFreezes() }
 
     private var periodRate: Double {
         let today = calendar.startOfDay(for: .now)

@@ -58,6 +58,9 @@ struct HeatmapView: View {
         guard habit.schedule.isActive(on: day, calendar: calendar), day >= calendar.startOfDay(for: habit.createdAt) else {
             return Color.gray.opacity(scheme == .dark ? 0.08 : 0.06)
         }
+        if habit.log(on: day, calendar: calendar)?.isFrozen == true {
+            return Color(hex: "3ABEEB").opacity(0.7)
+        }
         let fraction = habit.completionFraction(on: day, calendar: calendar)
         if fraction <= 0 {
             return Color.gray.opacity(scheme == .dark ? 0.16 : 0.12)

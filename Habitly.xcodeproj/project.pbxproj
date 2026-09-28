@@ -24,8 +24,11 @@
 		38D20BBA62F23BEFF8BD7ED1 /* Haptics.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4614EE13AB813364DD93D94 /* Haptics.swift */; };
 		3BCD66F1F57EBE3AD5916345 /* HabitTemplate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E853FC364D4B88D1870E850 /* HabitTemplate.swift */; };
 		3D46DC1EC0B9A00684595225 /* Typography.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05BB5C7FACCA8374BAA66A14 /* Typography.swift */; };
+		45868AA1DDEDD7EB66FAF12C /* WeeklySummaryCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F5781F9801CEF747B39EB55 /* WeeklySummaryCardView.swift */; };
 		48122F8CC69985E372696C66 /* DayLogEditorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A2361731C2BDB37AA20E9D7 /* DayLogEditorView.swift */; };
+		534451D1640D31F738267E38 /* AchievementUnlockedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DDAC8C0CD913DA29AC7EF0B /* AchievementUnlockedView.swift */; };
 		55F4CCAEC49D884D987F7920 /* StatsCalculator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D348B4A8C392A21EEE00044 /* StatsCalculator.swift */; };
+		570006A3EB5CC6C934974DE8 /* GamificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB34C315138CBA4C6CA6C1E3 /* GamificationService.swift */; };
 		6367264C7BC4E07A9533C610 /* HabitEditorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 679929AFCDB698610E664B9E /* HabitEditorView.swift */; };
 		6D6CBD6DB1699330FE8178EE /* IconPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 449F9C801D40895FAE8CF379 /* IconPickerView.swift */; };
 		6DE82E7A489158DB7F44F6D3 /* HabitIconView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 050B68E3ACF0992C9EED2B45 /* HabitIconView.swift */; };
@@ -46,6 +49,7 @@
 		C392CFA4F80969559D780BA8 /* StreakCalculatorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0616941846C2BD0094123553 /* StreakCalculatorTests.swift */; };
 		C5A76A368B6BAB1898C51E74 /* CapsuleButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 294C70C3DB43B599E1977D89 /* CapsuleButton.swift */; };
 		D2C117AC819BB48FB463CDA6 /* HabitCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07F1FDE1E3BCE544CECB05B0 /* HabitCard.swift */; };
+		D2CEB22521310E0B85F54E35 /* AchievementBadgeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 454CBA4B1391A72EA00593E2 /* AchievementBadgeView.swift */; };
 		D3A3010CF9B1750B382BEB20 /* NotificationDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F655E87FDADA3DC0ADA5041 /* NotificationDelegate.swift */; };
 		D9BBB53D117E3E83AC41E92C /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A906AAA4536165AF2DB3787 /* SettingsView.swift */; };
 		DD9CE6975B338603ACC2B9AE /* WeekStrip.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47F5BB93C9DCC318F6A814F8 /* WeekStrip.swift */; };
@@ -92,16 +96,19 @@
 		3E85952A2C313217FB81EF43 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		3FF0C1E96D84573A1ED98677 /* ConfettiView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfettiView.swift; sourceTree = "<group>"; };
 		449F9C801D40895FAE8CF379 /* IconPickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IconPickerView.swift; sourceTree = "<group>"; };
+		454CBA4B1391A72EA00593E2 /* AchievementBadgeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AchievementBadgeView.swift; sourceTree = "<group>"; };
 		47F5BB93C9DCC318F6A814F8 /* WeekStrip.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeekStrip.swift; sourceTree = "<group>"; };
 		4943BCEAA0AE8C477B9C377B /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
 		4BCF7C684275159C402B68BB /* Motion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Motion.swift; sourceTree = "<group>"; };
 		4CC3A82205F03E77D8BAB08F /* PlainRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlainRow.swift; sourceTree = "<group>"; };
+		4F5781F9801CEF747B39EB55 /* WeeklySummaryCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeeklySummaryCardView.swift; sourceTree = "<group>"; };
 		5F655E87FDADA3DC0ADA5041 /* NotificationDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationDelegate.swift; sourceTree = "<group>"; };
 		6554170D3177D804A91A88D1 /* TodayViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodayViewModel.swift; sourceTree = "<group>"; };
 		679929AFCDB698610E664B9E /* HabitEditorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HabitEditorView.swift; sourceTree = "<group>"; };
 		6A34A623B7862DC717BC70DE /* EmptyStateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyStateView.swift; sourceTree = "<group>"; };
 		78C94F50D0AE704E4000FD77 /* StatTileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatTileView.swift; sourceTree = "<group>"; };
 		79B8C7A4457779BED272F2DE /* NotificationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationService.swift; sourceTree = "<group>"; };
+		7DDAC8C0CD913DA29AC7EF0B /* AchievementUnlockedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AchievementUnlockedView.swift; sourceTree = "<group>"; };
 		8DE791ED11AA11CEF2C625C9 /* HabitType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HabitType.swift; sourceTree = "<group>"; };
 		942008B32FACFA0807D90733 /* MonthCalendarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonthCalendarView.swift; sourceTree = "<group>"; };
 		981B7C46D6757EFFD0B924F8 /* Habit+Streak.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Habit+Streak.swift"; sourceTree = "<group>"; };
@@ -119,6 +126,7 @@
 		D4614EE13AB813364DD93D94 /* Haptics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Haptics.swift; sourceTree = "<group>"; };
 		D9782E02DDE4D52900FCAB93 /* CardBackground.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardBackground.swift; sourceTree = "<group>"; };
 		DE72FB111294574562572C43 /* AchievementsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AchievementsView.swift; sourceTree = "<group>"; };
+		EB34C315138CBA4C6CA6C1E3 /* GamificationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GamificationService.swift; sourceTree = "<group>"; };
 		F23A245303FC520D2D24FC7B /* ReminderEditorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReminderEditorView.swift; sourceTree = "<group>"; };
 		FD211B4524606AD42BD088B6 /* Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -265,7 +273,10 @@
 		8F765971E8CAEC253AF78E05 /* Achievements */ = {
 			isa = PBXGroup;
 			children = (
+				454CBA4B1391A72EA00593E2 /* AchievementBadgeView.swift */,
 				DE72FB111294574562572C43 /* AchievementsView.swift */,
+				7DDAC8C0CD913DA29AC7EF0B /* AchievementUnlockedView.swift */,
+				4F5781F9801CEF747B39EB55 /* WeeklySummaryCardView.swift */,
 			);
 			path = Achievements;
 			sourceTree = "<group>";
@@ -301,6 +312,7 @@
 		E5911673C558506F779CD5BE /* Services */ = {
 			isa = PBXGroup;
 			children = (
+				EB34C315138CBA4C6CA6C1E3 /* GamificationService.swift */,
 				981B7C46D6757EFFD0B924F8 /* Habit+Streak.swift */,
 				D4614EE13AB813364DD93D94 /* Haptics.swift */,
 				5F655E87FDADA3DC0ADA5041 /* NotificationDelegate.swift */,
@@ -425,6 +437,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				70CF39BA1634BEF75BE9783F /* Achievement.swift in Sources */,
+				D2CEB22521310E0B85F54E35 /* AchievementBadgeView.swift in Sources */,
+				534451D1640D31F738267E38 /* AchievementUnlockedView.swift in Sources */,
 				17D74C4A5B27C502032B647A /* AchievementsView.swift in Sources */,
 				A0747541D59401DC7B085E79 /* BentoTile.swift in Sources */,
 				C5A76A368B6BAB1898C51E74 /* CapsuleButton.swift in Sources */,
@@ -433,6 +447,7 @@
 				F0064376EB65C0D3B9A8E71F /* ConfettiView.swift in Sources */,
 				48122F8CC69985E372696C66 /* DayLogEditorView.swift in Sources */,
 				C084F10579441577F7479310 /* EmptyStateView.swift in Sources */,
+				570006A3EB5CC6C934974DE8 /* GamificationService.swift in Sources */,
 				A68FDAD81DC03DC77009FC56 /* Habit+Streak.swift in Sources */,
 				92198D0817A5BC63AF76F8C1 /* Habit.swift in Sources */,
 				D2C117AC819BB48FB463CDA6 /* HabitCard.swift in Sources */,
@@ -472,6 +487,7 @@
 				FD6B41857CF3045294FC5FA1 /* TodayViewModel.swift in Sources */,
 				3D46DC1EC0B9A00684595225 /* Typography.swift in Sources */,
 				DD9CE6975B338603ACC2B9AE /* WeekStrip.swift in Sources */,
+				45868AA1DDEDD7EB66FAF12C /* WeeklySummaryCardView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
