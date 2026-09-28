@@ -15,4 +15,45 @@ extension Habit {
             calendar: calendar
         )
     }
+
+    func log(on date: Date, calendar: Calendar = .current) -> HabitLog? {
+        logs.first { calendar.isDate($0.date, inSameDayAs: date) }
+    }
+
+    func isCompleted(on date: Date, calendar: Calendar = .current) -> Bool {
+        guard let entry = log(on: date, calendar: calendar), !entry.isSkipped else { return false }
+        switch type {
+        case .boolean: return entry.value >= 1
+        case .count, .timer: return entry.value >= goalValue
+        }
+    }
+
+    /// Доля выполнения дня в диапазоне 0...1 — используется для интенсивности в хитмапе.
+    func completionFraction(on date: Date, calendar: Calendar = .current) -> Double {
+        guard let entry = log(on: date, calendar: calendar), !entry.isSkipped else { return 0 }
+        switch type {
+        case .boolean: return entry.value >= 1 ? 1 : 0
+        case .count, .timer: return goalValue > 0 ? min(entry.value / goalValue, 1) : 0
+        }
+    }
+
+    /// Процент выполнения запланированных дней в диапазоне [from, to] включительно.
+    func completionRate(from: Date, to: Date, calendar: Calendar = .current) -> Double {
+        let start = max(calendar.startOfDay(for: from), calendar.startOfDay(for: createdAt))
+        let end = calendar.startOfDay(for: to)
+        guard start <= end else { return 0 }
+
+        var scheduled = 0
+        var completed = 0
+        var cursor = start
+        while cursor <= end {
+            if schedule.isActive(on: cursor, calendar: calendar) {
+                scheduled += 1
+                if isCompleted(on: cursor, calendar: calendar) { completed += 1 }
+            }
+            guard let next = calendar.date(byAdding: .day, value: 1, to: cursor) else { break }
+            cursor = next
+        }
+        return scheduled > 0 ? Double(completed) / Double(scheduled) : 0
+    }
 }

@@ -13,6 +13,7 @@ struct TodayView: View {
     @State private var habitPendingDeletion: Habit?
     @State private var habitPendingEdit: Habit?
     @State private var showConfetti = false
+    @State private var navigationPath = NavigationPath()
 
     private var profile: Profile? { profiles.first }
     private var calendar: Calendar { .current }
@@ -46,16 +47,21 @@ struct TodayView: View {
     }
 
     var body: some View {
-        ZStack {
-            if habits.isEmpty {
-                emptyState
-            } else {
-                content
-            }
+        NavigationStack(path: $navigationPath) {
+            ZStack {
+                if habits.isEmpty {
+                    emptyState
+                } else {
+                    content
+                }
 
-            if showConfetti {
-                ConfettiView()
-                    .transition(.opacity)
+                if showConfetti {
+                    ConfettiView()
+                        .transition(.opacity)
+                }
+            }
+            .navigationDestination(for: Habit.self) { habit in
+                HabitDetailView(habit: habit)
             }
         }
         .onAppear(perform: ensureProfile)
@@ -204,6 +210,9 @@ struct TodayView: View {
             onToggle: { viewModel.toggleBoolean(habit, context: modelContext, allHabits: habits) }
         )
         .contentShape(Rectangle())
+        .onTapGesture {
+            navigationPath.append(habit)
+        }
         .swipeActions(edge: .leading, allowsFullSwipe: true) {
             Button {
                 if habit.type == .boolean {
