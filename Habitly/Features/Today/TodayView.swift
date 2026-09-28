@@ -78,21 +78,7 @@ struct TodayView: View {
             Text("Вся история выполнения этой привычки будет удалена без возможности восстановления.")
         }
         .sheet(item: $habitPendingEdit) { habit in
-            NavigationStack {
-                EmptyStateView(
-                    symbol: "pencil",
-                    title: "Редактирование «\(habit.name)»",
-                    message: "Полноценный редактор привычки появится на следующем этапе разработки"
-                )
-                .navigationTitle("Изменить привычку")
-                .navigationBarTitleDisplayMode(.inline)
-                .toolbar {
-                    ToolbarItem(placement: .cancellationAction) {
-                        Button("Закрыть") { habitPendingEdit = nil }
-                    }
-                }
-            }
-            .presentationDetents([.medium])
+            HabitEditorView(mode: .edit(habit))
         }
     }
 

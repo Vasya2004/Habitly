@@ -61,8 +61,7 @@ struct HabitCard: View {
     private var iconBadge: some View {
         ZStack {
             Circle().fill(color.gradient)
-            Text(icon)
-                .font(.system(size: 20))
+            HabitIconView(icon: icon, size: 40)
         }
         .frame(width: 44, height: 44)
         .overlay(
