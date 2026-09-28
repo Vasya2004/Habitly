@@ -1,6 +1,33 @@
 import Foundation
 import SwiftData
 
+enum AppearanceMode: String, CaseIterable, Identifiable, Codable {
+    case system, light, dark
+
+    var id: String { rawValue }
+
+    var title: String {
+        switch self {
+        case .system: return "Системная"
+        case .light: return "Светлая"
+        case .dark: return "Тёмная"
+        }
+    }
+
+    var colorScheme: ColorSchemePreference {
+        switch self {
+        case .system: return .unspecified
+        case .light: return .light
+        case .dark: return .dark
+        }
+    }
+}
+
+/// Обёртка, чтобы не тянуть SwiftUI в модель данных.
+enum ColorSchemePreference {
+    case unspecified, light, dark
+}
+
 @Model
 final class Profile {
     var name: String
@@ -14,6 +41,13 @@ final class Profile {
     var weekStartsMonday: Bool
     var hapticsEnabled: Bool
     var createdAt: Date
+    var hasCompletedOnboarding: Bool = false
+    var appearanceRaw: String = AppearanceMode.system.rawValue
+
+    var appearance: AppearanceMode {
+        get { AppearanceMode(rawValue: appearanceRaw) ?? .system }
+        set { appearanceRaw = newValue.rawValue }
+    }
 
     init(
         name: String = "",
@@ -24,7 +58,9 @@ final class Profile {
         lastFreezeRefillMonth: Date? = nil,
         weekStartsMonday: Bool = true,
         hapticsEnabled: Bool = true,
-        createdAt: Date = .now
+        createdAt: Date = .now,
+        hasCompletedOnboarding: Bool = false,
+        appearance: AppearanceMode = .system
     ) {
         self.name = name
         self.avatarEmoji = avatarEmoji
@@ -35,5 +71,7 @@ final class Profile {
         self.weekStartsMonday = weekStartsMonday
         self.hapticsEnabled = hapticsEnabled
         self.createdAt = createdAt
+        self.hasCompletedOnboarding = hasCompletedOnboarding
+        self.appearanceRaw = appearance.rawValue
     }
 }
