@@ -1,0 +1,50 @@
+name: Habitly
+options:
+  bundleIdPrefix: com.danko
+  deploymentTarget:
+    iOS: "17.0"
+  createIntermediateGroups: true
+settings:
+  base:
+    SWIFT_VERSION: "5.9"
+    DEVELOPMENT_TEAM: ""
+    CODE_SIGN_STYLE: Automatic
+    ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS: YES
+    ENABLE_PREVIEWS: YES
+targets:
+  Habitly:
+    type: application
+    platform: iOS
+    deploymentTarget: "17.0"
+    sources:
+      - path: Habitly
+    resources:
+      - path: Habitly/Resources
+    info:
+      path: Habitly/App/Info.plist
+      properties:
+        UILaunchScreen: {}
+        UISupportedInterfaceOrientations:
+          - UIInterfaceOrientationPortrait
+        UIUserInterfaceStyle: Automatic
+        CFBundleDisplayName: Habitly
+        NSUserNotificationsUsageDescription: "Habitly напоминает о привычках вовремя."
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.danko.habitly
+        PRODUCT_NAME: Habitly
+        TARGETED_DEVICE_FAMILY: "1"
+        MARKETING_VERSION: "1.0"
+        CURRENT_PROJECT_VERSION: "1"
+        SWIFT_EMIT_LOC_STRINGS: YES
+schemes:
+  Habitly:
+    build:
+      targets:
+        Habitly: all
+    run:
+      config: Debug
+    test:
+      config: Debug
+    archive:
+      config: Release
