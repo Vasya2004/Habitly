@@ -16,14 +16,17 @@
 		17D74C4A5B27C502032B647A /* AchievementsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE72FB111294574562572C43 /* AchievementsView.swift */; };
 		1D4DFAE8FFC54CCEDF66D0EA /* StatsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A317C41368F28C101141DB62 /* StatsView.swift */; };
 		20CED620CBABAA0DADEF5A36 /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD211B4524606AD42BD088B6 /* Theme.swift */; };
+		23E26F7E8D4C48D1781EB2AD /* StreakCalculator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A997E87972ACD98C8DE6376 /* StreakCalculator.swift */; };
 		2D4382443EB368F8A2E38861 /* TodayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0732C7FB930EC179D606801E /* TodayView.swift */; };
 		38D20BBA62F23BEFF8BD7ED1 /* Haptics.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4614EE13AB813364DD93D94 /* Haptics.swift */; };
 		3D46DC1EC0B9A00684595225 /* Typography.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05BB5C7FACCA8374BAA66A14 /* Typography.swift */; };
 		70CF39BA1634BEF75BE9783F /* Achievement.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B635B78B64899D06480BABA /* Achievement.swift */; };
 		92198D0817A5BC63AF76F8C1 /* Habit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 247142A0D185896FDDFBFE21 /* Habit.swift */; };
+		A68FDAD81DC03DC77009FC56 /* Habit+Streak.swift in Sources */ = {isa = PBXBuildFile; fileRef = 981B7C46D6757EFFD0B924F8 /* Habit+Streak.swift */; };
 		BDC8585BF73925B7482546B6 /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4943BCEAA0AE8C477B9C377B /* RootView.swift */; };
 		C084F10579441577F7479310 /* EmptyStateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A34A623B7862DC717BC70DE /* EmptyStateView.swift */; };
 		C1170AF3970438025D76DD54 /* Motion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BCF7C684275159C402B68BB /* Motion.swift */; };
+		C392CFA4F80969559D780BA8 /* StreakCalculatorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0616941846C2BD0094123553 /* StreakCalculatorTests.swift */; };
 		C5A76A368B6BAB1898C51E74 /* CapsuleButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 294C70C3DB43B599E1977D89 /* CapsuleButton.swift */; };
 		D2C117AC819BB48FB463CDA6 /* HabitCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07F1FDE1E3BCE544CECB05B0 /* HabitCard.swift */; };
 		D9BBB53D117E3E83AC41E92C /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A906AAA4536165AF2DB3787 /* SettingsView.swift */; };
@@ -32,11 +35,24 @@
 		F5FF4F9038191449A50CA7A9 /* Spacing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 244E6786AD030AB5A7CD421F /* Spacing.swift */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		F3A9454F84CA8EAAA3A4F1BA /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 5CDFE02799A59092EEF22374 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = C4B3357192E4D2560C7D1B64;
+			remoteInfo = Habitly;
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXFileReference section */
 		05BB5C7FACCA8374BAA66A14 /* Typography.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Typography.swift; sourceTree = "<group>"; };
+		0616941846C2BD0094123553 /* StreakCalculatorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StreakCalculatorTests.swift; sourceTree = "<group>"; };
 		0732C7FB930EC179D606801E /* TodayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodayView.swift; sourceTree = "<group>"; };
 		07F1FDE1E3BCE544CECB05B0 /* HabitCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HabitCard.swift; sourceTree = "<group>"; };
+		0A997E87972ACD98C8DE6376 /* StreakCalculator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StreakCalculator.swift; sourceTree = "<group>"; };
 		1B635B78B64899D06480BABA /* Achievement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Achievement.swift; sourceTree = "<group>"; };
+		22CD060CB14ACAFE93D6CA2A /* HabitlyTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = HabitlyTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		244E6786AD030AB5A7CD421F /* Spacing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Spacing.swift; sourceTree = "<group>"; };
 		247142A0D185896FDDFBFE21 /* Habit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Habit.swift; sourceTree = "<group>"; };
 		291C0EE7896C5B6C2BC5A703 /* HabitLog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HabitLog.swift; sourceTree = "<group>"; };
@@ -49,6 +65,7 @@
 		4BCF7C684275159C402B68BB /* Motion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Motion.swift; sourceTree = "<group>"; };
 		6A34A623B7862DC717BC70DE /* EmptyStateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyStateView.swift; sourceTree = "<group>"; };
 		8DE791ED11AA11CEF2C625C9 /* HabitType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HabitType.swift; sourceTree = "<group>"; };
+		981B7C46D6757EFFD0B924F8 /* Habit+Streak.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Habit+Streak.swift"; sourceTree = "<group>"; };
 		A317C41368F28C101141DB62 /* StatsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatsView.swift; sourceTree = "<group>"; };
 		A788036CF969672CDF373AD9 /* HabitlyApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HabitlyApp.swift; sourceTree = "<group>"; };
 		B170481FF5B82C6A70877CE1 /* ProgressRing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressRing.swift; sourceTree = "<group>"; };
@@ -110,6 +127,7 @@
 			isa = PBXGroup;
 			children = (
 				C5C07A9207121C194603A1EF /* Habitly.app */,
+				22CD060CB14ACAFE93D6CA2A /* HabitlyTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -136,6 +154,14 @@
 			path = App;
 			sourceTree = "<group>";
 		};
+		6B8ED3BB492A760B5E5ADCFC /* HabitlyTests */ = {
+			isa = PBXGroup;
+			children = (
+				0616941846C2BD0094123553 /* StreakCalculatorTests.swift */,
+			);
+			path = HabitlyTests;
+			sourceTree = "<group>";
+		};
 		7EB8823FBC44011167DA09F4 /* Features */ = {
 			isa = PBXGroup;
 			children = (
@@ -151,6 +177,7 @@
 			isa = PBXGroup;
 			children = (
 				2CDB6D821EB583773025CB1B /* Habitly */,
+				6B8ED3BB492A760B5E5ADCFC /* HabitlyTests */,
 				58E010388996223B36C98932 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -194,7 +221,9 @@
 		E5911673C558506F779CD5BE /* Services */ = {
 			isa = PBXGroup;
 			children = (
+				981B7C46D6757EFFD0B924F8 /* Habit+Streak.swift */,
 				D4614EE13AB813364DD93D94 /* Haptics.swift */,
+				0A997E87972ACD98C8DE6376 /* StreakCalculator.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -223,6 +252,24 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		958F675057A9BA9B80F3E166 /* HabitlyTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 765EFC8A42E0ADA25ABCA744 /* Build configuration list for PBXNativeTarget "HabitlyTests" */;
+			buildPhases = (
+				6FC7A82B47DB2ECF84C43CC3 /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				9AAF55167AF8D273D5F4BE1B /* PBXTargetDependency */,
+			);
+			name = HabitlyTests;
+			packageProductDependencies = (
+			);
+			productName = HabitlyTests;
+			productReference = 22CD060CB14ACAFE93D6CA2A /* HabitlyTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 		C4B3357192E4D2560C7D1B64 /* Habitly */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 2831B5257E3A18B410C82E30 /* Build configuration list for PBXNativeTarget "Habitly" */;
@@ -249,6 +296,10 @@
 				BuildIndependentTargetsInParallel = YES;
 				LastUpgradeCheck = 1430;
 				TargetAttributes = {
+					958F675057A9BA9B80F3E166 = {
+						DevelopmentTeam = "";
+						ProvisioningStyle = Automatic;
+					};
 					C4B3357192E4D2560C7D1B64 = {
 						DevelopmentTeam = "";
 						ProvisioningStyle = Automatic;
@@ -270,11 +321,20 @@
 			projectRoot = "";
 			targets = (
 				C4B3357192E4D2560C7D1B64 /* Habitly */,
+				958F675057A9BA9B80F3E166 /* HabitlyTests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXSourcesBuildPhase section */
+		6FC7A82B47DB2ECF84C43CC3 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C392CFA4F80969559D780BA8 /* StreakCalculatorTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		80B17A413EA3A63E7464F357 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -284,6 +344,7 @@
 				C5A76A368B6BAB1898C51E74 /* CapsuleButton.swift in Sources */,
 				112DC11DC5F5AADC88CDF55A /* CardBackground.swift in Sources */,
 				C084F10579441577F7479310 /* EmptyStateView.swift in Sources */,
+				A68FDAD81DC03DC77009FC56 /* Habit+Streak.swift in Sources */,
 				92198D0817A5BC63AF76F8C1 /* Habit.swift in Sources */,
 				D2C117AC819BB48FB463CDA6 /* HabitCard.swift in Sources */,
 				01D0320A82A685FA3A953288 /* HabitLog.swift in Sources */,
@@ -299,6 +360,7 @@
 				D9BBB53D117E3E83AC41E92C /* SettingsView.swift in Sources */,
 				F5FF4F9038191449A50CA7A9 /* Spacing.swift in Sources */,
 				1D4DFAE8FFC54CCEDF66D0EA /* StatsView.swift in Sources */,
+				23E26F7E8D4C48D1781EB2AD /* StreakCalculator.swift in Sources */,
 				20CED620CBABAA0DADEF5A36 /* Theme.swift in Sources */,
 				2D4382443EB368F8A2E38861 /* TodayView.swift in Sources */,
 				3D46DC1EC0B9A00684595225 /* Typography.swift in Sources */,
@@ -306,6 +368,14 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		9AAF55167AF8D273D5F4BE1B /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = C4B3357192E4D2560C7D1B64 /* Habitly */;
+			targetProxy = F3A9454F84CA8EAAA3A4F1BA /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		143F517DFA6233255CEF0442 /* Release */ = {
@@ -388,6 +458,42 @@
 				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
+		};
+		3A63446508426BFECD858DD6 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.danko.habitlyTests;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Habitly.app/Habitly";
+			};
+			name = Debug;
+		};
+		42CC93532A2EE0041B0612F3 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.danko.habitlyTests;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Habitly.app/Habitly";
+			};
+			name = Release;
 		};
 		4DE2675B8F17C9AA7F3721B8 /* Release */ = {
 			isa = XCBuildConfiguration;
@@ -485,6 +591,15 @@
 			buildConfigurations = (
 				3906A6CBDC7D1C7A5CFD4D36 /* Debug */,
 				4DE2675B8F17C9AA7F3721B8 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		765EFC8A42E0ADA25ABCA744 /* Build configuration list for PBXNativeTarget "HabitlyTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				3A63446508426BFECD858DD6 /* Debug */,
+				42CC93532A2EE0041B0612F3 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;

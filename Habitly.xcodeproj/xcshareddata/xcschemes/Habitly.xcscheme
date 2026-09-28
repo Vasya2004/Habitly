@@ -21,6 +21,20 @@
                ReferencedContainer = "container:Habitly.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "NO"
+            buildForProfiling = "NO"
+            buildForArchiving = "NO"
+            buildForAnalyzing = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "958F675057A9BA9B80F3E166"
+               BuildableName = "HabitlyTests.xctest"
+               BlueprintName = "HabitlyTests"
+               ReferencedContainer = "container:Habitly.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
       </BuildActionEntries>
    </BuildAction>
    <TestAction
@@ -39,6 +53,17 @@
          </BuildableReference>
       </MacroExpansion>
       <Testables>
+         <TestableReference
+            skipped = "NO"
+            parallelizable = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "958F675057A9BA9B80F3E166"
+               BuildableName = "HabitlyTests.xctest"
+               BlueprintName = "HabitlyTests"
+               ReferencedContainer = "container:Habitly.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
       </Testables>
       <CommandLineArguments>
       </CommandLineArguments>

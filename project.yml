@@ -37,14 +37,30 @@ targets:
         MARKETING_VERSION: "1.0"
         CURRENT_PROJECT_VERSION: "1"
         SWIFT_EMIT_LOC_STRINGS: YES
+  HabitlyTests:
+    type: bundle.unit-test
+    platform: iOS
+    deploymentTarget: "17.0"
+    sources:
+      - path: HabitlyTests
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.danko.habitlyTests
+        GENERATE_INFOPLIST_FILE: YES
+    dependencies:
+      - target: Habitly
+
 schemes:
   Habitly:
     build:
       targets:
         Habitly: all
+        HabitlyTests: [test]
     run:
       config: Debug
     test:
       config: Debug
+      targets:
+        - HabitlyTests
     archive:
       config: Release
