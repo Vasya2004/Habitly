@@ -1,7 +1,11 @@
 import SwiftUI
+import SwiftData
 
 struct RootView: View {
     @Environment(\.colorScheme) private var scheme
+    @Environment(\.scenePhase) private var scenePhase
+    @Query private var habits: [Habit]
+
     @State private var selection: MainTab = .today
     @State private var isPresentingEditor = false
 
@@ -25,6 +29,10 @@ struct RootView: View {
         }
         .sheet(isPresented: $isPresentingEditor) {
             HabitEditorView(mode: .create)
+        }
+        .task(id: scenePhase) {
+            guard scenePhase == .active else { return }
+            await NotificationService.shared.rescheduleAll(habits: habits)
         }
     }
 }

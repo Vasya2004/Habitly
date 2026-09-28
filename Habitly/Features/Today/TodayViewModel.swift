@@ -87,15 +87,18 @@ final class TodayViewModel {
         entry.value = wasCompleted ? 0 : 1
         try? context.save()
         checkCelebration(allHabits: allHabits)
+        if !wasCompleted { cancelTodayNotificationIfNeeded(for: habit) }
     }
 
     func increment(_ habit: Habit, context: ModelContext, allHabits: [Habit]) {
+        let wasCompleted = isCompleted(habit)
         let entry = existingOrNewLog(for: habit, context: context)
         entry.isSkipped = false
         let step = habit.type == .timer ? min(5, habit.goalValue) : 1
         entry.value = min(entry.value + step, habit.goalValue)
         try? context.save()
         checkCelebration(allHabits: allHabits)
+        if !wasCompleted, isCompleted(habit) { cancelTodayNotificationIfNeeded(for: habit) }
     }
 
     func decrement(_ habit: Habit, context: ModelContext) {
@@ -110,16 +113,28 @@ final class TodayViewModel {
         entry.isSkipped = true
         entry.value = 0
         try? context.save()
+        cancelTodayNotificationIfNeeded(for: habit)
     }
 
     func togglePause(_ habit: Habit, context: ModelContext) {
         habit.isPaused.toggle()
         try? context.save()
+        if habit.isPaused {
+            Task { await NotificationService.shared.cancelNotifications(for: habit) }
+        } else {
+            Task { await NotificationService.shared.scheduleNotifications(for: habit) }
+        }
     }
 
     func delete(_ habit: Habit, context: ModelContext) {
+        Task { await NotificationService.shared.cancelNotifications(for: habit) }
         context.delete(habit)
         try? context.save()
+    }
+
+    private func cancelTodayNotificationIfNeeded(for habit: Habit) {
+        guard calendar.isDate(selectedDate, inSameDayAs: .now) else { return }
+        Task { await NotificationService.shared.cancelTodayNotification(for: habit) }
     }
 
     private func checkCelebration(allHabits: [Habit]) {

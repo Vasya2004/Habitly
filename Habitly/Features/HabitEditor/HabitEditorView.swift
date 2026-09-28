@@ -186,9 +186,10 @@ struct HabitEditorView: View {
             return
         }
 
+        let habit: Habit
         switch mode {
         case .create:
-            let habit = Habit(
+            habit = Habit(
                 name: draft.name.trimmingCharacters(in: .whitespacesAndNewlines),
                 icon: draft.icon,
                 colorIndex: draft.colorIndex,
@@ -201,7 +202,8 @@ struct HabitEditorView: View {
                 note: draft.note
             )
             modelContext.insert(habit)
-        case .edit(let habit):
+        case .edit(let existing):
+            habit = existing
             habit.name = draft.name.trimmingCharacters(in: .whitespacesAndNewlines)
             habit.icon = draft.icon
             habit.colorIndex = draft.colorIndex
@@ -216,6 +218,16 @@ struct HabitEditorView: View {
 
         try? modelContext.save()
         Haptics.shared.success()
+
+        if !habit.reminders.isEmpty {
+            Task {
+                await NotificationService.shared.requestAuthorization()
+                await NotificationService.shared.scheduleNotifications(for: habit)
+            }
+        } else {
+            Task { await NotificationService.shared.cancelNotifications(for: habit) }
+        }
+
         onSaved?()
         dismiss()
     }

@@ -90,6 +90,9 @@ struct DayLogEditorView: View {
         }
         try? modelContext.save()
         Haptics.shared.success()
+        if calendar.isDateInToday(date) {
+            Task { await NotificationService.shared.cancelTodayNotification(for: habit) }
+        }
         dismiss()
     }
 }

@@ -108,6 +108,7 @@ struct HabitDetailView: View {
         .alert("Удалить привычку?", isPresented: $habitPendingDeletion) {
             Button("Отмена", role: .cancel) {}
             Button("Удалить", role: .destructive) {
+                Task { await NotificationService.shared.cancelNotifications(for: habit) }
                 modelContext.delete(habit)
                 try? modelContext.save()
                 dismiss()
