@@ -9,14 +9,19 @@ struct PressableScale: ViewModifier {
         content
             .scaleEffect(isPressed ? 0.97 : 1)
             .animation(reduceMotion ? nil : Motion.tap, value: isPressed)
-            .onLongPressGesture(minimumDuration: 100, maximumDistance: 30) {
-                // no-op: используется только для распознавания долгого нажатия там, где нужно
-            } onPressingChanged: { pressing in
-                isPressed = pressing
-                if pressing {
-                    Haptics.shared.impact(.soft)
-                }
-            }
+            // simultaneousGesture (а не onLongPressGesture) — чтобы не перехватывать тап
+            // у обёрнутого Button и не блокировать его action.
+            .simultaneousGesture(
+                DragGesture(minimumDistance: 0)
+                    .onChanged { _ in
+                        guard !isPressed else { return }
+                        isPressed = true
+                        Haptics.shared.impact(.soft)
+                    }
+                    .onEnded { _ in
+                        isPressed = false
+                    }
+            )
     }
 }
 

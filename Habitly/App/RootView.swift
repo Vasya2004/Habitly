@@ -32,14 +32,23 @@ struct RootView: View {
 /// Временная заглушка листа создания привычки — полноценный редактор появится на этапе 4.
 private struct HabitEditorPlaceholder: View {
     @Environment(\.dismiss) private var dismiss
+    @Environment(\.modelContext) private var modelContext
 
     var body: some View {
         NavigationStack {
-            EmptyStateView(
-                symbol: "wand.and.stars",
-                title: "Редактор привычки",
-                message: "Появится на следующем этапе разработки"
-            )
+            VStack(spacing: Spacing.md) {
+                EmptyStateView(
+                    symbol: "wand.and.stars",
+                    title: "Редактор привычки",
+                    message: "Появится на следующем этапе разработки"
+                )
+                #if DEBUG
+                CapsuleButton(title: "Добавить тестовые привычки", systemImage: "sparkles", isProminent: false) {
+                    SampleDataSeeder.seed(into: modelContext)
+                    dismiss()
+                }
+                #endif
+            }
             .navigationTitle("Новая привычка")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
