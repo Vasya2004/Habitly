@@ -9,6 +9,7 @@ struct HabitlyApp: App {
 
     init() {
         container = SharedModelContainer.make()
+        WidgetRefreshService.configure(container: container)
 
         notificationDelegate = NotificationDelegate(container: container)
         UNUserNotificationCenter.current().delegate = notificationDelegate

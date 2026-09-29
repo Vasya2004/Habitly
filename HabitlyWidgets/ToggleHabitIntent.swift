@@ -1,5 +1,4 @@
 import AppIntents
-import SwiftData
 import WidgetKit
 
 /// Отмечает привычку выполненной/невыполненной прямо из виджета, без открытия приложения.
@@ -17,27 +16,31 @@ struct ToggleHabitIntent: AppIntent {
     }
 
     func perform() async throws -> some IntentResult {
-        guard let uuid = UUID(uuidString: habitID) else { return .result() }
-        let context = ModelContextProvider.shared.context
-        let descriptor = FetchDescriptor<Habit>(predicate: #Predicate { $0.id == uuid })
-        guard let habit = try? context.fetch(descriptor).first else { return .result() }
-
-        let calendar = Calendar.current
-        let today = calendar.startOfDay(for: .now)
-        let existing = habit.log(on: today, calendar: calendar)
-        let wasCompleted = existing.map { habit.isLogCompleted($0) } ?? false
-
-        if let existing {
-            existing.isSkipped = false
-            existing.value = wasCompleted ? 0 : (habit.type == .boolean ? 1 : habit.goalValue)
+        if SharedModelContainer.isAppGroupAvailable {
+            HabitToggler.toggleToday(habitID: habitID, context: ModelContextProvider.shared.context)
         } else {
-            let log = HabitLog(date: today, value: habit.type == .boolean ? 1 : habit.goalValue, habit: habit)
-            habit.logs.append(log)
-            context.insert(log)
+            // Без App Group виджет не может писать в базу приложения: обновляем снимок
+            // и откладываем нажатие — приложение применит его при следующем открытии.
+            applyToSnapshotAndQueue()
         }
-
-        try? context.save()
         WidgetCenter.shared.reloadAllTimelines()
         return .result()
+    }
+
+    private func applyToSnapshotAndQueue() {
+        WidgetSnapshotKeychain.appendPendingToggle(habitID)
+        guard let data = WidgetSnapshotKeychain.readSnapshot() else { return }
+        let habits = data.habits.map { habit -> HabitSnapshot in
+            guard habit.id.uuidString == habitID else { return habit }
+            return HabitSnapshot(
+                id: habit.id, name: habit.name, icon: habit.icon, colorIndex: habit.colorIndex,
+                type: habit.type, goalValue: habit.goalValue, unit: habit.unit,
+                value: habit.isCompleted ? 0 : habit.goalValue, isCompleted: !habit.isCompleted, streak: habit.streak
+            )
+        }
+        WidgetSnapshotKeychain.writeSnapshot(HabitlyWidgetData(
+            completed: habits.filter(\.isCompleted).count, total: data.total,
+            bestStreak: data.bestStreak, habits: habits, week: data.week
+        ))
     }
 }

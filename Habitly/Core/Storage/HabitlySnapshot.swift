@@ -2,7 +2,7 @@ import Foundation
 import SwiftData
 
 /// Лёгкий снимок привычки для виджета — value type, безопасно пересекает границу процесса.
-struct HabitSnapshot: Identifiable, Hashable {
+struct HabitSnapshot: Identifiable, Hashable, Codable {
     let id: UUID
     let name: String
     let icon: String
@@ -17,14 +17,16 @@ struct HabitSnapshot: Identifiable, Hashable {
     var accentColor: HabitColor { HabitColor.palette[colorIndex % HabitColor.palette.count] }
 }
 
-struct WeekDaySnapshot: Identifiable {
+struct WeekDaySnapshot: Identifiable, Codable {
     let id = UUID()
     let date: Date
     let fraction: Double
     let isToday: Bool
+
+    private enum CodingKeys: String, CodingKey { case date, fraction, isToday }
 }
 
-struct HabitlyWidgetData {
+struct HabitlyWidgetData: Codable {
     let completed: Int
     let total: Int
     let bestStreak: Int
@@ -41,10 +43,20 @@ struct HabitlyWidgetData {
         week: (0..<7).map { WeekDaySnapshot(date: .now, fraction: Double($0) / 7, isToday: $0 == 3) }
     )
 
+    /// Источник данных для виджета: база в App Group, а если группа недоступна
+    /// (бесплатный аккаунт разработчика) — снимок, который приложение кладёт в общий Keychain.
     static func load() -> HabitlyWidgetData {
+        if SharedModelContainer.isAppGroupAvailable {
+            return load(context: ModelContextProvider.shared.context)
+        }
+        return WidgetSnapshotKeychain.readSnapshot() ?? empty
+    }
+
+    static let empty = HabitlyWidgetData(completed: 0, total: 0, bestStreak: 0, habits: [], week: [])
+
+    static func load(context: ModelContext) -> HabitlyWidgetData {
         let calendar = Calendar.current
         let today = calendar.startOfDay(for: .now)
-        let context = ModelContextProvider.shared.context
 
         let habits = (try? context.fetch(FetchDescriptor<Habit>()))?.filter { !$0.isArchived && !$0.isPaused } ?? []
         let scheduledToday = habits.filter { $0.schedule.isActive(on: today, calendar: calendar) }

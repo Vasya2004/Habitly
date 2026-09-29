@@ -55,6 +55,8 @@ struct RootView: View {
         }
         .task(id: scenePhase) {
             guard scenePhase == .active else { return }
+            WidgetRefreshService.applyPendingWidgetToggles()
+            WidgetRefreshService.reloadAll()
             Haptics.shared.isEnabled = profile?.hapticsEnabled ?? true
             await NotificationService.shared.rescheduleAll(habits: habits)
         }

@@ -6,6 +6,11 @@ import SwiftData
 enum SharedModelContainer {
     static let appGroupID = "group.com.danko.habitly"
 
+    /// false, если App Group недоступна (нет в профиле подписи, например при бесплатном аккаунте).
+    static var isAppGroupAvailable: Bool {
+        FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: appGroupID) != nil
+    }
+
     static let schema = Schema([Habit.self, HabitLog.self, Profile.self, Achievement.self])
 
     static func make() -> ModelContainer {

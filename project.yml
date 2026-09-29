@@ -66,6 +66,9 @@ targets:
       - path: Habitly/Core/Models
       - path: Habitly/Core/Storage/SharedModelContainer.swift
       - path: Habitly/Core/Storage/ModelContextProvider.swift
+      - path: Habitly/Core/Storage/HabitlySnapshot.swift
+      - path: Habitly/Core/Storage/WidgetSnapshotKeychain.swift
+      - path: Habitly/Core/Services/HabitToggler.swift
       - path: Habitly/Core/Services/StreakCalculator.swift
       - path: Habitly/Core/Services/Habit+Streak.swift
       - path: Habitly/DesignSystem/Colors/Theme.swift
