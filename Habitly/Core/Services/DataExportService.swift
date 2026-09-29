@@ -30,28 +30,11 @@ enum DataExportService {
         return lines.joined(separator: "\n")
     }
 
+    /// Полная резервная копия: привычки со всеми настройками и историей. Читается через `DataImportService`.
     static func exportJSON(habits: [Habit]) -> String {
-        let payload = habits.map { habit -> [String: Any] in
-            [
-                "name": habit.name,
-                "icon": habit.icon,
-                "type": habit.type.rawValue,
-                "goalValue": habit.goalValue,
-                "unit": habit.unit,
-                "createdAt": isoFormatter.string(from: habit.createdAt),
-                "logs": habit.logs.sorted(by: { $0.date < $1.date }).map { log -> [String: Any] in
-                    [
-                        "date": isoFormatter.string(from: log.date),
-                        "value": log.value,
-                        "completed": habit.isLogCompleted(log),
-                        "skipped": log.isSkipped,
-                        "note": log.note
-                    ]
-                }
-            ]
-        }
-        guard let data = try? JSONSerialization.data(withJSONObject: payload, options: [.prettyPrinted, .sortedKeys]),
-              let string = String(data: data, encoding: .utf8) else { return "[]" }
+        let file = BackupFile(exportedAt: .now, habits: habits.map(BackupHabit.init))
+        guard let data = try? BackupCoding.makeEncoder().encode(file),
+              let string = String(data: data, encoding: .utf8) else { return "{}" }
         return string
     }
 

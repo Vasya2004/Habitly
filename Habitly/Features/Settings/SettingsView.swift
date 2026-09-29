@@ -1,5 +1,6 @@
 import SwiftUI
 import SwiftData
+import UniformTypeIdentifiers
 
 struct SettingsView: View {
     @Environment(\.colorScheme) private var scheme
@@ -13,6 +14,8 @@ struct SettingsView: View {
     @State private var showPrivacyPolicy = false
     @State private var exportFileURL: URL?
     @State private var exportFileName = ""
+    @State private var showImporter = false
+    @State private var importMessage: String?
 
     private static let avatarEmojis = ["🙂", "😎", "🦊", "🐼", "🐨", "🦁", "🐸", "🌸", "🚀", "⭐️", "🌱", "🔥"]
 
@@ -50,6 +53,14 @@ struct SettingsView: View {
             Button("Удалить всё", role: .destructive, action: deleteAllData)
         } message: {
             Text("Все привычки и история их выполнения будут удалены без возможности восстановления.")
+        }
+        .fileImporter(isPresented: $showImporter, allowedContentTypes: [.json]) { result in
+            handleImport(result)
+        }
+        .alert("Импорт", isPresented: Binding(get: { importMessage != nil }, set: { if !$0 { importMessage = nil } })) {
+            Button("OK", role: .cancel) {}
+        } message: {
+            Text(importMessage ?? "")
         }
     }
 
@@ -201,6 +212,10 @@ struct SettingsView: View {
                     }
                 }
 
+                CapsuleButton(title: "Импорт из JSON", systemImage: "square.and.arrow.down", isProminent: false) {
+                    showImporter = true
+                }
+
                 CapsuleButton(title: "Удалить все данные", systemImage: "trash", isProminent: false) {
                     showDeleteConfirmation = true
                 }
@@ -293,6 +308,24 @@ struct SettingsView: View {
     private func refreshAuthorizationStatus() async {
         isAuthorized = await NotificationService.shared.isAuthorized
         didCheckAuthorization = true
+    }
+
+    private func handleImport(_ picked: Result<URL, Error>) {
+        do {
+            let url = try picked.get()
+            let scoped = url.startAccessingSecurityScopedResource()
+            defer { if scoped { url.stopAccessingSecurityScopedResource() } }
+            let result = try DataImportService.importJSON(Data(contentsOf: url), into: modelContext)
+            WidgetRefreshService.reloadAll()
+            Task { await NotificationService.shared.rescheduleAll(habits: habits) }
+            Haptics.shared.success()
+            importMessage = result.isEmpty
+                ? "Новых данных в файле не нашлось — всё уже есть в приложении."
+                : "Добавлено привычек: \(result.habitsAdded), дополнено: \(result.habitsMerged), новых записей истории: \(result.logsAdded)."
+        } catch {
+            Haptics.shared.warning()
+            importMessage = (error as? LocalizedError)?.errorDescription ?? "Не удалось прочитать файл: \(error.localizedDescription)"
+        }
     }
 
     private func deleteAllData() {

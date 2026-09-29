@@ -10,6 +10,7 @@
 		00C18E503C890266B9553037 /* Profile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 323C9567A3F2C1B0F9A0C878 /* Profile.swift */; };
 		00D737B40A082F2A6B0C86A2 /* HabitlyApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = A788036CF969672CDF373AD9 /* HabitlyApp.swift */; };
 		01D0320A82A685FA3A953288 /* HabitLog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 291C0EE7896C5B6C2BC5A703 /* HabitLog.swift */; };
+		032D5D99CE5F7AA88251BA7B /* DataBackup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39680B1EC27B12AD2943CE6A /* DataBackup.swift */; };
 		05E7750DE111BA917CFE428C /* ModelContextProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1664B523573982AEACCB77F /* ModelContextProvider.swift */; };
 		085F76AB6064B367D11E46CC /* HabitType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DE791ED11AA11CEF2C625C9 /* HabitType.swift */; };
 		08680B435283B35BD854B59B /* PressableScale.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D8F956F61A5DB0AD91434FF /* PressableScale.swift */; };
@@ -21,6 +22,7 @@
 		1AC6E6E956243E5939A732F9 /* HabitlyWidgetsBundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 822751EE52EB7EA796D95354 /* HabitlyWidgetsBundle.swift */; };
 		1BC636002F33C04DEACCB77D /* Habit+Streak.swift in Sources */ = {isa = PBXBuildFile; fileRef = 981B7C46D6757EFFD0B924F8 /* Habit+Streak.swift */; };
 		1D4DFAE8FFC54CCEDF66D0EA /* StatsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A317C41368F28C101141DB62 /* StatsView.swift */; };
+		1EA31379B56B5D0E47F1A4D1 /* DataImportTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4381DE446075F187E52E80F /* DataImportTests.swift */; };
 		20CED620CBABAA0DADEF5A36 /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD211B4524606AD42BD088B6 /* Theme.swift */; };
 		22933D722FCC9DC55BF858B0 /* DataExportService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5EFF8E0FCF916F3E23966E32 /* DataExportService.swift */; };
 		23E26F7E8D4C48D1781EB2AD /* StreakCalculator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A997E87972ACD98C8DE6376 /* StreakCalculator.swift */; };
@@ -79,6 +81,7 @@
 		D2C117AC819BB48FB463CDA6 /* HabitCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07F1FDE1E3BCE544CECB05B0 /* HabitCard.swift */; };
 		D2CEB22521310E0B85F54E35 /* AchievementBadgeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 454CBA4B1391A72EA00593E2 /* AchievementBadgeView.swift */; };
 		D3A3010CF9B1750B382BEB20 /* NotificationDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F655E87FDADA3DC0ADA5041 /* NotificationDelegate.swift */; };
+		D6AFEE5D23B67959AD85DD2E /* DataImportService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26424D1CF671320D8B524498 /* DataImportService.swift */; };
 		D9BBB53D117E3E83AC41E92C /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A906AAA4536165AF2DB3787 /* SettingsView.swift */; };
 		DBCDDC39C2D9783AEC5D2A3D /* Profile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 323C9567A3F2C1B0F9A0C878 /* Profile.swift */; };
 		DD9CE6975B338603ACC2B9AE /* WeekStrip.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47F5BB93C9DCC318F6A814F8 /* WeekStrip.swift */; };
@@ -144,6 +147,7 @@
 		22CD060CB14ACAFE93D6CA2A /* HabitlyTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = HabitlyTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		244E6786AD030AB5A7CD421F /* Spacing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Spacing.swift; sourceTree = "<group>"; };
 		247142A0D185896FDDFBFE21 /* Habit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Habit.swift; sourceTree = "<group>"; };
+		26424D1CF671320D8B524498 /* DataImportService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataImportService.swift; sourceTree = "<group>"; };
 		279BA366AB6FDF3DDF8C2309 /* HabitDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HabitDetailView.swift; sourceTree = "<group>"; };
 		291C0EE7896C5B6C2BC5A703 /* HabitLog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HabitLog.swift; sourceTree = "<group>"; };
 		294C70C3DB43B599E1977D89 /* CapsuleButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CapsuleButton.swift; sourceTree = "<group>"; };
@@ -151,6 +155,7 @@
 		323C9567A3F2C1B0F9A0C878 /* Profile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Profile.swift; sourceTree = "<group>"; };
 		365FFD0B08C076CA74E53769 /* OnboardingIllustration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingIllustration.swift; sourceTree = "<group>"; };
 		3777B6D55653852D3C6F2814 /* HabitlyWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HabitlyWidget.swift; sourceTree = "<group>"; };
+		39680B1EC27B12AD2943CE6A /* DataBackup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataBackup.swift; sourceTree = "<group>"; };
 		3A906AAA4536165AF2DB3787 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		3B9725F2CE15AEFC4E5AA44B /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		3D348B4A8C392A21EEE00044 /* StatsCalculator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatsCalculator.swift; sourceTree = "<group>"; };
@@ -210,6 +215,7 @@
 		E1664B523573982AEACCB77F /* ModelContextProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelContextProvider.swift; sourceTree = "<group>"; };
 		EB34C315138CBA4C6CA6C1E3 /* GamificationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GamificationService.swift; sourceTree = "<group>"; };
 		F23A245303FC520D2D24FC7B /* ReminderEditorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReminderEditorView.swift; sourceTree = "<group>"; };
+		F4381DE446075F187E52E80F /* DataImportTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataImportTests.swift; sourceTree = "<group>"; };
 		F69FB99FE09BE3814FD7C4F8 /* SmallProgressWidgetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SmallProgressWidgetView.swift; sourceTree = "<group>"; };
 		FD211B4524606AD42BD088B6 /* Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -356,6 +362,7 @@
 		6B8ED3BB492A760B5E5ADCFC /* HabitlyTests */ = {
 			isa = PBXGroup;
 			children = (
+				F4381DE446075F187E52E80F /* DataImportTests.swift */,
 				0616941846C2BD0094123553 /* StreakCalculatorTests.swift */,
 			);
 			path = HabitlyTests;
@@ -428,7 +435,9 @@
 		E5911673C558506F779CD5BE /* Services */ = {
 			isa = PBXGroup;
 			children = (
+				39680B1EC27B12AD2943CE6A /* DataBackup.swift */,
 				5EFF8E0FCF916F3E23966E32 /* DataExportService.swift */,
+				26424D1CF671320D8B524498 /* DataImportService.swift */,
 				EB34C315138CBA4C6CA6C1E3 /* GamificationService.swift */,
 				981B7C46D6757EFFD0B924F8 /* Habit+Streak.swift */,
 				D82C3EF56283D3D2545E5A1D /* HabitToggler.swift */,
@@ -608,6 +617,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1EA31379B56B5D0E47F1A4D1 /* DataImportTests.swift in Sources */,
 				C392CFA4F80969559D780BA8 /* StreakCalculatorTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -626,7 +636,9 @@
 				112DC11DC5F5AADC88CDF55A /* CardBackground.swift in Sources */,
 				2B37E3D24D6CCC992E7F8161 /* ColorPickerRow.swift in Sources */,
 				F0064376EB65C0D3B9A8E71F /* ConfettiView.swift in Sources */,
+				032D5D99CE5F7AA88251BA7B /* DataBackup.swift in Sources */,
 				22933D722FCC9DC55BF858B0 /* DataExportService.swift in Sources */,
+				D6AFEE5D23B67959AD85DD2E /* DataImportService.swift in Sources */,
 				48122F8CC69985E372696C66 /* DayLogEditorView.swift in Sources */,
 				C084F10579441577F7479310 /* EmptyStateView.swift in Sources */,
 				570006A3EB5CC6C934974DE8 /* GamificationService.swift in Sources */,
