@@ -73,7 +73,7 @@ struct OnboardingView: View {
                 Text("Как вас зовут?")
                     .font(Typography.subheadline)
                     .foregroundStyle(.white.opacity(0.7))
-                TextField("Необязательно", text: $name)
+                TextField("", text: $name, prompt: Text("Необязательно").foregroundStyle(Color.white.opacity(0.4)))
                     .textFieldStyle(.plain)
                     .focused($nameFocused)
                     .submitLabel(.done)
@@ -132,7 +132,7 @@ struct OnboardingView: View {
             }
             .foregroundStyle(.white)
             .padding(Spacing.md)
-            .background(isSelected ? AnyShapeStyle(Theme.brandGradient) : AnyShapeStyle(.ultraThinMaterial), in: RoundedRectangle(cornerRadius: Radius.control))
+            .background { OnboardingCardBackground(isSelected: isSelected) }
         }
         .buttonStyle(.plain)
     }
@@ -147,15 +147,12 @@ struct OnboardingView: View {
             buttonTitle: "Далее",
             buttonAction: { advance(to: .notifications) }
         ) {
-            ScrollView {
-                VStack(spacing: Spacing.sm) {
-                    ForEach(Array(suggestedTemplates.prefix(5))) { template in
-                        templateRow(template)
-                    }
+            VStack(spacing: Spacing.sm) {
+                ForEach(Array(suggestedTemplates.prefix(5))) { template in
+                    templateRow(template)
                 }
-                .padding(.horizontal, Spacing.lg)
             }
-            .frame(maxHeight: 260)
+            .padding(.horizontal, Spacing.lg)
         }
         .onAppear {
             if selectedTemplateIDs.isEmpty {
@@ -187,7 +184,7 @@ struct OnboardingView: View {
                     .foregroundStyle(.white)
             }
             .padding(Spacing.sm)
-            .background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: Radius.control))
+            .background { OnboardingCardBackground(isSelected: false) }
             .opacity(isSelected ? 1 : 0.55)
         }
         .buttonStyle(.plain)
@@ -256,31 +253,49 @@ private struct OnboardingScaffold<Content: View>: View {
     @ViewBuilder var content: Content
 
     var body: some View {
-        VStack(spacing: Spacing.lg) {
-            Spacer(minLength: Spacing.sm)
-            OnboardingIllustration(symbol: illustrationSymbol)
+        ScrollView {
+            VStack(spacing: Spacing.lg) {
+                OnboardingIllustration(symbol: illustrationSymbol)
+                    .padding(.top, Spacing.sm)
 
-            VStack(spacing: Spacing.xs) {
-                Text(title)
-                    .font(Typography.title)
-                    .foregroundStyle(.white)
-                    .multilineTextAlignment(.center)
-                Text(subtitle)
-                    .font(Typography.body)
-                    .foregroundStyle(.white.opacity(0.7))
-                    .multilineTextAlignment(.center)
+                VStack(spacing: Spacing.xs) {
+                    Text(title)
+                        .font(Typography.title)
+                        .foregroundStyle(.white)
+                        .multilineTextAlignment(.center)
+                    Text(subtitle)
+                        .font(Typography.body)
+                        .foregroundStyle(.white.opacity(0.7))
+                        .multilineTextAlignment(.center)
+                }
+                .padding(.horizontal, Spacing.lg)
+
+                content
             }
-            .padding(.horizontal, Spacing.lg)
-
-            content
-
-            Spacer()
-
+            .frame(maxWidth: .infinity)
+            .padding(.bottom, Spacing.md)
+        }
+        .scrollBounceBehavior(.basedOnSize)
+        .safeAreaInset(edge: .bottom, spacing: 0) {
             CapsuleButton(title: buttonTitle, action: buttonAction)
                 .opacity(buttonEnabled ? 1 : 0.4)
                 .disabled(!buttonEnabled)
-                .padding(.bottom, Spacing.lg)
+                .padding(.vertical, Spacing.md)
         }
+    }
+}
+
+/// Карточка выбора на тёмном фоне онбординга: тонкая подложка вместо серого системного материала.
+private struct OnboardingCardBackground: View {
+    var isSelected: Bool
+
+    var body: some View {
+        RoundedRectangle(cornerRadius: Radius.control)
+            .fill(isSelected ? AnyShapeStyle(Theme.brandGradient) : AnyShapeStyle(Color.white.opacity(0.08)))
+            .overlay(
+                RoundedRectangle(cornerRadius: Radius.control)
+                    .stroke(Color.white.opacity(isSelected ? 0 : 0.15), lineWidth: 1)
+            )
     }
 }
 

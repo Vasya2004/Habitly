@@ -29,7 +29,7 @@ enum Theme {
     static func cardStroke(for scheme: ColorScheme) -> LinearGradient {
         let colors: [Color] = scheme == .dark
             ? [Color.white.opacity(0.18), Color.white.opacity(0.02)]
-            : [Color.white.opacity(0.9), Color.white.opacity(0.2)]
+            : [Color(hex: "14142B").opacity(0.12), Color(hex: "14142B").opacity(0.05)]
         return LinearGradient(colors: colors, startPoint: .topLeading, endPoint: .bottomTrailing)
     }
 
