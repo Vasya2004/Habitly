@@ -29,12 +29,21 @@ struct HabitlyWidget: Widget {
         StaticConfiguration(kind: kind, provider: HabitlyProvider()) { entry in
             HabitlyWidgetView(entry: entry)
                 .containerBackground(for: .widget) {
-                    Theme.backgroundGradient(for: .dark)
+                    WidgetBackground()
                 }
         }
         .configurationDisplayName("Habitly")
         .description("Прогресс дня и быстрая отметка привычек.")
         .supportedFamilies([.systemSmall, .systemMedium, .systemLarge, .accessoryCircular, .accessoryRectangular])
+    }
+}
+
+/// Фон виджета следует системной теме (светлый/тёмный).
+private struct WidgetBackground: View {
+    @Environment(\.colorScheme) private var scheme
+
+    var body: some View {
+        Theme.backgroundGradient(for: scheme)
     }
 }
 

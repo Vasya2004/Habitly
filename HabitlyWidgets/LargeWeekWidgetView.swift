@@ -11,7 +11,7 @@ struct LargeWeekWidgetView: View {
             HStack {
                 Text("Эта неделя")
                     .font(.system(size: 16, weight: .bold, design: .rounded))
-                    .foregroundStyle(.white)
+                    .foregroundStyle(Color.primary)
                 Spacer()
                 HStack(spacing: 3) {
                     Image(systemName: "flame.fill").font(.system(size: 12))
@@ -26,12 +26,12 @@ struct LargeWeekWidgetView: View {
                     VStack(spacing: 4) {
                         Text(weekdaySymbols[index])
                             .font(.system(size: 10, weight: .medium))
-                            .foregroundStyle(.white.opacity(0.5))
+                            .foregroundStyle(Color.primary.opacity(0.5))
                         ZStack {
-                            Circle().stroke(Color.white.opacity(0.15), lineWidth: 4)
+                            Circle().stroke(Color.primary.opacity(0.15), lineWidth: 4)
                             Circle()
                                 .trim(from: 0, to: day.fraction)
-                                .stroke(day.isToday ? AnyShapeStyle(Theme.brandGradient) : AnyShapeStyle(Color.white.opacity(0.6)), style: StrokeStyle(lineWidth: 4, lineCap: .round))
+                                .stroke(day.isToday ? AnyShapeStyle(Theme.brandGradient) : AnyShapeStyle(Color.primary.opacity(0.6)), style: StrokeStyle(lineWidth: 4, lineCap: .round))
                                 .rotationEffect(.degrees(-90))
                         }
                         .frame(width: 26, height: 26)
@@ -40,7 +40,7 @@ struct LargeWeekWidgetView: View {
                 }
             }
 
-            Divider().background(Color.white.opacity(0.15))
+            Divider().background(Color.primary.opacity(0.15))
 
             VStack(spacing: 6) {
                 ForEach(Array(data.habits.prefix(5))) { habit in
@@ -50,13 +50,13 @@ struct LargeWeekWidgetView: View {
                             .background(Circle().fill(habit.accentColor.gradient))
                         Text(habit.name)
                             .font(.system(size: 12, weight: .medium))
-                            .foregroundStyle(.white)
+                            .foregroundStyle(Color.primary)
                             .lineLimit(1)
                         Spacer()
                         Button(intent: ToggleHabitIntent(habitID: habit.id.uuidString)) {
                             Image(systemName: habit.isCompleted ? "checkmark.circle.fill" : "circle")
                                 .font(.system(size: 18))
-                                .foregroundStyle(habit.isCompleted ? AnyShapeStyle(habit.accentColor.gradient) : AnyShapeStyle(Color.white.opacity(0.35)))
+                                .foregroundStyle(habit.isCompleted ? AnyShapeStyle(habit.accentColor.gradient) : AnyShapeStyle(Color.primary.opacity(0.35)))
                         }
                         .buttonStyle(.plain)
                     }

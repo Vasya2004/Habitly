@@ -12,7 +12,7 @@ struct SmallProgressWidgetView: View {
         VStack(spacing: 6) {
             ZStack {
                 Circle()
-                    .stroke(Color.white.opacity(0.15), lineWidth: 9)
+                    .stroke(Color.primary.opacity(0.15), lineWidth: 9)
                 Circle()
                     .trim(from: 0, to: fraction)
                     .stroke(Theme.brandGradient, style: StrokeStyle(lineWidth: 9, lineCap: .round))
@@ -20,17 +20,17 @@ struct SmallProgressWidgetView: View {
                 VStack(spacing: 0) {
                     Text("\(data.completed)")
                         .font(.system(size: 26, weight: .heavy, design: .rounded))
-                        .foregroundStyle(.white)
+                        .foregroundStyle(Color.primary)
                     Text("из \(data.total)")
                         .font(.system(size: 11, weight: .medium))
-                        .foregroundStyle(.white.opacity(0.6))
+                        .foregroundStyle(Color.primary.opacity(0.6))
                 }
             }
             .frame(width: 84, height: 84)
 
             Text("Сегодня")
                 .font(.system(size: 12, weight: .semibold))
-                .foregroundStyle(.white.opacity(0.8))
+                .foregroundStyle(Color.primary.opacity(0.8))
         }
         .widgetURL(URL(string: "habitly://today"))
     }
