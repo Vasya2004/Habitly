@@ -59,7 +59,7 @@ struct HabitlyWidgetData: Codable {
         let today = calendar.startOfDay(for: .now)
 
         let habits = (try? context.fetch(FetchDescriptor<Habit>()))?.filter { !$0.isArchived && !$0.isPaused } ?? []
-        let scheduledToday = habits.filter { $0.schedule.isActive(on: today, calendar: calendar) }
+        let scheduledToday = habits.filter { $0.isRequired(on: today, calendar: calendar) }
             .sorted { $0.sortOrder < $1.sortOrder }
 
         let snapshots: [HabitSnapshot] = scheduledToday.map { habit in

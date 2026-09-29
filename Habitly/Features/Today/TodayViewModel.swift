@@ -36,6 +36,13 @@ final class TodayViewModel {
     }
 
     func progressText(for habit: Habit, on date: Date? = nil) -> String {
+        let base = dayProgressText(for: habit, on: date)
+        guard let week = habit.weeklyProgress(asOf: date ?? selectedDate, calendar: calendar) else { return base }
+        if week.isReached && !isCompleted(habit, on: date) { return "Цель недели выполнена · \(week.done)/\(week.target)" }
+        return "\(base) · неделя \(week.done)/\(week.target)"
+    }
+
+    private func dayProgressText(for habit: Habit, on date: Date? = nil) -> String {
         switch habit.type {
         case .boolean:
             return isCompleted(habit, on: date) ? "Выполнено" : "Не выполнено"
@@ -65,7 +72,7 @@ final class TodayViewModel {
     }
 
     func dayProgress(for habits: [Habit]) -> (completed: Int, total: Int) {
-        let scheduled = habits.filter { !$0.isArchived && !$0.isPaused && isScheduled($0) }
+        let scheduled = habits.filter { !$0.isArchived && !$0.isPaused && $0.isRequired(on: selectedDate, calendar: calendar) }
         let completed = scheduled.filter { isCompleted($0) }.count
         return (completed, scheduled.count)
     }

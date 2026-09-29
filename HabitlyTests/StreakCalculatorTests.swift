@@ -305,3 +305,62 @@ final class StreakCalculatorTests: XCTestCase {
         XCTAssertEqual(stats.completionRate, 0.5, accuracy: 0.0001)
     }
 }
+
+// MARK: - Недельная цель
+
+final class WeeklyProgressTests: XCTestCase {
+    private func makeCalendar() -> Calendar {
+        // HabitLog нормализует дату через Calendar.current, поэтому берём тот же часовой пояс.
+        var calendar = Calendar.current
+        calendar.firstWeekday = 2
+        return calendar
+    }
+
+    private func day(_ d: Int, calendar: Calendar) -> Date {
+        calendar.date(from: DateComponents(year: 2026, month: 1, day: d, hour: 12))!
+    }
+
+    private func makeHabit(target: Int, doneDays: [Int], calendar: Calendar) -> Habit {
+        let habit = Habit(
+            name: "Тренировка",
+            schedule: HabitSchedule(type: .timesPerWeek, weekdays: [], timesPerWeek: target),
+            createdAt: day(1, calendar: calendar)
+        )
+        for d in doneDays {
+            habit.logs.append(HabitLog(date: calendar.startOfDay(for: day(d, calendar: calendar)), value: 1, habit: habit))
+        }
+        return habit
+    }
+
+    func test_weeklyProgress_countsOnlyCurrentWeek() {
+        let cal = makeCalendar()
+        // 5 января 2026 — понедельник; 4 января (вс) относится к прошлой неделе.
+        let habit = makeHabit(target: 3, doneDays: [4, 5, 6], calendar: cal)
+        let progress = habit.weeklyProgress(asOf: day(7, calendar: cal), calendar: cal)
+        XCTAssertEqual(progress, WeeklyProgress(done: 2, target: 3))
+    }
+
+    func test_weeklyProgress_nilForDailySchedule() {
+        let cal = makeCalendar()
+        let habit = Habit(name: "Вода", createdAt: day(1, calendar: cal))
+        XCTAssertNil(habit.weeklyProgress(asOf: day(7, calendar: cal), calendar: cal))
+    }
+
+    func test_isRequired_falseWhenWeeklyGoalReachedOnAnotherDay() {
+        let cal = makeCalendar()
+        let habit = makeHabit(target: 2, doneDays: [5, 6], calendar: cal)
+        XCTAssertFalse(habit.isRequired(on: day(8, calendar: cal), calendar: cal))
+    }
+
+    func test_isRequired_trueOnDayWhereGoalWasCompleted() {
+        let cal = makeCalendar()
+        let habit = makeHabit(target: 2, doneDays: [5, 6], calendar: cal)
+        XCTAssertTrue(habit.isRequired(on: day(6, calendar: cal), calendar: cal))
+    }
+
+    func test_isRequired_trueWhileGoalNotReached() {
+        let cal = makeCalendar()
+        let habit = makeHabit(target: 3, doneDays: [5], calendar: cal)
+        XCTAssertTrue(habit.isRequired(on: day(8, calendar: cal), calendar: cal))
+    }
+}

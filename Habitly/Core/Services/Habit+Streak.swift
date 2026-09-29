@@ -70,4 +70,30 @@ extension Habit {
         }
         return scheduled > 0 ? Double(completed) / Double(scheduled) : 0
     }
+
+    // MARK: - Недельная цель («X раз в неделю»)
+
+    /// Сколько дней текущей недели привычка выполнена и какая цель — только для расписания `.timesPerWeek`.
+    func weeklyProgress(asOf date: Date = .now, calendar: Calendar = .current) -> WeeklyProgress? {
+        guard schedule.type == .timesPerWeek,
+              let week = calendar.dateInterval(of: .weekOfYear, for: date) else { return nil }
+        let done = logs.filter { week.contains($0.date) && !$0.isSkipped && isLogCompleted($0) }.count
+        return WeeklyProgress(done: done, target: max(schedule.timesPerWeek, 1))
+    }
+
+    /// Нужно ли выполнять привычку в этот день, чтобы закрыть дневной прогресс: привычка
+    /// с недельной целью, уже выполненной в другие дни, перестаёт «висеть» невыполненной.
+    func isRequired(on date: Date, calendar: Calendar = .current) -> Bool {
+        guard schedule.isActive(on: date, calendar: calendar) else { return false }
+        guard let progress = weeklyProgress(asOf: date, calendar: calendar) else { return true }
+        return !progress.isReached || isCompleted(on: date, calendar: calendar)
+    }
+}
+
+struct WeeklyProgress: Equatable {
+    let done: Int
+    let target: Int
+
+    var isReached: Bool { done >= target }
+    var fraction: Double { min(Double(done) / Double(target), 1) }
 }
