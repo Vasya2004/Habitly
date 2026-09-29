@@ -152,7 +152,7 @@ struct HabitDetailView: View {
         .background(habit.accentColor.gradient, in: RoundedRectangle(cornerRadius: Radius.cardLarge, style: .continuous))
     }
 
-    private func sectionCard<Content: View>(title: String, @ViewBuilder content: () -> Content) -> some View {
+    private func sectionCard<Content: View>(title: LocalizedStringKey, @ViewBuilder content: () -> Content) -> some View {
         VStack(alignment: .leading, spacing: Spacing.sm) {
             Text(title)
                 .font(Typography.headline)

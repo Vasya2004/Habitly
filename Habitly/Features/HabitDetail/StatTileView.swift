@@ -25,5 +25,8 @@ struct StatTileView: View {
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding(Spacing.sm)
         .cardStyle(cornerRadius: Radius.control)
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(label)
+        .accessibilityValue(value)
     }
 }

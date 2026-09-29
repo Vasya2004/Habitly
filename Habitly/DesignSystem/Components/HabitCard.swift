@@ -43,6 +43,8 @@ struct HabitCard: View {
                         .contentTransition(.numericText())
                 }
                 .foregroundStyle(Theme.secondaryText(for: scheme))
+                .accessibilityElement(children: .ignore)
+                .accessibilityLabel("Стрик \(streak) дней")
             }
 
             if showsStepper {
@@ -53,9 +55,7 @@ struct HabitCard: View {
         }
         .padding(Spacing.sm)
         .cardStyle()
-        .accessibilityElement(children: .combine)
-        .accessibilityLabel("\(title), \(subtitle)")
-        .accessibilityAddTraits(isCompleted ? [.isSelected] : [])
+        .accessibilityElement(children: .contain)
     }
 
     private var iconBadge: some View {
@@ -68,6 +68,8 @@ struct HabitCard: View {
             ProgressRing(progress: progress, gradient: color.gradient, lineWidth: 3)
                 .padding(-4)
         )
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel("\(title), \(subtitle)")
     }
 
     private var completeButton: some View {
@@ -84,6 +86,8 @@ struct HabitCard: View {
                 .animation(reduceMotion ? nil : Motion.bouncy, value: didBounce)
         }
         .buttonStyle(.plain)
+        .accessibilityLabel(isCompleted ? "Выполнено" : "Отметить выполненным")
+        .accessibilityAddTraits(isCompleted ? [.isButton, .isSelected] : .isButton)
     }
 
     private var stepper: some View {
@@ -94,12 +98,15 @@ struct HabitCard: View {
             } label: {
                 Image(systemName: "minus.circle.fill")
             }
+            .accessibilityLabel("Уменьшить: \(title)")
+
             Button {
                 onIncrement?()
                 Haptics.shared.impact(.soft)
             } label: {
                 Image(systemName: "plus.circle.fill")
             }
+            .accessibilityLabel("Увеличить: \(title)")
         }
         .font(.system(size: 22))
         .foregroundStyle(color.gradient)

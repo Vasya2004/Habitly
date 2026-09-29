@@ -111,10 +111,8 @@ struct TodayView: View {
 
             ForEach(groups, id: \.time) { group in
                 Section {
-                    if !viewModel.collapsedSections.contains(group.time) {
-                        ForEach(group.habits) { habit in
-                            row(for: habit)
-                        }
+                    ForEach(group.habits) { habit in
+                        row(for: habit)
                     }
                 } header: {
                     sectionHeader(group)
@@ -183,26 +181,15 @@ struct TodayView: View {
     }
 
     private func sectionHeader(_ group: (time: TimeOfDay, habits: [Habit])) -> some View {
-        let isCollapsed = viewModel.collapsedSections.contains(group.time)
-        return Button {
-            withAnimation(Motion.spring) {
-                if isCollapsed { viewModel.collapsedSections.remove(group.time) }
-                else { viewModel.collapsedSections.insert(group.time) }
-            }
-        } label: {
-            HStack {
-                Image(systemName: group.time.symbol)
-                Text(group.time.title)
-                Spacer()
-                Text("\(group.habits.count)")
-                    .foregroundStyle(Theme.secondaryText(for: scheme))
-                Image(systemName: "chevron.down")
-                    .rotationEffect(.degrees(isCollapsed ? -90 : 0))
-            }
-            .font(Typography.subheadline)
-            .foregroundStyle(Theme.primaryText(for: scheme))
+        HStack {
+            Image(systemName: group.time.symbol)
+            Text(group.time.title)
+            Spacer()
+            Text("\(group.habits.count)")
+                .foregroundStyle(Theme.secondaryText(for: scheme))
         }
-        .buttonStyle(.plain)
+        .font(Typography.subheadline)
+        .foregroundStyle(Theme.primaryText(for: scheme))
     }
 
     private func row(for habit: Habit) -> some View {

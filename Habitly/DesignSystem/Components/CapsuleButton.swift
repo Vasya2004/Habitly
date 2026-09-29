@@ -2,7 +2,7 @@ import SwiftUI
 
 /// Кнопка-капсула с фирменным градиентом.
 struct CapsuleButton: View {
-    var title: String
+    var title: LocalizedStringKey
     var systemImage: String?
     var isProminent: Bool = true
     var action: () -> Void

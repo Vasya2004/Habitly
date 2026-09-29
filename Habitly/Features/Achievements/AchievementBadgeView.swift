@@ -39,6 +39,9 @@ struct AchievementBadgeView: View {
         .frame(maxWidth: .infinity)
         .padding(.vertical, Spacing.sm)
         .opacity(isUnlocked ? 1 : 0.55)
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel("\(kind.title). \(kind.subtitle)")
+        .accessibilityValue(isUnlocked ? "Получено" : "Заблокировано")
     }
 }
 

@@ -233,9 +233,9 @@ struct OnboardingView: View {
 /// Общий каркас шага онбординга: иллюстрация, заголовок, подзаголовок, кастомный контент и кнопка.
 private struct OnboardingScaffold<Content: View>: View {
     var illustrationSymbol: String
-    var title: String
-    var subtitle: String
-    var buttonTitle: String
+    var title: LocalizedStringKey
+    var subtitle: LocalizedStringKey
+    var buttonTitle: LocalizedStringKey
     var buttonEnabled: Bool = true
     var buttonAction: () -> Void
     @ViewBuilder var content: Content

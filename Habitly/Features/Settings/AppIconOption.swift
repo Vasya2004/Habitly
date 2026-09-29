@@ -77,6 +77,7 @@ struct AppIconPickerRow: View {
             }
         }
         .buttonStyle(.plain)
+        .accessibilityAddTraits(current == option ? [.isButton, .isSelected] : .isButton)
     }
 
     private func select(_ option: AppIconOption) {

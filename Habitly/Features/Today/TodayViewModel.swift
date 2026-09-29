@@ -5,7 +5,6 @@ import Observation
 @Observable
 final class TodayViewModel {
     var selectedDate: Date = Calendar.current.startOfDay(for: .now)
-    var collapsedSections: Set<TimeOfDay> = []
     var celebrationTrigger: Int = 0
     var pendingAchievements: [AchievementKind] = []
 

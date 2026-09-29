@@ -1,0 +1,505 @@
+{
+  "sourceLanguage" : "ru",
+  "strings" : {
+    "XP заработано" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "XP earned" } }
+      }
+    },
+    "Активное время" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Active time" } }
+      }
+    },
+    "Активных дней" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Active days" } }
+      }
+    },
+    "Активных привычек" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Active habits" } }
+      }
+    },
+    "Version" : { },
+    "Версия" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Version" } }
+      }
+    },
+    "Включите уведомления — мы дружелюбно напомним в нужное время, без спама." : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Turn on notifications and we'll send friendly reminders at the right time — no spam." } }
+      }
+    },
+    "Включить уведомления" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Enable Notifications" } }
+      }
+    },
+    "Внешний вид" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Appearance" } }
+      }
+    },
+    "Воскресенье" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Sunday" } }
+      }
+    },
+    "Все привычки и история их выполнения будут удалены без возможности восстановления." : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "All habits and their completion history will be permanently deleted." } }
+      }
+    },
+    "Всего выполнений" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Total completions" } }
+      }
+    },
+    "Вся история выполнения будет удалена без возможности восстановления." : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "All completion history will be permanently deleted." } }
+      }
+    },
+    "Вся история выполнения этой привычки будет удалена без возможности восстановления." : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "All completion history for this habit will be permanently deleted." } }
+      }
+    },
+    "Вы можете в любой момент экспортировать свои данные (CSV или JSON) или полностью удалить их в разделе «Данные»." : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "You can export your data (CSV or JSON), or delete it completely, at any time in the Data section." } }
+      }
+    },
+    "Выберите одну или несколько целей — подберём подходящие привычки." : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Choose one or more goals — we'll suggest matching habits." } }
+      }
+    },
+    "Выполнений" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Completions" } }
+      }
+    },
+    "Выполнено" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Done" } }
+      }
+    },
+    "Выполнить" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Complete" } }
+      }
+    },
+    "Выполняйте привычки, чтобы открывать достижения и получать XP" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Complete habits to unlock achievements and earn XP" } }
+      }
+    },
+    "Готово" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Done" } }
+      }
+    },
+    "Данные" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Data" } }
+      }
+    },
+    "Динамика выполнения" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Completion Trend" } }
+      }
+    },
+    "Динамика за 30 дней" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "30-Day Trend" } }
+      }
+    },
+    "Добавить напоминание" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Add Reminder" } }
+      }
+    },
+    "Добавить привычку" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Add Habit" } }
+      }
+    },
+    "Добавить тестовые привычки" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Add Sample Habits" } }
+      }
+    },
+    "Добавьте первую привычку, чтобы начать путь" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Add your first habit to get started" } }
+      }
+    },
+    "Добавьте первую привычку, чтобы начать формировать полезные ритуалы" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Add your first habit to start building good rituals" } }
+      }
+    },
+    "Добро пожаловать в Habitly" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Welcome to Habitly" } }
+      }
+    },
+    "Достижения" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Achievements" } }
+      }
+    },
+    "Заблокировано" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Locked" } }
+      }
+    },
+    "Заморозки закончились" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "No Freezes Left" } }
+      }
+    },
+    "Заморозки стрика" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Streak Freezes" } }
+      }
+    },
+    "Заморозить этот день" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Freeze This Day" } }
+      }
+    },
+    "Зачем мне это" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Why It Matters" } }
+      }
+    },
+    "Зачем эта привычка" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Why This Habit" } }
+      }
+    },
+    "Иконка" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Icon" } }
+      }
+    },
+    "Иконка приложения" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "App Icon" } }
+      }
+    },
+    "Изменить" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Edit" } }
+      }
+    },
+    "Инсайты" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Insights" } }
+      }
+    },
+    "Как вас зовут?" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "What's your name?" } }
+      }
+    },
+    "Как только вы начнёте отмечать привычки, тут появятся графики и инсайты" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Once you start checking off habits, charts and insights will show up here" } }
+      }
+    },
+    "Календарь" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Calendar" } }
+      }
+    },
+    "Конфиденциальность" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Privacy" } }
+      }
+    },
+    "Лучшие привычки" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Best Habits" } }
+      }
+    },
+    "Лучший стрик" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Best Streak" } }
+      }
+    },
+    "Максимальный уровень достигнут 🎉" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Maximum level reached 🎉" } }
+      }
+    },
+    "Может быть позже" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Maybe Later" } }
+      }
+    },
+    "Мы подобрали привычки под ваши цели — оставьте те, что откликаются." : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "We picked habits based on your goals — keep the ones that resonate." } }
+      }
+    },
+    "Название" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Name" } }
+      }
+    },
+    "Награды" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Rewards" } }
+      }
+    },
+    "Награды впереди" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Rewards ahead" } }
+      }
+    },
+    "Напоминания" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Reminders" } }
+      }
+    },
+    "Начало недели" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Week Start" } }
+      }
+    },
+    "Начнём с этого" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Let's start with these" } }
+      }
+    },
+    "Не забывайте о привычках" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Don't forget your habits" } }
+      }
+    },
+    "О приложении" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "About" } }
+      }
+    },
+    "Осталось заморозок в этом месяце" : { },
+    "Отладка" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Debug" } }
+      }
+    },
+    "Отлично!" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Great!" } }
+      }
+    },
+    "Отмена" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Cancel" } }
+      }
+    },
+    "Пить воду" : { },
+    "Поделиться" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Share" } }
+      }
+    },
+    "Пока недостаточно данных" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Not enough data yet" } }
+      }
+    },
+    "Пока пусто" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Nothing here yet" } }
+      }
+    },
+    "Политика конфиденциальности" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Privacy Policy" } }
+      }
+    },
+    "Понедельник" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Monday" } }
+      }
+    },
+    "Привычек выполнено сегодня" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Habits completed today" } }
+      }
+    },
+    "Продолжить" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Continue" } }
+      }
+    },
+    "Продуктивный день" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Productive Day" } }
+      }
+    },
+    "Профиль" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Profile" } }
+      }
+    },
+    "Пропустить" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Skip" } }
+      }
+    },
+    "Пропустить день" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Skip day" } }
+      }
+    },
+    "Разрешить уведомления" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Allow Notifications" } }
+      }
+    },
+    "Сегодня" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Today" } }
+      }
+    },
+    "Сохранить" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Save" } }
+      }
+    },
+    "Статистика" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Statistics" } }
+      }
+    },
+    "Статистика появится здесь" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Your stats will appear here" } }
+      }
+    },
+    "Тактильная отдача" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Haptics" } }
+      }
+    },
+    "Текущий стрик" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Current Streak" } }
+      }
+    },
+    "Тип привычки" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Habit Type" } }
+      }
+    },
+    "Уведомления" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Notifications" } }
+      }
+    },
+    "Уведомления формируются и планируются полностью на устройстве. Доступ к отправке уведомлений запрашивается только с вашего явного согласия." : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Notifications are created and scheduled entirely on your device. Permission to send notifications is requested only with your explicit consent." } }
+      }
+    },
+    "Удалить" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Delete" } }
+      }
+    },
+    "Удалить все данные" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Delete All Data" } }
+      }
+    },
+    "Удалить всё" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Delete All" } }
+      }
+    },
+    "Формируйте полезные привычки маленькими шагами — красиво, спокойно и без давления." : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Build good habits in small steps — beautifully, calmly, without pressure." } }
+      }
+    },
+    "Хитмап" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Heatmap" } }
+      }
+    },
+    "Цвет" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Color" } }
+      }
+    },
+    "Цель" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Goal" } }
+      }
+    },
+    "Частота" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Frequency" } }
+      }
+    },
+    "Чего хотите добиться?" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "What do you want to achieve?" } }
+      }
+    },
+    "Читать" : { },
+    "Шаблоны" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Templates" } }
+      }
+    },
+    "Экспорт CSV" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Export CSV" } }
+      }
+    },
+    "Экспорт JSON" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Export JSON" } }
+      }
+    },
+    "Далее" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Next" } }
+      }
+    },
+    "Время дня" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Time of Day" } }
+      }
+    },
+    "Запись дня" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Day Entry" } }
+      }
+    },
+    "Итоги недели" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Weekly Summary" } }
+      }
+    },
+    "Новое достижение!" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "New Achievement!" } }
+      }
+    },
+    "Habitly хранит все данные о ваших привычках локально на устройстве. Мы не передаём их на серверы и не используем для рекламы или аналитики третьих сторон." : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Habitly stores all your habit data locally on your device. We never send it to servers or use it for advertising or third-party analytics." } }
+      }
+    }
+  },
+  "version" : "1.0"
+}

@@ -110,10 +110,20 @@ struct MonthCalendarView: View {
                 }
                 .buttonStyle(.plain)
                 .disabled(isFuture)
+                .accessibilityLabel(dayAccessibilityLabel(day, isCompleted: isCompleted, isFrozen: isFrozen))
             } else {
                 Color.clear.frame(height: 34)
             }
         }
+    }
+
+    private func dayAccessibilityLabel(_ day: Date, isCompleted: Bool, isFrozen: Bool) -> String {
+        let formatter = DateFormatter()
+        formatter.locale = Locale(identifier: "ru_RU")
+        formatter.dateFormat = "d MMMM"
+        let dateText = formatter.string(from: day)
+        if isFrozen { return "\(dateText), защищено заморозкой" }
+        return "\(dateText), \(isCompleted ? "выполнено" : "не выполнено")"
     }
 
     private func changeMonth(by value: Int) {

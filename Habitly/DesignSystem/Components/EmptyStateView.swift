@@ -3,9 +3,9 @@ import SwiftUI
 /// Переиспользуемый empty state: иконка, заголовок, подпись и опциональная кнопка действия.
 struct EmptyStateView: View {
     var symbol: String
-    var title: String
-    var message: String
-    var actionTitle: String?
+    var title: LocalizedStringKey
+    var message: LocalizedStringKey
+    var actionTitle: LocalizedStringKey?
     var action: (() -> Void)?
 
     @Environment(\.colorScheme) private var scheme

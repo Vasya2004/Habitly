@@ -28,6 +28,9 @@ struct BentoTile: View {
         .padding(Spacing.md)
         .frame(minHeight: isLarge ? 140 : 108)
         .cardStyle(cornerRadius: Radius.control)
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(label)
+        .accessibilityValue(value)
     }
 }
 

@@ -277,7 +277,7 @@ struct SettingsView: View {
     }
     #endif
 
-    private func section<Content: View>(title: String, @ViewBuilder content: () -> Content) -> some View {
+    private func section<Content: View>(title: LocalizedStringKey, @ViewBuilder content: () -> Content) -> some View {
         VStack(alignment: .leading, spacing: Spacing.xs) {
             Text(title)
                 .font(Typography.subheadline)

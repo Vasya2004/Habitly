@@ -63,6 +63,8 @@ struct MainTabBar: View {
             .padding(.vertical, Spacing.xs)
         }
         .buttonStyle(.plain)
+        .accessibilityLabel(tab.title)
+        .accessibilityAddTraits(selection == tab ? [.isButton, .isSelected] : .isButton)
     }
 
     private var addButton: some View {
@@ -80,6 +82,7 @@ struct MainTabBar: View {
         .buttonStyle(.plain)
         .pressableScale()
         .offset(y: -6)
+        .accessibilityLabel("Добавить привычку")
     }
 }
 

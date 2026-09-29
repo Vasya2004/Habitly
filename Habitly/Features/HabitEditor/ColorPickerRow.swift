@@ -28,6 +28,8 @@ struct ColorPickerRow: View {
                             .scaleEffect(selectedIndex == color.id ? 1.1 : 1)
                     }
                     .buttonStyle(.plain)
+                    .accessibilityLabel(color.name)
+                    .accessibilityAddTraits(selectedIndex == color.id ? [.isButton, .isSelected] : .isButton)
                 }
             }
             .padding(.vertical, Spacing.xxs)
