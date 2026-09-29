@@ -10,6 +10,7 @@ struct OnboardingView: View {
 
     @State private var step: Step = .welcome
     @State private var name: String = ""
+    @FocusState private var nameFocused: Bool
     @State private var selectedGoals: Set<HabitCategory> = []
     @State private var selectedTemplateIDs: Set<UUID> = []
 
@@ -40,6 +41,9 @@ struct OnboardingView: View {
                 .animation(Motion.spring, value: step)
             }
         }
+        .contentShape(Rectangle())
+        .onTapGesture { nameFocused = false }
+        .scrollDismissesKeyboard(.immediately)
     }
 
     // MARK: - Прогресс
@@ -71,9 +75,20 @@ struct OnboardingView: View {
                     .foregroundStyle(.white.opacity(0.7))
                 TextField("Необязательно", text: $name)
                     .textFieldStyle(.plain)
+                    .focused($nameFocused)
+                    .submitLabel(.done)
+                    .onSubmit { nameFocused = false }
                     .padding(Spacing.sm)
-                    .background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: Radius.control))
+                    .background(
+                        RoundedRectangle(cornerRadius: Radius.control)
+                            .fill(Color.white.opacity(0.08))
+                            .overlay(
+                                RoundedRectangle(cornerRadius: Radius.control)
+                                    .stroke(Color.white.opacity(0.15), lineWidth: 1)
+                            )
+                    )
                     .foregroundStyle(.white)
+                    .tint(.white)
             }
             .padding(.horizontal, Spacing.lg)
         }
