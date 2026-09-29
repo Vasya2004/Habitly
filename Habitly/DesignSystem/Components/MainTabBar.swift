@@ -26,6 +26,7 @@ enum MainTab: Int, CaseIterable, Identifiable {
 
 /// Кастомный таб-бар с плавающей кнопкой "+" по центру.
 struct MainTabBar: View {
+    @Environment(\.colorScheme) private var scheme
     @Binding var selection: MainTab
     var onAdd: () -> Void
 
@@ -41,8 +42,8 @@ struct MainTabBar: View {
         .padding(.horizontal, Spacing.sm)
         .padding(.vertical, Spacing.xs)
         .background(.ultraThinMaterial, in: Capsule())
-        .overlay(Capsule().strokeBorder(Color.white.opacity(0.12), lineWidth: 1))
-        .shadow(color: .black.opacity(0.2), radius: 20, x: 0, y: 10)
+        .overlay(Capsule().strokeBorder(scheme == .dark ? Color.white.opacity(0.12) : Color.black.opacity(0.08), lineWidth: 1))
+        .shadow(color: .black.opacity(scheme == .dark ? 0.2 : 0.12), radius: 20, x: 0, y: 10)
         .padding(.horizontal, Spacing.lg)
     }
 
@@ -59,12 +60,20 @@ struct MainTabBar: View {
                     .font(.system(size: 10, weight: .semibold))
             }
             .frame(maxWidth: .infinity)
-            .foregroundStyle(selection == tab ? Color.white : Color.white.opacity(0.45))
+            .foregroundStyle(tabColor(selected: selection == tab))
             .padding(.vertical, Spacing.xs)
         }
         .buttonStyle(.plain)
         .accessibilityLabel(tab.title)
         .accessibilityAddTraits(selection == tab ? [.isButton, .isSelected] : .isButton)
+    }
+
+    /// В тёмной теме — белый, в светлой — фирменный фиолетовый для активной и серый для неактивной вкладки.
+    private func tabColor(selected: Bool) -> Color {
+        if scheme == .dark {
+            return selected ? .white : Color.white.opacity(0.45)
+        }
+        return selected ? Color(hex: "7C5CFF") : Color.black.opacity(0.45)
     }
 
     private var addButton: some View {
