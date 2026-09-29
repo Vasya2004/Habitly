@@ -4,19 +4,38 @@ import WidgetKit
 struct MediumHabitsWidgetView: View {
     let data: HabitlyWidgetData
 
+    private var fraction: Double {
+        data.total > 0 ? Double(data.completed) / Double(data.total) : 0
+    }
+
     var body: some View {
-        VStack(alignment: .leading, spacing: 8) {
-            HStack {
-                Text("Сегодня")
-                    .font(.system(size: 14, weight: .bold, design: .rounded))
-                    .foregroundStyle(Color.primary)
-                Spacer()
-                Text("\(data.completed)/\(data.total)")
-                    .font(.system(size: 13, weight: .semibold))
-                    .foregroundStyle(Color.primary.opacity(0.7))
+        VStack(alignment: .leading, spacing: 10) {
+            VStack(alignment: .leading, spacing: 6) {
+                HStack(spacing: 6) {
+                    Text("Сегодня")
+                        .font(.system(size: 15, weight: .bold, design: .rounded))
+                        .foregroundStyle(Color.primary)
+                    if data.bestStreak > 0 {
+                        Text("🔥\(data.bestStreak)")
+                            .font(.system(size: 12, weight: .bold, design: .rounded))
+                            .foregroundStyle(Color.primary.opacity(0.7))
+                    }
+                    Spacer()
+                    Text("\(data.completed)/\(data.total)")
+                        .font(.system(size: 13, weight: .semibold, design: .rounded))
+                        .foregroundStyle(Color.primary.opacity(0.7))
+                }
+                GeometryReader { geo in
+                    ZStack(alignment: .leading) {
+                        Capsule().fill(Color.primary.opacity(0.1))
+                        Capsule().fill(Theme.brandGradient)
+                            .frame(width: max(fraction > 0 ? 6 : 0, geo.size.width * fraction))
+                    }
+                }
+                .frame(height: 5)
             }
 
-            VStack(spacing: 6) {
+            VStack(spacing: 8) {
                 ForEach(Array(data.habits.prefix(4))) { habit in
                     HabitRow(habit: habit)
                 }
@@ -41,7 +60,8 @@ private struct HabitRow: View {
 
             Text(habit.name)
                 .font(.system(size: 13, weight: .medium))
-                .foregroundStyle(Color.primary)
+                .foregroundStyle(Color.primary.opacity(habit.isCompleted ? 0.5 : 1))
+                .strikethrough(habit.isCompleted, color: Color.primary.opacity(0.4))
                 .lineLimit(1)
 
             Spacer()
