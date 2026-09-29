@@ -20,9 +20,9 @@ enum AppIconOption: String, CaseIterable, Identifiable {
 
     var gradient: LinearGradient {
         switch self {
-        case .default: return Theme.brandGradient
-        case .ember: return LinearGradient(colors: [Color(hex: "120A1A"), Color(hex: "C42A1E")], startPoint: .topLeading, endPoint: .bottomTrailing)
-        case .sunset: return LinearGradient(colors: [Color(hex: "FF5E62"), Color(hex: "FFB03B")], startPoint: .topLeading, endPoint: .bottomTrailing)
+        case .default: return LinearGradient(colors: [Color(hex: "FF5C6C"), Color(hex: "DE2A4E")], startPoint: .topLeading, endPoint: .bottomTrailing)
+        case .ember: return LinearGradient(colors: [Color(hex: "FFB03B"), Color(hex: "E03C28")], startPoint: .topLeading, endPoint: .bottomTrailing)
+        case .sunset: return LinearGradient(colors: [Color(hex: "8250EB"), Color(hex: "E63782")], startPoint: .topLeading, endPoint: .bottomTrailing)
         }
     }
 }
