@@ -2,8 +2,8 @@ import SwiftUI
 
 enum AppIconOption: String, CaseIterable, Identifiable {
     case `default`
-    case teal = "AppIcon-Teal"
-    case coral = "AppIcon-Coral"
+    case ember = "AppIcon-Ember"
+    case sunset = "AppIcon-Sunset"
 
     var id: String { rawValue }
 
@@ -13,16 +13,16 @@ enum AppIconOption: String, CaseIterable, Identifiable {
     var title: String {
         switch self {
         case .default: return "Классическая"
-        case .teal: return "Бирюзовая"
-        case .coral: return "Коралловая"
+        case .ember: return "Огненная"
+        case .sunset: return "Закатная"
         }
     }
 
     var gradient: LinearGradient {
         switch self {
         case .default: return Theme.brandGradient
-        case .teal: return LinearGradient(colors: [Color(hex: "38E1C4"), Color(hex: "3ABEEB")], startPoint: .topLeading, endPoint: .bottomTrailing)
-        case .coral: return LinearGradient(colors: [Color(hex: "FF7A59"), Color(hex: "FFB259")], startPoint: .topLeading, endPoint: .bottomTrailing)
+        case .ember: return LinearGradient(colors: [Color(hex: "120A1A"), Color(hex: "C42A1E")], startPoint: .topLeading, endPoint: .bottomTrailing)
+        case .sunset: return LinearGradient(colors: [Color(hex: "FF5E62"), Color(hex: "FFB03B")], startPoint: .topLeading, endPoint: .bottomTrailing)
         }
     }
 }

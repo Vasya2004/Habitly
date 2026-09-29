@@ -36,13 +36,13 @@ targets:
             CFBundleURLName: com.danko.habitly
         CFBundleIcons:
           CFBundleAlternateIcons:
-            AppIcon-Teal:
+            AppIcon-Ember:
               CFBundleIconFiles:
-                - AppIcon-Teal
+                - AppIcon-Ember
               UIPrerenderedIcon: false
-            AppIcon-Coral:
+            AppIcon-Sunset:
               CFBundleIconFiles:
-                - AppIcon-Coral
+                - AppIcon-Sunset
               UIPrerenderedIcon: false
     settings:
       base:
