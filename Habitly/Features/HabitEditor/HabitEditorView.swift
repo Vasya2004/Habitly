@@ -228,6 +228,7 @@ struct HabitEditorView: View {
             Task { await NotificationService.shared.cancelNotifications(for: habit) }
         }
 
+        WidgetRefreshService.reloadAll()
         onSaved?()
         dismiss()
     }

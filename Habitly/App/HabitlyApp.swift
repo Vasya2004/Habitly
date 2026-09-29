@@ -8,13 +8,7 @@ struct HabitlyApp: App {
     private let notificationDelegate: NotificationDelegate
 
     init() {
-        do {
-            container = try ModelContainer(
-                for: Habit.self, HabitLog.self, Profile.self, Achievement.self
-            )
-        } catch {
-            fatalError("Не удалось создать ModelContainer: \(error)")
-        }
+        container = SharedModelContainer.make()
 
         notificationDelegate = NotificationDelegate(container: container)
         UNUserNotificationCenter.current().delegate = notificationDelegate

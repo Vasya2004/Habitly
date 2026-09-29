@@ -111,6 +111,7 @@ final class TodayViewModel {
             GamificationService.applyCompletion(isCompleted: habit.isLogCompleted(entry), to: entry, profile: profile)
         }
         try? context.save()
+        WidgetRefreshService.reloadAll()
     }
 
     func skip(_ habit: Habit, context: ModelContext) {
@@ -119,6 +120,7 @@ final class TodayViewModel {
         entry.value = 0
         try? context.save()
         cancelTodayNotificationIfNeeded(for: habit)
+        WidgetRefreshService.reloadAll()
     }
 
     func togglePause(_ habit: Habit, context: ModelContext) {
@@ -129,12 +131,14 @@ final class TodayViewModel {
         } else {
             Task { await NotificationService.shared.scheduleNotifications(for: habit) }
         }
+        WidgetRefreshService.reloadAll()
     }
 
     func delete(_ habit: Habit, context: ModelContext) {
         Task { await NotificationService.shared.cancelNotifications(for: habit) }
         context.delete(habit)
         try? context.save()
+        WidgetRefreshService.reloadAll()
     }
 
     private func applyGamification(habit: Habit, entry: HabitLog, isCompletedNow: Bool, context: ModelContext, profile: Profile?, allHabits: [Habit]) {
@@ -144,6 +148,7 @@ final class TodayViewModel {
         }
         GamificationService.applyCompletion(isCompleted: isCompletedNow, to: entry, profile: profile)
         try? context.save()
+        WidgetRefreshService.reloadAll()
         guard isCompletedNow else { return }
 
         let existingKinds = Set((try? context.fetch(FetchDescriptor<Achievement>()))?.map(\.kind) ?? [])

@@ -58,6 +58,10 @@ struct RootView: View {
             Haptics.shared.isEnabled = profile?.hapticsEnabled ?? true
             await NotificationService.shared.rescheduleAll(habits: habits)
         }
+        .onOpenURL { url in
+            guard url.scheme == "habitly" else { return }
+            if url.host == "today" { selection = .today }
+        }
     }
 }
 

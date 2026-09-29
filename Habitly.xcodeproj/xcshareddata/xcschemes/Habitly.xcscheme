@@ -35,6 +35,20 @@
                ReferencedContainer = "container:Habitly.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "A7ACBFDD271A45842677C726"
+               BuildableName = "HabitlyWidgets.appex"
+               BlueprintName = "HabitlyWidgets"
+               ReferencedContainer = "container:Habitly.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
       </BuildActionEntries>
    </BuildAction>
    <TestAction
