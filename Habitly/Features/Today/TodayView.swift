@@ -125,7 +125,8 @@ struct TodayView: View {
         .listStyle(.plain)
         .scrollContentBackground(.hidden)
         .background(Color.clear)
-        .padding(.bottom, 70)
+        // Список идёт под стеклянное меню; отступ нужен только чтобы последняя карточка не оставалась под ним.
+        .contentMargins(.bottom, 96, for: .scrollContent)
     }
 
     private var header: some View {

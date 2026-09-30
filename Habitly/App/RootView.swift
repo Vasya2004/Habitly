@@ -48,7 +48,8 @@ struct RootView: View {
             MainTabBar(selection: $selection) {
                 isPresentingEditor = true
             }
-            .padding(.bottom, Spacing.xs)
+            // Ниже обычного: бар «парит» у самого нижнего края, рядом с индикатором «Домой».
+            .padding(.bottom, -Spacing.xs)
         }
         .sheet(isPresented: $isPresentingEditor) {
             HabitEditorView(mode: .create)

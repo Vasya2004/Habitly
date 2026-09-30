@@ -33,7 +33,20 @@ struct MainTabBar: View {
     private let leftTabs: [MainTab] = [.today, .stats]
     private let rightTabs: [MainTab] = [.achievements, .settings]
 
+    @Namespace private var selectionNamespace
+
     var body: some View {
+        Group {
+            if #available(iOS 26.0, *) {
+                glassBar
+            } else {
+                materialBar
+            }
+        }
+        .padding(.horizontal, Spacing.lg)
+    }
+
+    private var items: some View {
         HStack(spacing: 0) {
             ForEach(leftTabs) { tab in tabButton(tab) }
             addButton
@@ -41,10 +54,22 @@ struct MainTabBar: View {
         }
         .padding(.horizontal, Spacing.sm)
         .padding(.vertical, Spacing.xs)
-        .background(.ultraThinMaterial, in: Capsule())
-        .overlay(Capsule().strokeBorder(scheme == .dark ? Color.white.opacity(0.12) : Color.black.opacity(0.08), lineWidth: 1))
-        .shadow(color: .black.opacity(scheme == .dark ? 0.2 : 0.12), radius: 20, x: 0, y: 10)
-        .padding(.horizontal, Spacing.lg)
+    }
+
+    /// iOS 26+: настоящее стекло Liquid Glass, реагирует на касание и подсвечивает содержимое под собой.
+    @available(iOS 26.0, *)
+    private var glassBar: some View {
+        GlassEffectContainer {
+            items.glassEffect(.regular.interactive(), in: .capsule)
+        }
+    }
+
+    /// iOS 17–25: прежний матовый материал.
+    private var materialBar: some View {
+        items
+            .background(.ultraThinMaterial, in: Capsule())
+            .overlay(Capsule().strokeBorder(scheme == .dark ? Color.white.opacity(0.12) : Color.black.opacity(0.08), lineWidth: 1))
+            .shadow(color: .black.opacity(scheme == .dark ? 0.2 : 0.12), radius: 20, x: 0, y: 10)
     }
 
     private func tabButton(_ tab: MainTab) -> some View {
@@ -62,6 +87,13 @@ struct MainTabBar: View {
             .frame(maxWidth: .infinity)
             .foregroundStyle(tabColor(selected: selection == tab))
             .padding(.vertical, Spacing.xs)
+            .background {
+                if selection == tab {
+                    Capsule()
+                        .fill(Color(hex: "7C5CFF").opacity(scheme == .dark ? 0.28 : 0.14))
+                        .matchedGeometryEffect(id: "tabSelection", in: selectionNamespace)
+                }
+            }
         }
         .buttonStyle(.plain)
         .accessibilityLabel(tab.title)
