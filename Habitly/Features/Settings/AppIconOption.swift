@@ -52,7 +52,7 @@ struct AppIconPickerRow: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: Spacing.xs) {
-            LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: Spacing.md), count: 3), alignment: .leading, spacing: Spacing.md) {
+            LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: Spacing.md), count: 3), alignment: .center, spacing: Spacing.md) {
                 ForEach(AppIconOption.allCases) { option in
                     iconButton(option)
                 }
@@ -87,7 +87,11 @@ struct AppIconPickerRow: View {
                 Text(option.title)
                     .font(Typography.caption)
                     .foregroundStyle(Theme.secondaryText(for: scheme))
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.8)
             }
+            .frame(maxWidth: .infinity)
+            .contentShape(Rectangle())
         }
         .buttonStyle(.plain)
         .accessibilityAddTraits(current == option ? [.isButton, .isSelected] : .isButton)
