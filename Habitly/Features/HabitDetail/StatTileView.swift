@@ -16,6 +16,7 @@ struct StatTileView: View {
                 .foregroundStyle(tint)
             Text(value)
                 .font(Typography.mediumNumber)
+                .fitsWidth()
                 .foregroundStyle(Theme.primaryText(for: scheme))
                 .contentTransition(.numericText())
             Text(label)

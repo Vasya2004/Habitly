@@ -26,6 +26,7 @@ struct SettingsView: View {
             VStack(alignment: .leading, spacing: Spacing.lg) {
                 Text("Настройки")
                     .font(Typography.largeTitle)
+                    .fitsWidth()
                     .foregroundStyle(Theme.primaryText(for: scheme))
                     .frame(maxWidth: .infinity, alignment: .leading)
 

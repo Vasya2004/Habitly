@@ -37,6 +37,7 @@ struct AchievementUnlockedView: View {
                 VStack(spacing: Spacing.xs) {
                     Text(kind.title)
                         .font(Typography.title)
+                        .fitsWidth(lines: 2, minScale: 0.7)
                         .foregroundStyle(.white)
                         .multilineTextAlignment(.center)
                     Text(kind.subtitle)

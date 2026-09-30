@@ -89,6 +89,8 @@ struct AppIconPickerRow: View {
                     .foregroundStyle(Theme.secondaryText(for: scheme))
                     .lineLimit(1)
                     .minimumScaleFactor(0.8)
+                    // Три колонки: крупнее этого размера подписи не помещаются.
+                    .dynamicTypeSize(...DynamicTypeSize.xxxLarge)
             }
             .frame(maxWidth: .infinity)
             .contentShape(Rectangle())

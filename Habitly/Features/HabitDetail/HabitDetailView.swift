@@ -130,6 +130,7 @@ struct HabitDetailView: View {
                 VStack(alignment: .leading, spacing: 2) {
                     Text(habit.name)
                         .font(Typography.title)
+                        .fitsWidth(lines: 2, minScale: 0.7)
                         .foregroundStyle(.white)
                     Text(habit.timeOfDay.title)
                         .font(Typography.caption)

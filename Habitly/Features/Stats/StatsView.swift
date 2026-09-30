@@ -5,10 +5,18 @@ import Charts
 struct StatsView: View {
     @Environment(\.colorScheme) private var scheme
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @Environment(\.dynamicTypeSize) private var typeSize
     @Query(sort: \Habit.sortOrder) private var habits: [Habit]
 
     @State private var period: StatsPeriod = .month
     @State private var animateChart = false
+
+    /// При крупном шрифте плитки идут в одну колонку — в узкой подписи режутся слова.
+    private var tileColumns: [GridItem] {
+        typeSize.isAccessibilitySize
+            ? [GridItem(.flexible())]
+            : [GridItem(.flexible()), GridItem(.flexible())]
+    }
 
     private var summary: StatsSummary {
         StatsCalculator.summary(habits: habits, period: period)
@@ -43,6 +51,7 @@ struct StatsView: View {
         VStack(alignment: .leading, spacing: Spacing.sm) {
             Text("Статистика")
                 .font(Typography.largeTitle)
+                .fitsWidth()
                 .foregroundStyle(Theme.primaryText(for: scheme))
 
             Picker("Период", selection: $period) {
@@ -63,7 +72,7 @@ struct StatsView: View {
     }
 
     private var secondaryTiles: some View {
-        LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: Spacing.sm) {
+        LazyVGrid(columns: tileColumns, spacing: Spacing.sm) {
             BentoTile(
                 symbol: "calendar",
                 value: summary.bestWeekday.map { StatsCalculator.weekdayName($0) } ?? "—",

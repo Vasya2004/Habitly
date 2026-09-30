@@ -45,3 +45,10 @@ private extension Font.Weight {
         }
     }
 }
+
+extension View {
+    /// Крупный текст (заголовки, цифры) при большом Dynamic Type сжимается, а не разрывается посреди слова.
+    func fitsWidth(lines: Int = 1, minScale: CGFloat = 0.5) -> some View {
+        lineLimit(lines).minimumScaleFactor(minScale)
+    }
+}

@@ -1,3 +1,4 @@
+#if DEBUG
 import Foundation
 import SwiftData
 
@@ -49,3 +50,4 @@ enum SampleDataSeeder {
         try? context.save()
     }
 }
+#endif

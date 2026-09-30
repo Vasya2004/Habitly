@@ -19,6 +19,9 @@ struct HabitlyApp: App {
     var body: some Scene {
         WindowGroup {
             RootView()
+                // Ограничиваем максимальный размер шрифта: крупный текст поддерживается,
+                // но самые крайние значения ломают карточки и кольца.
+                .dynamicTypeSize(...DynamicTypeSize.accessibility2)
         }
         .modelContainer(container)
     }

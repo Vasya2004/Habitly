@@ -31,6 +31,8 @@ struct WeekStrip: View {
                 dayCell(day)
             }
         }
+        // Семь колонок в ряд: крупнее этого размера цифры перестают помещаться.
+        .dynamicTypeSize(...DynamicTypeSize.xxxLarge)
     }
 
     private func dayCell(_ day: Date) -> some View {
@@ -46,10 +48,14 @@ struct WeekStrip: View {
         } label: {
             VStack(spacing: 4) {
                 Text(weekdayFormatter.string(from: day).uppercased())
-                    .font(.system(size: 10, weight: .semibold))
+                    .font(Typography.caption.weight(.semibold))
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.5)
                     .foregroundStyle(isSelected ? .white : Theme.secondaryText(for: scheme))
                 Text("\(calendar.component(.day, from: day))")
                     .font(Typography.roundedFont(size: 16, weight: .bold))
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.5)
                     .foregroundStyle(isSelected ? .white : Theme.primaryText(for: scheme).opacity(isFuture ? 0.3 : 1))
             }
             .frame(maxWidth: .infinity)
@@ -66,6 +72,8 @@ struct WeekStrip: View {
         }
         .buttonStyle(.plain)
         .disabled(isFuture)
+        .accessibilityLabel(day.formatted(.dateTime.weekday(.wide).day().month(.wide)))
+        .accessibilityAddTraits(isSelected ? [.isButton, .isSelected] : .isButton)
     }
 }
 

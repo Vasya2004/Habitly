@@ -5,6 +5,8 @@ struct TodayView: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(\.colorScheme) private var scheme
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @Environment(\.dynamicTypeSize) private var typeSize
+    @ScaledMetric(relativeTo: .largeTitle) private var ringSize: CGFloat = 108
 
     @Query(sort: \Habit.sortOrder) private var habits: [Habit]
     @Query private var profiles: [Profile]
@@ -130,6 +132,9 @@ struct TodayView: View {
             Text(greeting)
                 .font(Typography.largeTitle)
                 .foregroundStyle(Theme.primaryText(for: scheme))
+                .lineLimit(2)
+                .minimumScaleFactor(0.6)
+                .accessibilityAddTraits(.isHeader)
             Text(dateText)
                 .font(Typography.subheadline)
                 .foregroundStyle(Theme.secondaryText(for: scheme))
@@ -141,21 +146,32 @@ struct TodayView: View {
         let progress = dayProgress
         let fraction = progress.total > 0 ? Double(progress.completed) / Double(progress.total) : 0
 
-        return HStack(spacing: Spacing.md) {
+        let layout = typeSize.isAccessibilitySize
+            ? AnyLayout(VStackLayout(alignment: .leading, spacing: Spacing.md))
+            : AnyLayout(HStackLayout(spacing: Spacing.md))
+
+        return layout {
             ZStack {
                 ProgressRing(progress: fraction, lineWidth: 12)
                 VStack(spacing: 0) {
                     Text("\(progress.completed)")
                         .font(Typography.bigNumber)
                         .foregroundStyle(Theme.primaryText(for: scheme))
+                        .lineLimit(1)
+                        .minimumScaleFactor(0.4)
                         .contentTransition(.numericText())
                         .animation(reduceMotion ? nil : Motion.spring, value: progress.completed)
                     Text("из \(progress.total)")
                         .font(Typography.caption)
                         .foregroundStyle(Theme.secondaryText(for: scheme))
+                        .lineLimit(1)
+                        .minimumScaleFactor(0.6)
                 }
+                .padding(.horizontal, 22)
             }
-            .frame(width: 108, height: 108)
+            .frame(width: ringSize, height: ringSize)
+            .accessibilityElement(children: .ignore)
+            .accessibilityLabel("Выполнено \(progress.completed) из \(progress.total)")
 
             VStack(alignment: .leading, spacing: Spacing.xxs) {
                 Text(progress.total == 0 ? "На сегодня ничего не запланировано" : progressHeadline(fraction: fraction))
@@ -165,7 +181,7 @@ struct TodayView: View {
                     .font(Typography.caption)
                     .foregroundStyle(Theme.secondaryText(for: scheme))
             }
-            Spacer()
+            .frame(maxWidth: .infinity, alignment: .leading)
         }
         .padding(Spacing.md)
         .cardStyle()

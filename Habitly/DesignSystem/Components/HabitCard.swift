@@ -16,41 +16,53 @@ struct HabitCard: View {
 
     @Environment(\.colorScheme) private var scheme
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @Environment(\.dynamicTypeSize) private var typeSize
     @State private var didBounce = false
 
     var body: some View {
-        HStack(spacing: Spacing.sm) {
-            iconBadge
+        // При крупном шрифте кнопки уходят под текст, иначе название режется посреди слова.
+        let isLarge = typeSize.isAccessibilitySize
+        let layout = isLarge
+            ? AnyLayout(VStackLayout(alignment: .leading, spacing: Spacing.sm))
+            : AnyLayout(HStackLayout(spacing: Spacing.sm))
 
-            VStack(alignment: .leading, spacing: 2) {
-                Text(title)
-                    .font(Typography.headline)
-                    .foregroundStyle(Theme.primaryText(for: scheme))
-                Text(subtitle)
-                    .font(Typography.caption)
-                    .foregroundStyle(Theme.secondaryText(for: scheme))
-            }
+        return layout {
+            HStack(spacing: Spacing.sm) {
+                iconBadge
 
-            Spacer(minLength: Spacing.xs)
-
-            if streak > 0 {
-                HStack(spacing: 2) {
-                    Image(systemName: "flame.fill")
-                        .foregroundStyle(.orange)
-                        .font(.system(size: 12))
-                    Text("\(streak)")
-                        .font(Typography.subheadline)
-                        .contentTransition(.numericText())
+                VStack(alignment: .leading, spacing: 2) {
+                    Text(title)
+                        .font(Typography.headline)
+                        .foregroundStyle(Theme.primaryText(for: scheme))
+                    Text(subtitle)
+                        .font(Typography.caption)
+                        .foregroundStyle(Theme.secondaryText(for: scheme))
                 }
-                .foregroundStyle(Theme.secondaryText(for: scheme))
-                .accessibilityElement(children: .ignore)
-                .accessibilityLabel("Стрик \(streak) дней")
+                .frame(maxWidth: .infinity, alignment: .leading)
             }
 
-            if showsStepper {
-                stepper
-            } else {
-                completeButton
+            HStack(spacing: Spacing.sm) {
+                if isLarge { Spacer(minLength: 0) }
+
+                if streak > 0 {
+                    HStack(spacing: 2) {
+                        Image(systemName: "flame.fill")
+                            .foregroundStyle(.orange)
+                            .font(.system(size: 12))
+                        Text("\(streak)")
+                            .font(Typography.subheadline)
+                            .contentTransition(.numericText())
+                    }
+                    .foregroundStyle(Theme.secondaryText(for: scheme))
+                    .accessibilityElement(children: .ignore)
+                    .accessibilityLabel("Стрик \(streak) дней")
+                }
+
+                if showsStepper {
+                    stepper
+                } else {
+                    completeButton
+                }
             }
         }
         .padding(Spacing.sm)
@@ -81,6 +93,8 @@ struct HabitCard: View {
         } label: {
             Image(systemName: isCompleted ? "checkmark.circle.fill" : "circle")
                 .font(.system(size: 28))
+                .frame(minWidth: 44, minHeight: 44)
+                .contentShape(Rectangle())
                 .foregroundStyle(isCompleted ? AnyShapeStyle(color.gradient) : AnyShapeStyle(Color.gray.opacity(0.3)))
                 .scaleEffect(didBounce && !reduceMotion ? 1.25 : 1)
                 .animation(reduceMotion ? nil : Motion.bouncy, value: didBounce)
@@ -91,12 +105,14 @@ struct HabitCard: View {
     }
 
     private var stepper: some View {
-        HStack(spacing: Spacing.xs) {
+        HStack(spacing: 0) {
             Button {
                 onDecrement?()
                 Haptics.shared.selectionChanged()
             } label: {
                 Image(systemName: "minus.circle.fill")
+                    .frame(minWidth: 44, minHeight: 44)
+                    .contentShape(Rectangle())
             }
             .accessibilityLabel("Уменьшить: \(title)")
 
@@ -105,6 +121,8 @@ struct HabitCard: View {
                 Haptics.shared.impact(.soft)
             } label: {
                 Image(systemName: "plus.circle.fill")
+                    .frame(minWidth: 44, minHeight: 44)
+                    .contentShape(Rectangle())
             }
             .accessibilityLabel("Увеличить: \(title)")
         }
