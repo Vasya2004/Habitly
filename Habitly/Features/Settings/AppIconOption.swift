@@ -4,6 +4,12 @@ enum AppIconOption: String, CaseIterable, Identifiable {
     case `default`
     case ember = "AppIcon-Ember"
     case sunset = "AppIcon-Sunset"
+    case night = "AppIcon-Night"
+    case neon = "AppIcon-Neon"
+    case ocean = "AppIcon-Ocean"
+    case mint = "AppIcon-Mint"
+    case lavender = "AppIcon-Lavender"
+    case gold = "AppIcon-Gold"
 
     var id: String { rawValue }
 
@@ -15,6 +21,12 @@ enum AppIconOption: String, CaseIterable, Identifiable {
         case .default: return "Классическая"
         case .ember: return "Огненная"
         case .sunset: return "Закатная"
+        case .night: return "Ночная"
+        case .neon: return "Неон"
+        case .ocean: return "Океан"
+        case .mint: return "Мята"
+        case .lavender: return "Лаванда"
+        case .gold: return "Золото"
         }
     }
 
@@ -22,8 +34,7 @@ enum AppIconOption: String, CaseIterable, Identifiable {
     var previewImageName: String {
         switch self {
         case .default: return "IconPreviewClassic"
-        case .ember: return "IconPreviewEmber"
-        case .sunset: return "IconPreviewSunset"
+        default: return "IconPreview" + rawValue.replacingOccurrences(of: "AppIcon-", with: "")
         }
     }
 }
@@ -41,7 +52,7 @@ struct AppIconPickerRow: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: Spacing.xs) {
-            HStack(spacing: Spacing.md) {
+            LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: Spacing.md), count: 3), alignment: .leading, spacing: Spacing.md) {
                 ForEach(AppIconOption.allCases) { option in
                     iconButton(option)
                 }

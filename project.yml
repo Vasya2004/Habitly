@@ -43,7 +43,7 @@ targets:
         CURRENT_PROJECT_VERSION: "1"
         SWIFT_EMIT_LOC_STRINGS: YES
         ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
-        ASSETCATALOG_COMPILER_ALTERNATE_APPICON_NAMES: "AppIcon-Ember AppIcon-Sunset"
+        ASSETCATALOG_COMPILER_ALTERNATE_APPICON_NAMES: "AppIcon-Ember AppIcon-Sunset AppIcon-Night AppIcon-Neon AppIcon-Ocean AppIcon-Mint AppIcon-Lavender AppIcon-Gold"
         CODE_SIGN_ENTITLEMENTS: Habitly/App/Habitly.entitlements
     dependencies:
       - target: HabitlyWidgets

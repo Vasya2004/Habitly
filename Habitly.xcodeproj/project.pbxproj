@@ -815,7 +815,7 @@
 		3906A6CBDC7D1C7A5CFD4D36 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_ALTERNATE_APPICON_NAMES = "AppIcon-Ember AppIcon-Sunset";
+				ASSETCATALOG_COMPILER_ALTERNATE_APPICON_NAMES = "AppIcon-Ember AppIcon-Sunset AppIcon-Night AppIcon-Neon AppIcon-Ocean AppIcon-Mint AppIcon-Lavender AppIcon-Gold";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = Habitly/App/Habitly.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
@@ -874,7 +874,7 @@
 		4DE2675B8F17C9AA7F3721B8 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_ALTERNATE_APPICON_NAMES = "AppIcon-Ember AppIcon-Sunset";
+				ASSETCATALOG_COMPILER_ALTERNATE_APPICON_NAMES = "AppIcon-Ember AppIcon-Sunset AppIcon-Night AppIcon-Neon AppIcon-Ocean AppIcon-Mint AppIcon-Lavender AppIcon-Gold";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = Habitly/App/Habitly.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
