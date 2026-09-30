@@ -23,6 +23,9 @@ struct HabitCard: View {
     @State private var burstTrigger = 0
     @State private var pulse = false
     @State private var iconPop = false
+    /// Перелив цвета по карточке: прогресс 0...1 и видимость управляются отдельно, чтобы не «откатываться» назад.
+    @State private var washProgress: CGFloat = 0
+    @State private var washVisible = false
     /// Эффект показываем только после нажатия пользователя, а не при смене даты или перерисовке списка.
     @State private var awaitingUserCompletion = false
 
@@ -74,32 +77,70 @@ struct HabitCard: View {
         }
         .padding(Spacing.sm)
         .background {
-            RoundedRectangle(cornerRadius: Radius.card, style: .continuous)
-                .fill(color.gradient.opacity(isCompleted ? 0.14 : 0))
+            CompletionWash(progress: washProgress, color: color)
+                .opacity(washVisible ? 1 : 0)
+                .clipShape(RoundedRectangle(cornerRadius: Radius.card, style: .continuous))
         }
         .cardStyle()
         .overlay {
             RoundedRectangle(cornerRadius: Radius.card, style: .continuous)
                 .strokeBorder(color.gradient.opacity(isCompleted ? 0.6 : 0), lineWidth: 1.5)
         }
-        .overlay {
-            RippleWash(trigger: burstTrigger, color: color) { size in
-                CGPoint(x: size.width - Spacing.sm - 22, y: typeSize.isAccessibilitySize ? size.height - Spacing.sm - 22 : size.height / 2)
-            }
-            .clipShape(RoundedRectangle(cornerRadius: Radius.card, style: .continuous))
-        }
         .scaleEffect(pulse ? 1.03 : 1)
         .animation(reduceMotion ? nil : Motion.spring, value: isCompleted)
-        .onAppear { checkProgress = isCompleted ? 1 : 0 }
+        .onAppear {
+            checkProgress = isCompleted ? 1 : 0
+            setWash(filled: isCompleted)
+        }
         .onChange(of: isCompleted) { _, done in
             if done {
-                if awaitingUserCompletion { celebrate() } else { checkProgress = 1 }
+                if awaitingUserCompletion {
+                    celebrate()
+                } else {
+                    checkProgress = 1
+                    setWash(filled: true)
+                }
             } else {
                 checkProgress = 0
+                fadeOutWash()
             }
             awaitingUserCompletion = false
         }
         .accessibilityElement(children: .contain)
+    }
+
+    /// Мгновенно выставляет перелив в готовое состояние (без анимации).
+    private func setWash(filled: Bool) {
+        var transaction = Transaction()
+        transaction.disablesAnimations = true
+        withTransaction(transaction) {
+            washProgress = filled ? 1 : 0
+            washVisible = filled
+        }
+    }
+
+    /// Снятие отметки: цвет плавно гаснет на месте — без обратного движения.
+    private func fadeOutWash() {
+        withAnimation(.easeOut(duration: 0.35)) { washVisible = false }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) {
+            guard !isCompleted else { return }
+            var transaction = Transaction()
+            transaction.disablesAnimations = true
+            withTransaction(transaction) { washProgress = 0 }
+        }
+    }
+
+    /// Медленный перелив слева направо, один раз.
+    private func startWash() {
+        var transaction = Transaction()
+        transaction.disablesAnimations = true
+        withTransaction(transaction) {
+            washProgress = 0
+            washVisible = true
+        }
+        DispatchQueue.main.async {
+            withAnimation(.easeInOut(duration: 1.6)) { washProgress = 1 }
+        }
     }
 
     private func resetAwaitingFlag() {
@@ -110,9 +151,11 @@ struct HabitCard: View {
     private func celebrate() {
         guard !reduceMotion else {
             checkProgress = 1
+            setWash(filled: true)
             return
         }
         burstTrigger += 1
+        startWash()
         checkProgress = 0
         withAnimation(.easeOut(duration: 0.3).delay(0.1)) { checkProgress = 1 }
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.14) {

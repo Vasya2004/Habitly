@@ -146,32 +146,49 @@ struct ParticleBurst: View {
     }
 }
 
-// MARK: - Волна цвета
+// MARK: - Перелив цвета
 
-/// Цвет привычки «выливается» из точки нажатия и заливает всю карточку.
-struct RippleWash: View {
-    var trigger: Int
+/// Цвет привычки один раз перетекает по карточке слева направо и остаётся подкраской.
+/// Идёт строго в одну сторону: вместе с фронтом бежит светлая полоса и гаснет у правого края.
+struct CompletionWash: View {
+    /// 0 — карточка чистая, 1 — залита полностью.
+    var progress: CGFloat
     var color: HabitColor
-    /// Точка, из которой расходится волна, в координатах карточки.
-    var origin: (CGSize) -> CGPoint
 
     var body: some View {
         GeometryReader { geo in
-            Color.clear
-                .keyframeAnimator(initialValue: ProgressValue(), trigger: trigger) { _, value in
-                    let p = value.progress
-                    let diameter = max(geo.size.width, geo.size.height) * 2.6
-                    Circle()
-                        .fill(color.gradient)
-                        .frame(width: diameter, height: diameter)
-                        .scaleEffect(max(p, 0.001))
-                        .opacity(p == 0 || p == 1 ? 0 : 0.34 * (1 - pow(p, 1.5)))
-                        .position(origin(geo.size))
-                } keyframes: { _ in
-                    KeyframeTrack(\.progress) {
-                        CubicKeyframe(1, duration: 0.8)
+            let w = geo.size.width
+            let h = geo.size.height
+            let feather = w * 0.3           // мягкость переднего края
+            let span = w + feather
+
+            ZStack(alignment: .leading) {
+                // постоянная подкраска, открывающаяся слева направо
+                Rectangle()
+                    .fill(color.gradient.opacity(0.16))
+                    .mask(alignment: .leading) {
+                        LinearGradient(
+                            stops: [
+                                .init(color: .black, location: 0),
+                                .init(color: .black, location: w / span),
+                                .init(color: .clear, location: 1)
+                            ],
+                            startPoint: .leading, endPoint: .trailing
+                        )
+                        .frame(width: span)
+                        .offset(x: progress * span - span)
                     }
-                }
+
+                // светлая полоса на переднем крае
+                LinearGradient(
+                    colors: [color.start.opacity(0), color.start.opacity(0.32), color.start.opacity(0)],
+                    startPoint: .leading, endPoint: .trailing
+                )
+                .frame(width: w * 0.42, height: h)
+                .position(x: progress * span - feather / 2, y: h / 2)
+                .opacity(sin(Double.pi * Double(min(max(progress, 0), 1))))
+            }
+            .frame(width: w, height: h, alignment: .leading)
         }
         .allowsHitTesting(false)
         .accessibilityHidden(true)
