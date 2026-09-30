@@ -34,6 +34,7 @@ struct MainTabBar: View {
     private let rightTabs: [MainTab] = [.achievements, .settings]
 
     @Namespace private var selectionNamespace
+    @State private var tabFrames: [MainTab: CGRect] = [:]
 
     var body: some View {
         Group {
@@ -54,6 +55,22 @@ struct MainTabBar: View {
         }
         .padding(.horizontal, Spacing.sm)
         .padding(.vertical, Spacing.xs)
+        .coordinateSpace(name: "tabBar")
+        // Можно вести пальцем по меню — стеклянный индикатор перетекает за пальцем.
+        .simultaneousGesture(
+            DragGesture(minimumDistance: 8, coordinateSpace: .named("tabBar"))
+                .onChanged { drag in
+                    if let tab = tabFrames.first(where: { $0.value.contains(drag.location) })?.key {
+                        select(tab)
+                    }
+                }
+        )
+    }
+
+    private func select(_ tab: MainTab) {
+        guard tab != selection else { return }
+        Haptics.shared.selectionChanged()
+        withAnimation(Motion.bouncy) { selection = tab }
     }
 
     /// iOS 26+: настоящее стекло Liquid Glass, реагирует на касание и подсвечивает содержимое под собой.
@@ -74,8 +91,7 @@ struct MainTabBar: View {
 
     private func tabButton(_ tab: MainTab) -> some View {
         Button {
-            Haptics.shared.selectionChanged()
-            withAnimation(Motion.tap) { selection = tab }
+            select(tab)
         } label: {
             VStack(spacing: 2) {
                 Image(systemName: tab.symbol)
@@ -87,17 +103,29 @@ struct MainTabBar: View {
             .frame(maxWidth: .infinity)
             .foregroundStyle(tabColor(selected: selection == tab))
             .padding(.vertical, Spacing.xs)
-            .background {
-                if selection == tab {
-                    Capsule()
-                        .fill(Color(hex: "7C5CFF").opacity(scheme == .dark ? 0.28 : 0.14))
-                        .matchedGeometryEffect(id: "tabSelection", in: selectionNamespace)
-                }
-            }
+            .background { selectionIndicator(for: tab) }
         }
         .buttonStyle(.plain)
+        .onGeometryChange(for: CGRect.self) { $0.frame(in: .named("tabBar")) } action: { tabFrames[tab] = $0 }
         .accessibilityLabel(tab.title)
         .accessibilityAddTraits(selection == tab ? [.isButton, .isSelected] : .isButton)
+    }
+
+    /// Индикатор выбранной вкладки: на iOS 26 — стеклянная «капля», которая перетекает между вкладками.
+    @ViewBuilder
+    private func selectionIndicator(for tab: MainTab) -> some View {
+        if selection == tab {
+            if #available(iOS 26.0, *) {
+                Capsule()
+                    .fill(Color.clear)
+                    .glassEffect(.regular.tint(Color(hex: "7C5CFF").opacity(0.35)).interactive(), in: .capsule)
+                    .glassEffectID("tabSelection", in: selectionNamespace)
+            } else {
+                Capsule()
+                    .fill(Color(hex: "7C5CFF").opacity(scheme == .dark ? 0.28 : 0.14))
+                    .matchedGeometryEffect(id: "tabSelection", in: selectionNamespace)
+            }
+        }
     }
 
     /// В тёмной теме — белый, в светлой — фирменный фиолетовый для активной и серый для неактивной вкладки.
