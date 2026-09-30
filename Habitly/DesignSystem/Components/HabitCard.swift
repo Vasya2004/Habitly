@@ -43,10 +43,10 @@ struct HabitCard: View {
                 VStack(alignment: .leading, spacing: 2) {
                     Text(title)
                         .font(Typography.headline)
-                        .foregroundStyle(Theme.primaryText(for: scheme).opacity(isCompleted ? 0.7 : 1))
+                        .foregroundStyle(Theme.primaryText(for: scheme).opacity(isCompleted ? 0.85 : 1))
                     Text(subtitle)
                         .font(Typography.caption)
-                        .foregroundStyle(isCompleted ? AnyShapeStyle(color.gradient) : AnyShapeStyle(Theme.secondaryText(for: scheme)))
+                        .foregroundStyle(subtitleStyle)
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
             }
@@ -171,6 +171,14 @@ struct HabitCard: View {
             }
         }
         Haptics.shared.success()
+    }
+
+    /// Подпись выполненной привычки: на тёмной теме — цвет привычки, на светлой — тёмнее, чтобы читалась на подкраске.
+    private var subtitleStyle: AnyShapeStyle {
+        guard isCompleted else { return AnyShapeStyle(Theme.secondaryText(for: scheme)) }
+        return scheme == .dark
+            ? AnyShapeStyle(color.gradient)
+            : AnyShapeStyle(Theme.primaryText(for: scheme).opacity(0.65))
     }
 
     private var iconBadge: some View {

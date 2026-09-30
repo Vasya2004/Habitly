@@ -165,7 +165,7 @@ struct CompletionWash: View {
             ZStack(alignment: .leading) {
                 // постоянная подкраска, открывающаяся слева направо
                 Rectangle()
-                    .fill(color.gradient.opacity(0.16))
+                    .fill(color.gradient.opacity(0.34))
                     .mask(alignment: .leading) {
                         LinearGradient(
                             stops: [
@@ -181,10 +181,10 @@ struct CompletionWash: View {
 
                 // светлая полоса на переднем крае
                 LinearGradient(
-                    colors: [color.start.opacity(0), color.start.opacity(0.32), color.start.opacity(0)],
+                    colors: [color.start.opacity(0), color.end.opacity(0.7), color.start.opacity(0)],
                     startPoint: .leading, endPoint: .trailing
                 )
-                .frame(width: w * 0.42, height: h)
+                .frame(width: w * 0.5, height: h)
                 .position(x: progress * span - feather / 2, y: h / 2)
                 .opacity(sin(Double.pi * Double(min(max(progress, 0), 1))))
             }
