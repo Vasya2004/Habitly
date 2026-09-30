@@ -45,6 +45,8 @@ struct ScheduleEditorView: View {
                         }
                 }
                 .buttonStyle(.plain)
+                .accessibilityLabel(Calendar.current.weekdaySymbols[weekday - 1])
+                .accessibilityAddTraits(isOn ? [.isButton, .isSelected] : .isButton)
             }
         }
     }

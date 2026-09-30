@@ -226,6 +226,9 @@ struct TodayView: View {
         .onTapGesture {
             navigationPath.append(habit)
         }
+        .accessibilityAction(named: Text("Открыть детали")) {
+            navigationPath.append(habit)
+        }
         .swipeActions(edge: .leading, allowsFullSwipe: true) {
             Button {
                 if habit.type == .boolean {

@@ -59,6 +59,8 @@ struct LargeWeekWidgetView: View {
                                 .foregroundStyle(habit.isCompleted ? AnyShapeStyle(habit.accentColor.gradient) : AnyShapeStyle(Color.primary.opacity(0.35)))
                         }
                         .buttonStyle(.plain)
+                        .accessibilityLabel(habit.name)
+                        .accessibilityValue(habit.isCompleted ? "Выполнено" : "Не выполнено")
                     }
                 }
             }
