@@ -11,80 +11,266 @@ struct CheckmarkShape: Shape {
     }
 }
 
-private struct BurstValues { var progress = 0.0 }
+private struct ProgressValue { var progress = 0.0 }
 
-/// Салют при выполнении: кольцо-волна и искры, разлетающиеся от галочки. Рисуется по одному триггеру.
-struct CompletionBurst: View {
+// MARK: - Частицы
+
+/// Салют из частиц с физикой: разлёт, торможение, падение под силой тяжести, вращение.
+/// Рисуется в Canvas по одному триггеру; в покое ничего не рендерит.
+struct ParticleBurst: View {
     var trigger: Int
     var color: HabitColor
 
-    private let spark = Color(hex: "FFC65C")
-
-    var body: some View {
-        Color.clear
-            .frame(width: 44, height: 44)
-            .keyframeAnimator(initialValue: BurstValues(), trigger: trigger) { _, value in
-                burst(progress: value.progress)
-            } keyframes: { _ in
-                KeyframeTrack(\.progress) {
-                    CubicKeyframe(1, duration: 0.75)
-                }
-            }
-            .allowsHitTesting(false)
-            .accessibilityHidden(true)
+    private struct Particle {
+        let angle: Double
+        let speed: Double
+        let size: Double
+        let kind: Int          // 0 — круг, 1 — искра, 2 — конфетти
+        let spin: Double
+        let life: Double
+        let colorIndex: Int
     }
 
-    private func burst(progress p: Double) -> some View {
-        let eased = 1 - pow(1 - p, 3)
-        return ZStack {
-            // волна
-            Circle()
-                .stroke(color.start, lineWidth: max(0.5, 3 * (1 - p)))
-                .frame(width: 30, height: 30)
-                .scaleEffect(0.5 + eased * 2.0)
-                .opacity((1 - p) * 0.7)
+    @State private var particles: [Particle] = []
+    @State private var startDate: Date?
 
-            // искры
-            ForEach(0..<12, id: \.self) { i in
-                let angle = Double(i) / 12 * 2 * .pi
-                let long = i % 2 == 0
-                Circle()
-                    .fill([color.start, color.end, spark][i % 3])
-                    .frame(width: long ? 6 : 4, height: long ? 6 : 4)
-                    .scaleEffect(1 - p * 0.7)
-                    .offset(x: cos(angle) * (long ? 32 : 22) * eased, y: sin(angle) * (long ? 32 : 22) * eased)
-                    .opacity(1 - pow(p, 2))
+    private let duration = 1.6
+    private let gold = Color(hex: "FFC65C")
+
+    var body: some View {
+        TimelineView(.animation(minimumInterval: nil, paused: startDate == nil)) { timeline in
+            Canvas { context, size in
+                guard let startDate else { return }
+                let t = timeline.date.timeIntervalSince(startDate)
+                guard t >= 0, t < duration else { return }
+                let origin = CGPoint(x: size.width / 2, y: size.height / 2)
+                drawGlow(&context, origin: origin, t: t)
+                drawRings(&context, origin: origin, t: t)
+                drawParticles(&context, origin: origin, t: t)
             }
         }
-        .frame(width: 44, height: 44)
-        .opacity(p == 0 || p == 1 ? 0 : 1)
+        .allowsHitTesting(false)
+        .accessibilityHidden(true)
+        .onChange(of: trigger) { _, _ in spawn() }
+    }
+
+    private func spawn() {
+        particles = (0..<34).map { i in
+            Particle(
+                angle: Double.random(in: 0..<(2 * .pi)),
+                speed: Double.random(in: 150...360),
+                size: Double.random(in: 4...9),
+                kind: i % 5 == 0 ? 1 : (i % 3 == 0 ? 2 : 0),
+                spin: Double.random(in: -9...9),
+                life: Double.random(in: 0.9...1.5),
+                colorIndex: Int.random(in: 0..<5)
+            )
+        }
+        startDate = .now
+        DispatchQueue.main.asyncAfter(deadline: .now() + duration + 0.1) { startDate = nil }
+    }
+
+    // MARK: рисование
+
+    private func drawGlow(_ context: inout GraphicsContext, origin: CGPoint, t: Double) {
+        let span = 0.45
+        guard t < span else { return }
+        let p = t / span
+        let radius = 26 + 40 * p
+        let rect = CGRect(x: origin.x - radius, y: origin.y - radius, width: radius * 2, height: radius * 2)
+        context.fill(
+            Path(ellipseIn: rect),
+            with: .radialGradient(
+                Gradient(colors: [color.start.opacity(0.55 * (1 - p)), color.start.opacity(0)]),
+                center: origin, startRadius: 0, endRadius: radius
+            )
+        )
+    }
+
+    private func drawRings(_ context: inout GraphicsContext, origin: CGPoint, t: Double) {
+        for (index, delay) in [0.0, 0.12].enumerated() {
+            let p = (t - delay) / 0.55
+            guard p > 0, p < 1 else { continue }
+            let eased = 1 - pow(1 - p, 3)
+            let radius = 16 + 62 * eased
+            let rect = CGRect(x: origin.x - radius, y: origin.y - radius, width: radius * 2, height: radius * 2)
+            let tint = index == 0 ? color.start : color.end
+            context.stroke(Path(ellipseIn: rect), with: .color(tint.opacity((1 - p) * 0.75)), lineWidth: max(0.6, 3.2 * (1 - p)))
+        }
+    }
+
+    private func drawParticles(_ context: inout GraphicsContext, origin: CGPoint, t: Double) {
+        let palette = [color.start, color.end, gold, color.start, color.end]
+        let drag = 3.2
+        let gravity = 320.0
+        for particle in particles {
+            let age = t / particle.life
+            guard age < 1 else { continue }
+            let travel = (1 - exp(-drag * t)) / drag
+            let x = origin.x + cos(particle.angle) * particle.speed * travel
+            let y = origin.y + sin(particle.angle) * particle.speed * travel + 0.5 * gravity * t * t
+
+            let pop = min(t / 0.08, 1)
+            let fade = age < 0.6 ? 1 : max(0, 1 - (age - 0.6) / 0.4)
+            let scale = pop * (1 - 0.55 * age)
+
+            var ctx = context
+            ctx.translateBy(x: x, y: y)
+            ctx.rotate(by: .radians(particle.spin * t))
+            ctx.opacity = fade
+            let s = particle.size * scale
+            let fill = GraphicsContext.Shading.color(palette[particle.colorIndex])
+            switch particle.kind {
+            case 1:
+                ctx.fill(sparkle(radius: s * 1.6), with: fill)
+            case 2:
+                ctx.fill(Path(roundedRect: CGRect(x: -s * 0.9, y: -s * 0.4, width: s * 1.8, height: s * 0.8), cornerRadius: 1.5), with: fill)
+            default:
+                ctx.fill(Path(ellipseIn: CGRect(x: -s / 2, y: -s / 2, width: s, height: s)), with: fill)
+            }
+        }
+    }
+
+    /// Четырёхконечная искра.
+    private func sparkle(radius r: Double) -> Path {
+        var path = Path()
+        let inner = r * 0.28
+        for i in 0..<8 {
+            let angle = Double(i) * .pi / 4 - .pi / 2
+            let radius = i % 2 == 0 ? r : inner
+            let point = CGPoint(x: cos(angle) * radius, y: sin(angle) * radius)
+            if i == 0 { path.move(to: point) } else { path.addLine(to: point) }
+        }
+        path.closeSubpath()
+        return path
     }
 }
 
-/// Блик, один раз пробегающий по карточке слева направо.
-struct ShimmerSweep: View {
+// MARK: - Волна цвета
+
+/// Цвет привычки «выливается» из точки нажатия и заливает всю карточку.
+struct RippleWash: View {
     var trigger: Int
-    var color: Color
+    var color: HabitColor
+    /// Точка, из которой расходится волна, в координатах карточки.
+    var origin: (CGSize) -> CGPoint
 
     var body: some View {
         GeometryReader { geo in
             Color.clear
-                .keyframeAnimator(initialValue: BurstValues(), trigger: trigger) { _, value in
+                .keyframeAnimator(initialValue: ProgressValue(), trigger: trigger) { _, value in
                     let p = value.progress
-                    LinearGradient(
-                        colors: [color.opacity(0), color.opacity(0.5), color.opacity(0)],
-                        startPoint: .leading, endPoint: .trailing
-                    )
-                    .frame(width: geo.size.width * 0.55)
-                    .offset(x: -geo.size.width * 0.55 + p * geo.size.width * 1.55)
-                    .opacity(p == 0 || p == 1 ? 0 : 1)
+                    let diameter = max(geo.size.width, geo.size.height) * 2.6
+                    Circle()
+                        .fill(color.gradient)
+                        .frame(width: diameter, height: diameter)
+                        .scaleEffect(max(p, 0.001))
+                        .opacity(p == 0 || p == 1 ? 0 : 0.34 * (1 - pow(p, 1.5)))
+                        .position(origin(geo.size))
                 } keyframes: { _ in
                     KeyframeTrack(\.progress) {
-                        LinearKeyframe(1, duration: 0.85)
+                        CubicKeyframe(1, duration: 0.8)
                     }
                 }
         }
         .allowsHitTesting(false)
         .accessibilityHidden(true)
+    }
+}
+
+// MARK: - Награда XP
+
+/// «+10 XP», всплывающая над галочкой.
+struct XPFloater: View {
+    var trigger: Int
+    var amount: Int
+    var color: HabitColor
+
+    private struct Values {
+        var offset = -22.0
+        var opacity = 0.0
+        var scale = 0.6
+    }
+
+    var body: some View {
+        // Анимация применяется прямо к значку, чтобы он сохранял собственный размер.
+        Text("+\(amount) XP")
+            .font(.system(size: 13, weight: .heavy, design: .rounded))
+            .foregroundStyle(.white)
+            .lineLimit(1)
+            .fixedSize()
+            .padding(.horizontal, 10)
+            .padding(.vertical, 4)
+            .background(Capsule().fill(color.gradient))
+            .shadow(color: color.start.opacity(0.55), radius: 6, y: 2)
+            .keyframeAnimator(initialValue: Values(), trigger: trigger) { content, v in
+                content
+                    .scaleEffect(v.scale)
+                    // левее галочки, чтобы не перекрывать счётчик секции над карточкой
+                    .offset(x: -40, y: v.offset)
+                    .opacity(v.opacity)
+            } keyframes: { _ in
+                KeyframeTrack(\.offset) {
+                    CubicKeyframe(-46, duration: 1.2)
+                }
+                KeyframeTrack(\.opacity) {
+                    LinearKeyframe(0, duration: 0.12)
+                    CubicKeyframe(1, duration: 0.14)
+                    LinearKeyframe(1, duration: 0.6)
+                    CubicKeyframe(0, duration: 0.4)
+                }
+                KeyframeTrack(\.scale) {
+                    LinearKeyframe(0.6, duration: 0.12)
+                    SpringKeyframe(1.12, duration: 0.25, spring: .bouncy)
+                    SpringKeyframe(1, duration: 0.3)
+                }
+            }
+            .allowsHitTesting(false)
+            .accessibilityHidden(true)
+    }
+}
+
+// MARK: - Вспышка вокруг иконки
+
+/// Кольцо, расходящееся от иконки привычки, когда цель выполнена.
+struct IconFlash: View {
+    var trigger: Int
+    var color: HabitColor
+
+    var body: some View {
+        Color.clear
+            .keyframeAnimator(initialValue: ProgressValue(), trigger: trigger) { _, value in
+                let p = value.progress
+                Circle()
+                    .strokeBorder(color.gradient, lineWidth: max(0.5, 4 * (1 - p)))
+                    .scaleEffect(1 + p * 0.7)
+                    .opacity(p == 0 || p == 1 ? 0 : (1 - p) * 0.85)
+            } keyframes: { _ in
+                KeyframeTrack(\.progress) {
+                    LinearKeyframe(0, duration: 0.25)
+                    CubicKeyframe(1, duration: 0.6)
+                }
+            }
+            .allowsHitTesting(false)
+            .accessibilityHidden(true)
+    }
+}
+
+// MARK: - Отскок кнопки
+
+private struct ButtonScale { var scale = 1.0 }
+
+extension View {
+    /// Кнопка «сжимается» под пальцем и пружинно отскакивает при каждом срабатывании триггера.
+    func completionSquash(trigger: Int) -> some View {
+        keyframeAnimator(initialValue: ButtonScale(), trigger: trigger) { content, value in
+            content.scaleEffect(value.scale)
+        } keyframes: { _ in
+            KeyframeTrack(\.scale) {
+                CubicKeyframe(0.78, duration: 0.09)
+                SpringKeyframe(1.28, duration: 0.22, spring: .bouncy)
+                SpringKeyframe(1.0, duration: 0.3, spring: .smooth)
+            }
+        }
     }
 }

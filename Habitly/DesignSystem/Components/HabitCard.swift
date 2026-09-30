@@ -13,14 +13,16 @@ struct HabitCard: View {
     var onIncrement: (() -> Void)?
     var onDecrement: (() -> Void)?
     var onToggle: () -> Void
+    /// Награда, всплывающая при выполнении; nil — не показывать.
+    var xpReward: Int? = GamificationService.xpPerCompletion
 
     @Environment(\.colorScheme) private var scheme
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @Environment(\.dynamicTypeSize) private var typeSize
-    @State private var didBounce = false
     @State private var checkProgress: CGFloat = 0
     @State private var burstTrigger = 0
     @State private var pulse = false
+    @State private var iconPop = false
     /// Эффект показываем только после нажатия пользователя, а не при смене даты или перерисовке списка.
     @State private var awaitingUserCompletion = false
 
@@ -81,8 +83,10 @@ struct HabitCard: View {
                 .strokeBorder(color.gradient.opacity(isCompleted ? 0.6 : 0), lineWidth: 1.5)
         }
         .overlay {
-            ShimmerSweep(trigger: burstTrigger, color: color.start)
-                .clipShape(RoundedRectangle(cornerRadius: Radius.card, style: .continuous))
+            RippleWash(trigger: burstTrigger, color: color) { size in
+                CGPoint(x: size.width - Spacing.sm - 22, y: typeSize.isAccessibilitySize ? size.height - Spacing.sm - 22 : size.height / 2)
+            }
+            .clipShape(RoundedRectangle(cornerRadius: Radius.card, style: .continuous))
         }
         .scaleEffect(pulse ? 1.03 : 1)
         .animation(reduceMotion ? nil : Motion.spring, value: isCompleted)
@@ -102,7 +106,7 @@ struct HabitCard: View {
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.8) { awaitingUserCompletion = false }
     }
 
-    /// Полный эффект выполнения: галочка рисуется, салют, блик и лёгкая «пульсация» карточки.
+    /// Полный эффект выполнения по времени: сжатие кнопки → галочка → салют и волна → пульс карточки → иконка.
     private func celebrate() {
         guard !reduceMotion else {
             checkProgress = 1
@@ -110,10 +114,18 @@ struct HabitCard: View {
         }
         burstTrigger += 1
         checkProgress = 0
-        withAnimation(.easeOut(duration: 0.3).delay(0.08)) { checkProgress = 1 }
-        withAnimation(.easeOut(duration: 0.12)) { pulse = true }
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.12) {
-            withAnimation(Motion.bouncy) { pulse = false }
+        withAnimation(.easeOut(duration: 0.3).delay(0.1)) { checkProgress = 1 }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.14) {
+            withAnimation(.easeOut(duration: 0.12)) { pulse = true }
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.12) {
+                withAnimation(Motion.bouncy) { pulse = false }
+            }
+        }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
+            withAnimation(.spring(response: 0.3, dampingFraction: 0.45)) { iconPop = true }
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.22) {
+                withAnimation(Motion.bouncy) { iconPop = false }
+            }
         }
         Haptics.shared.success()
     }
@@ -138,7 +150,8 @@ struct HabitCard: View {
                     .transition(.scale.combined(with: .opacity))
             }
         }
-        .background { if showsStepper { CompletionBurst(trigger: burstTrigger, color: color) } }
+        .background { IconFlash(trigger: burstTrigger, color: color) }
+        .scaleEffect(iconPop ? 1.18 : 1)
         .accessibilityElement(children: .ignore)
         .accessibilityLabel("\(title), \(subtitle)")
     }
@@ -148,10 +161,8 @@ struct HabitCard: View {
             let willComplete = !isCompleted
             awaitingUserCompletion = willComplete
             resetAwaitingFlag()
-            didBounce = true
             onToggle()
             if !willComplete { Haptics.shared.impact(.soft) }
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) { didBounce = false }
         } label: {
             ZStack {
                 Circle()
@@ -170,16 +181,23 @@ struct HabitCard: View {
                     .padding(6)
             }
             .frame(width: 30, height: 30)
-            .background { CompletionBurst(trigger: burstTrigger, color: color) }
+            .completionSquash(trigger: burstTrigger)
+            .background { ParticleBurst(trigger: burstTrigger, color: color).frame(width: 320, height: 200) }
+            .overlay(alignment: .center) { xpFloater }
             .frame(minWidth: 44, minHeight: 44)
             .contentShape(Rectangle())
-            .scaleEffect(didBounce && !reduceMotion ? 1.22 : 1)
-            .animation(reduceMotion ? nil : Motion.bouncy, value: didBounce)
             .animation(reduceMotion ? nil : Motion.bouncy, value: isCompleted)
         }
         .buttonStyle(.plain)
         .accessibilityLabel(isCompleted ? Text("Выполнено") : Text("Отметить выполненным"))
         .accessibilityAddTraits(isCompleted ? [.isButton, .isSelected] : .isButton)
+    }
+
+    @ViewBuilder
+    private var xpFloater: some View {
+        if let xpReward, !reduceMotion {
+            XPFloater(trigger: burstTrigger, amount: xpReward, color: color)
+        }
     }
 
     private var stepper: some View {
@@ -203,6 +221,8 @@ struct HabitCard: View {
                 Image(systemName: "plus.circle.fill")
                     .frame(minWidth: 44, minHeight: 44)
                     .contentShape(Rectangle())
+                    .background { ParticleBurst(trigger: burstTrigger, color: color).frame(width: 320, height: 200) }
+                    .overlay(alignment: .center) { xpFloater }
             }
             .accessibilityLabel("Увеличить: \(title)")
         }
