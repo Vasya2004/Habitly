@@ -4,7 +4,7 @@ import SwiftUI
 struct StatTileView: View {
     var symbol: String
     var value: String
-    var label: String
+    var label: LocalizedStringKey
     var tint: LinearGradient
 
     @Environment(\.colorScheme) private var scheme

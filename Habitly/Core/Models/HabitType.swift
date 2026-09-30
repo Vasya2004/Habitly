@@ -9,9 +9,9 @@ enum HabitType: String, Codable, CaseIterable, Identifiable {
 
     var title: String {
         switch self {
-        case .boolean: return "Да / Нет"
-        case .count: return "Количество"
-        case .timer: return "Таймер"
+        case .boolean: return String(localized: "Да / Нет")
+        case .count: return String(localized: "Количество")
+        case .timer: return String(localized: "Таймер")
         }
     }
 }
@@ -25,9 +25,9 @@ enum ScheduleType: String, Codable, CaseIterable, Identifiable {
 
     var title: String {
         switch self {
-        case .everyDay: return "Каждый день"
-        case .daysOfWeek: return "Дни недели"
-        case .timesPerWeek: return "X раз в неделю"
+        case .everyDay: return String(localized: "Каждый день")
+        case .daysOfWeek: return String(localized: "Дни недели")
+        case .timesPerWeek: return String(localized: "X раз в неделю")
         }
     }
 }
@@ -42,10 +42,10 @@ enum TimeOfDay: String, Codable, CaseIterable, Identifiable {
 
     var title: String {
         switch self {
-        case .morning: return "Утро"
-        case .afternoon: return "День"
-        case .evening: return "Вечер"
-        case .anytime: return "В любое время"
+        case .morning: return String(localized: "Утро")
+        case .afternoon: return String(localized: "День")
+        case .evening: return String(localized: "Вечер")
+        case .anytime: return String(localized: "В любое время")
         }
     }
 

@@ -55,7 +55,7 @@ struct StatsView: View {
                 .foregroundStyle(Theme.primaryText(for: scheme))
 
             Picker("Период", selection: $period) {
-                ForEach(StatsPeriod.allCases) { Text($0.rawValue).tag($0) }
+                ForEach(StatsPeriod.allCases) { Text($0.title).tag($0) }
             }
             .pickerStyle(.segmented)
         }
@@ -66,7 +66,7 @@ struct StatsView: View {
         BentoTile(
             symbol: "percent",
             value: "\(Int((summary.overallRate * 100).rounded()))%",
-            label: "Выполнено за период «\(period.rawValue.lowercased())»",
+            label: "Выполнено за период «\(period.title.lowercased())»",
             isLarge: true
         )
     }
@@ -207,16 +207,16 @@ struct StatsView: View {
     private var insights: [String] {
         var result: [String] = []
         if let weekday = summary.bestWeekday, summary.bestWeekdayCount > 0 {
-            result.append("Вы чаще всего выполняете привычки по \(StatsCalculator.weekdayName(weekday).lowercased())ам")
+            result.append(String(localized: "Самый продуктивный день недели — \(StatsCalculator.weekdayName(weekday))"))
         }
         if let time = summary.bestTimeOfDay, summary.bestTimeOfDayCount > 0 {
-            result.append("Больше всего привычек вы выполняете в это время дня: «\(time.title.lowercased())»")
+            result.append(String(localized: "Больше всего привычек вы выполняете в это время дня: «\(time.title.lowercased())»"))
         }
         if let best = summary.bestHabits.first {
-            result.append("Лучшая привычка периода — «\(best.habit.name)» с результатом \(Int((best.rate * 100).rounded()))%")
+            result.append(String(localized: "Лучшая привычка периода — «\(best.habit.name)» с результатом \(Int((best.rate * 100).rounded()))%"))
         }
         if result.isEmpty {
-            result.append("Отмечайте привычки регулярно, чтобы здесь появились персональные инсайты")
+            result.append(String(localized: "Отмечайте привычки регулярно, чтобы здесь появились персональные инсайты"))
         }
         return result
     }

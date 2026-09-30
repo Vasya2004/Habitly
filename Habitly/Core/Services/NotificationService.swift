@@ -26,16 +26,16 @@ final class NotificationService {
     /// Несколько дружелюбных, не шаблонных вариантов текста — выбираются случайно,
     /// чтобы одна и та же формулировка не повторялась каждый день.
     private let phrases: [String] = [
-        "Небольшой шаг для «%@» — и день пойдёт по плану 🌿",
-        "«%@» уже ждёт вас. Пара минут — и готово!",
-        "Самое время для «%@». Вы справитесь 💪",
-        "Не забудьте про «%@» — будущее «я» скажет спасибо",
-        "Сегодняшняя доза «%@» ещё не выполнена — исправим?",
-        "«%@»: маленькая привычка, большой эффект со временем ✨",
-        "Заскочите на минутку к «%@» — и закрывайте пункт",
-        "Хороший момент, чтобы вспомнить про «%@»",
-        "«%@» не отметится сама — но у вас всё получится",
-        "Ежедневная забота о себе начинается с «%@»"
+        String(localized: "Небольшой шаг для «%@» — и день пойдёт по плану 🌿"),
+        String(localized: "«%@» уже ждёт вас. Пара минут — и готово!"),
+        String(localized: "Самое время для «%@». Вы справитесь 💪"),
+        String(localized: "Не забудьте про «%@» — будущее «я» скажет спасибо"),
+        String(localized: "Сегодняшняя доза «%@» ещё не выполнена — исправим?"),
+        String(localized: "«%@»: маленькая привычка, большой эффект со временем ✨"),
+        String(localized: "Заскочите на минутку к «%@» — и закрывайте пункт"),
+        String(localized: "Хороший момент, чтобы вспомнить про «%@»"),
+        String(localized: "«%@» не отметится сама — но у вас всё получится"),
+        String(localized: "Ежедневная забота о себе начинается с «%@»")
     ]
 
     private init() {}
@@ -55,8 +55,8 @@ final class NotificationService {
     }
 
     func registerCategories() {
-        let complete = UNNotificationAction(identifier: NotificationAction.complete.rawValue, title: "Выполнено", options: [])
-        let snooze = UNNotificationAction(identifier: NotificationAction.snooze.rawValue, title: "Напомнить через час", options: [])
+        let complete = UNNotificationAction(identifier: NotificationAction.complete.rawValue, title: String(localized: "Выполнено"), options: [])
+        let snooze = UNNotificationAction(identifier: NotificationAction.snooze.rawValue, title: String(localized: "Напомнить через час"), options: [])
         let category = UNNotificationCategory(
             identifier: Self.categoryIdentifier,
             actions: [complete, snooze],
@@ -146,7 +146,7 @@ final class NotificationService {
     func scheduleSnooze(habitID: String, habitName: String) {
         let content = UNMutableNotificationContent()
         content.title = "Habitly"
-        content.body = String(format: phrases.randomElement() ?? "Не забудьте про «%@»", habitName)
+        content.body = String(format: phrases.randomElement() ?? String(localized: "Не забудьте про «%@»"), habitName)
         content.sound = .default
         content.categoryIdentifier = Self.categoryIdentifier
         content.userInfo = ["habitID": habitID]

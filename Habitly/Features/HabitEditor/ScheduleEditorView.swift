@@ -7,7 +7,7 @@ struct ScheduleEditorView: View {
     @Binding var timesPerWeek: Int
 
     @Environment(\.colorScheme) private var scheme
-    private let weekdaySymbols = ["П", "В", "С", "Ч", "П", "С", "В"] // начиная с понедельника
+    private let weekdaySymbols = Calendar.current.mondayFirstVeryShortWeekdaySymbols // начиная с понедельника
     private let weekdayOrder = [2, 3, 4, 5, 6, 7, 1] // Calendar.weekday: 1=вс...7=сб
 
     var body: some View {

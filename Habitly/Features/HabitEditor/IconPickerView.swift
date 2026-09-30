@@ -8,9 +8,15 @@ struct IconPickerView: View {
     @State private var mode: Mode = .emoji
 
     private enum Mode: String, CaseIterable, Identifiable {
-        case emoji = "Эмодзи"
-        case symbols = "Символы"
+        case emoji, symbols
         var id: String { rawValue }
+
+        var title: String {
+            switch self {
+            case .emoji: return String(localized: "Эмодзи")
+            case .symbols: return String(localized: "Символы")
+            }
+        }
     }
 
     private static let emojis = [
@@ -33,7 +39,7 @@ struct IconPickerView: View {
     var body: some View {
         VStack(spacing: Spacing.sm) {
             Picker("Тип иконки", selection: $mode) {
-                ForEach(Mode.allCases) { Text($0.rawValue).tag($0) }
+                ForEach(Mode.allCases) { Text($0.title).tag($0) }
             }
             .pickerStyle(.segmented)
 

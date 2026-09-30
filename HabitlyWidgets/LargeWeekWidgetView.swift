@@ -4,7 +4,7 @@ import WidgetKit
 struct LargeWeekWidgetView: View {
     let data: HabitlyWidgetData
 
-    private let weekdaySymbols = ["П", "В", "С", "Ч", "П", "С", "В"]
+    private let weekdaySymbols = Calendar.current.mondayFirstVeryShortWeekdaySymbols
 
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
@@ -60,7 +60,7 @@ struct LargeWeekWidgetView: View {
                         }
                         .buttonStyle(.plain)
                         .accessibilityLabel(habit.name)
-                        .accessibilityValue(habit.isCompleted ? "Выполнено" : "Не выполнено")
+                        .accessibilityValue(habit.isCompleted ? Text("Выполнено") : Text("Не выполнено"))
                     }
                 }
             }

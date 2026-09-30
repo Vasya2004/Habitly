@@ -17,8 +17,16 @@ struct HabitDetailView: View {
     private let calendar: Calendar = .current
 
     private enum RatePeriod: String, CaseIterable, Identifiable {
-        case week = "Неделя", month = "Месяц", allTime = "Всё время"
+        case week, month, allTime
         var id: String { rawValue }
+
+        var title: String {
+            switch self {
+            case .week: return String(localized: "Неделя")
+            case .month: return String(localized: "Месяц")
+            case .allTime: return String(localized: "Всё время")
+            }
+        }
     }
 
     private struct IdentifiableDate: Identifiable {
@@ -173,7 +181,7 @@ struct HabitDetailView: View {
                     .foregroundStyle(Theme.primaryText(for: scheme))
                 Spacer()
                 Picker("Период", selection: $ratePeriod) {
-                    ForEach(RatePeriod.allCases) { Text($0.rawValue).tag($0) }
+                    ForEach(RatePeriod.allCases) { Text($0.title).tag($0) }
                 }
                 .pickerStyle(.menu)
                 .tint(habit.accentColor.start)
@@ -182,7 +190,7 @@ struct HabitDetailView: View {
             LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: Spacing.sm) {
                 StatTileView(symbol: "flame.fill", value: "\(stats.currentStreak)", label: "Текущий стрик", tint: habit.accentColor.gradient)
                 StatTileView(symbol: "trophy.fill", value: "\(stats.bestStreak)", label: "Лучший стрик", tint: habit.accentColor.gradient)
-                StatTileView(symbol: "percent", value: "\(Int((periodRate * 100).rounded()))%", label: "Выполнено (\(ratePeriod.rawValue.lowercased()))", tint: habit.accentColor.gradient)
+                StatTileView(symbol: "percent", value: "\(Int((periodRate * 100).rounded()))%", label: "Выполнено (\(ratePeriod.title.lowercased()))", tint: habit.accentColor.gradient)
                 StatTileView(symbol: "checkmark.seal.fill", value: "\(stats.totalCompletions)", label: "Всего выполнений", tint: habit.accentColor.gradient)
             }
         }
@@ -192,7 +200,7 @@ struct HabitDetailView: View {
     private var chart: some View {
         Chart(chartData) { point in
             BarMark(
-                x: .value("День", point.date, unit: .day),
+                x: .value("Дата", point.date, unit: .day),
                 y: .value("Выполнение", point.fraction)
             )
             .foregroundStyle(habit.accentColor.gradient)

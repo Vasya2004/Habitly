@@ -2,11 +2,17 @@ import Foundation
 import SwiftData
 
 enum StatsPeriod: String, CaseIterable, Identifiable {
-    case week = "Неделя"
-    case month = "Месяц"
-    case year = "Год"
+    case week, month, year
 
     var id: String { rawValue }
+
+    var title: String {
+        switch self {
+        case .week: return String(localized: "Неделя")
+        case .month: return String(localized: "Месяц")
+        case .year: return String(localized: "Год")
+        }
+    }
 
     func range(asOf: Date, calendar: Calendar) -> (start: Date, end: Date) {
         let end = calendar.startOfDay(for: asOf)
@@ -54,7 +60,7 @@ enum StatsCalculator {
     /// Название дня недели по числу Calendar.weekday (1 = воскресенье).
     static func weekdayName(_ weekday: Int) -> String {
         var calendar = Calendar(identifier: .gregorian)
-        calendar.locale = Locale(identifier: "ru_RU")
+        calendar.locale = Locale.current
         let symbols = calendar.standaloneWeekdaySymbols
         guard (1...7).contains(weekday) else { return "" }
         return symbols[weekday - 1].capitalized

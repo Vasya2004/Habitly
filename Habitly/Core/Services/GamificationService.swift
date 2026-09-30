@@ -22,16 +22,16 @@ enum GamificationService {
 
     /// Пороги XP и названия уровней.
     private static let levels: [(threshold: Int, title: String)] = [
-        (0, "Новичок"),
-        (100, "Ученик"),
-        (250, "Практик"),
-        (450, "Настойчивый"),
-        (700, "Уверенный"),
-        (1000, "Мастер привычек"),
-        (1400, "Эксперт"),
-        (1900, "Чемпион"),
-        (2500, "Легенда"),
-        (3200, "Гуру дисциплины")
+        (0, String(localized: "Новичок")),
+        (100, String(localized: "Ученик")),
+        (250, String(localized: "Практик")),
+        (450, String(localized: "Настойчивый")),
+        (700, String(localized: "Уверенный")),
+        (1000, String(localized: "Мастер привычек")),
+        (1400, String(localized: "Эксперт")),
+        (1900, String(localized: "Чемпион")),
+        (2500, String(localized: "Легенда")),
+        (3200, String(localized: "Гуру дисциплины"))
     ]
 
     static func levelInfo(for xp: Int) -> LevelInfo {

@@ -73,7 +73,7 @@ private struct HabitRow: View {
             }
             .buttonStyle(.plain)
             .accessibilityLabel(habit.name)
-            .accessibilityValue(habit.isCompleted ? "Выполнено" : "Не выполнено")
+            .accessibilityValue(habit.isCompleted ? Text("Выполнено") : Text("Не выполнено"))
         }
     }
 }

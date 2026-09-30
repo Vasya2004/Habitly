@@ -40,10 +40,10 @@ struct HabitEditorView: View {
 
     private var previewSubtitle: String {
         switch draft.type {
-        case .boolean: return "Не выполнено"
+        case .boolean: return String(localized: "Не выполнено")
         case .count, .timer:
             let goal = draft.goalValue.truncatingRemainder(dividingBy: 1) == 0 ? String(Int(draft.goalValue)) : String(format: "%.1f", draft.goalValue)
-            return "0 из \(goal) \(draft.unit)"
+            return String(localized: "0 из \(goal) \(draft.unit)")
         }
     }
 
@@ -136,7 +136,7 @@ struct HabitEditorView: View {
                 .padding(.bottom, Spacing.xl)
             }
             .scrollDismissesKeyboard(.interactively)
-            .navigationTitle(isCreating ? "Новая привычка" : "Изменить привычку")
+            .navigationTitle(isCreating ? String(localized: "Новая привычка") : String(localized: "Изменить привычку"))
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
@@ -162,7 +162,7 @@ struct HabitEditorView: View {
     private var preview: some View {
         HabitCard(
             icon: draft.icon,
-            title: draft.name.isEmpty ? "Название привычки" : draft.name,
+            title: draft.name.isEmpty ? String(localized: "Название привычки") : draft.name,
             subtitle: previewSubtitle,
             color: accentColor,
             streak: 0,

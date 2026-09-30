@@ -38,19 +38,19 @@ final class TodayViewModel {
     func progressText(for habit: Habit, on date: Date? = nil) -> String {
         let base = dayProgressText(for: habit, on: date)
         guard let week = habit.weeklyProgress(asOf: date ?? selectedDate, calendar: calendar) else { return base }
-        if week.isReached && !isCompleted(habit, on: date) { return "Цель недели выполнена · \(week.done)/\(week.target)" }
-        return "\(base) · неделя \(week.done)/\(week.target)"
+        if week.isReached && !isCompleted(habit, on: date) { return String(localized: "Цель недели выполнена · \(week.done)/\(week.target)") }
+        return String(localized: "\(base) · неделя \(week.done)/\(week.target)")
     }
 
     private func dayProgressText(for habit: Habit, on date: Date? = nil) -> String {
         switch habit.type {
         case .boolean:
-            return isCompleted(habit, on: date) ? "Выполнено" : "Не выполнено"
+            return isCompleted(habit, on: date) ? String(localized: "Выполнено") : String(localized: "Не выполнено")
         case .count, .timer:
             let value = log(for: habit, on: date)?.value ?? 0
             let goal = habit.goalValue
             let formatter: (Double) -> String = { $0.truncatingRemainder(dividingBy: 1) == 0 ? String(Int($0)) : String(format: "%.1f", $0) }
-            return "\(formatter(value)) из \(formatter(goal)) \(habit.unit)"
+            return String(localized: "\(formatter(value)) из \(formatter(goal)) \(habit.unit)")
         }
     }
 

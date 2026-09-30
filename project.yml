@@ -60,6 +60,8 @@ targets:
       - path: Habitly/Core/Storage/HabitlySnapshot.swift
       - path: Habitly/Core/Storage/WidgetSnapshotKeychain.swift
       - path: Habitly/Core/Services/HabitToggler.swift
+      - path: Habitly/Core/Services/Calendar+Weekdays.swift
+      - path: Habitly/Resources/Localizable.xcstrings
       - path: Habitly/Core/Services/StreakCalculator.swift
       - path: Habitly/Core/Services/Habit+Streak.swift
       - path: Habitly/DesignSystem/Colors/Theme.swift

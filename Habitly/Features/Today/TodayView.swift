@@ -24,20 +24,21 @@ struct TodayView: View {
         let hour = calendar.component(.hour, from: .now)
         let base: String
         switch hour {
-        case 5..<12: base = "Доброе утро"
-        case 12..<17: base = "Добрый день"
-        case 17..<23: base = "Добрый вечер"
-        default: base = "Доброй ночи"
+        case 5..<12: base = String(localized: "Доброе утро")
+        case 12..<17: base = String(localized: "Добрый день")
+        case 17..<23: base = String(localized: "Добрый вечер")
+        default: base = String(localized: "Доброй ночи")
         }
         let name = profile?.name.isEmpty == false ? profile!.name : nil
-        return name.map { "\(base), \($0)!" } ?? "\(base)!"
+        return name.map { String(localized: "\(base), \($0)!") } ?? String(localized: "\(base)!")
     }
 
     private var dateText: String {
         let formatter = DateFormatter()
-        formatter.locale = Locale(identifier: "ru_RU")
-        formatter.dateFormat = "d MMMM, EEEE"
-        return formatter.string(from: viewModel.selectedDate).capitalized
+        formatter.locale = .current
+        formatter.setLocalizedDateFormatFromTemplate("d MMMM EEEE")
+        let text = formatter.string(from: viewModel.selectedDate)
+        return text.prefix(1).uppercased() + text.dropFirst()
     }
 
     private var groups: [(time: TimeOfDay, habits: [Habit])] {
@@ -174,7 +175,7 @@ struct TodayView: View {
             .accessibilityLabel("Выполнено \(progress.completed) из \(progress.total)")
 
             VStack(alignment: .leading, spacing: Spacing.xxs) {
-                Text(progress.total == 0 ? "На сегодня ничего не запланировано" : progressHeadline(fraction: fraction))
+                Text(progress.total == 0 ? String(localized: "На сегодня ничего не запланировано") : progressHeadline(fraction: fraction))
                     .font(Typography.headline)
                     .foregroundStyle(Theme.primaryText(for: scheme))
                 Text("Привычек выполнено сегодня")
@@ -189,10 +190,10 @@ struct TodayView: View {
 
     private func progressHeadline(fraction: Double) -> String {
         switch fraction {
-        case 1: return "Идеальный день! 🎉"
-        case 0.5...: return "Больше половины позади"
-        case 0.0001...: return "Хорошее начало"
-        default: return "Пора начинать"
+        case 1: return String(localized: "Идеальный день! 🎉")
+        case 0.5...: return String(localized: "Больше половины позади")
+        case 0.0001...: return String(localized: "Хорошее начало")
+        default: return String(localized: "Пора начинать")
         }
     }
 
@@ -264,7 +265,7 @@ struct TodayView: View {
             Button {
                 viewModel.togglePause(habit, context: modelContext)
             } label: {
-                Label(habit.isPaused ? "Возобновить" : "Поставить на паузу", systemImage: habit.isPaused ? "play.fill" : "pause.fill")
+                Label(habit.isPaused ? String(localized: "Возобновить") : String(localized: "Поставить на паузу"), systemImage: habit.isPaused ? "play.fill" : "pause.fill")
             }
             Button(role: .destructive) {
                 habitPendingDeletion = habit

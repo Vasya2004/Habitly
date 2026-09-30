@@ -32,8 +32,8 @@ struct DayLogEditorView: View {
 
     private var dateTitle: String {
         let formatter = DateFormatter()
-        formatter.locale = Locale(identifier: "ru_RU")
-        formatter.dateFormat = "d MMMM yyyy"
+        formatter.locale = .current
+        formatter.setLocalizedDateFormatFromTemplate("d MMMM yyyy")
         return formatter.string(from: date)
     }
 
@@ -75,7 +75,7 @@ struct DayLogEditorView: View {
                             useFreeze()
                         } label: {
                             Label(
-                                (profile?.streakFreezesLeft ?? 0) > 0 ? "Заморозить этот день" : "Заморозки закончились",
+                                (profile?.streakFreezesLeft ?? 0) > 0 ? String(localized: "Заморозить этот день") : String(localized: "Заморозки закончились"),
                                 systemImage: "snowflake"
                             )
                         }

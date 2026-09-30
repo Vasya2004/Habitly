@@ -59,11 +59,11 @@ struct HabitDraft {
 
         var errorDescription: String? {
             switch self {
-            case .emptyName: return "Введите название привычки"
-            case .invalidGoal: return "Цель должна быть больше нуля"
-            case .missingUnit: return "Укажите единицу измерения"
-            case .noWeekdaysSelected: return "Выберите хотя бы один день недели"
-            case .invalidTimesPerWeek: return "Укажите от 1 до 7 раз в неделю"
+            case .emptyName: return String(localized: "Введите название привычки")
+            case .invalidGoal: return String(localized: "Цель должна быть больше нуля")
+            case .missingUnit: return String(localized: "Укажите единицу измерения")
+            case .noWeekdaysSelected: return String(localized: "Выберите хотя бы один день недели")
+            case .invalidTimesPerWeek: return String(localized: "Укажите от 1 до 7 раз в неделю")
             }
         }
     }

@@ -41,7 +41,7 @@ struct AchievementBadgeView: View {
         .opacity(isUnlocked ? 1 : 0.55)
         .accessibilityElement(children: .ignore)
         .accessibilityLabel("\(kind.title). \(kind.subtitle)")
-        .accessibilityValue(isUnlocked ? "Получено" : "Заблокировано")
+        .accessibilityValue(isUnlocked ? Text("Получено") : Text("Заблокировано"))
     }
 }
 

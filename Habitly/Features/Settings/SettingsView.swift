@@ -155,12 +155,12 @@ struct SettingsView: View {
                     .frame(width: 40, height: 40)
 
                     VStack(alignment: .leading, spacing: 2) {
-                        Text(isAuthorized ? "Напоминания включены" : "Напоминания выключены")
+                        Text(isAuthorized ? String(localized: "Напоминания включены") : String(localized: "Напоминания выключены"))
                             .font(Typography.headline)
                             .foregroundStyle(Theme.primaryText(for: scheme))
                         Text(isAuthorized
-                             ? "Привычки с напоминаниями будут присылать уведомления по расписанию"
-                             : "Разрешите уведомления, чтобы не забывать о привычках")
+                             ? String(localized: "Привычки с напоминаниями будут присылать уведомления по расписанию")
+                             : String(localized: "Разрешите уведомления, чтобы не забывать о привычках"))
                             .font(Typography.caption)
                             .foregroundStyle(Theme.secondaryText(for: scheme))
                     }
@@ -321,11 +321,11 @@ struct SettingsView: View {
             Task { await NotificationService.shared.rescheduleAll(habits: habits) }
             Haptics.shared.success()
             importMessage = result.isEmpty
-                ? "Новых данных в файле не нашлось — всё уже есть в приложении."
-                : "Добавлено привычек: \(result.habitsAdded), дополнено: \(result.habitsMerged), новых записей истории: \(result.logsAdded)."
+                ? String(localized: "Новых данных в файле не нашлось — всё уже есть в приложении.")
+                : String(localized: "Добавлено привычек: \(result.habitsAdded), дополнено: \(result.habitsMerged), новых записей истории: \(result.logsAdded).")
         } catch {
             Haptics.shared.warning()
-            importMessage = (error as? LocalizedError)?.errorDescription ?? "Не удалось прочитать файл: \(error.localizedDescription)"
+            importMessage = (error as? LocalizedError)?.errorDescription ?? String(localized: "Не удалось прочитать файл: \(error.localizedDescription)")
         }
     }
 

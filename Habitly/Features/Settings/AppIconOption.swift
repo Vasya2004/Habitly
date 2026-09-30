@@ -18,15 +18,15 @@ enum AppIconOption: String, CaseIterable, Identifiable {
 
     var title: String {
         switch self {
-        case .default: return "Классическая"
-        case .ember: return "Огненная"
-        case .sunset: return "Закатная"
-        case .night: return "Ночная"
-        case .neon: return "Неон"
-        case .ocean: return "Океан"
-        case .mint: return "Мята"
-        case .lavender: return "Лаванда"
-        case .gold: return "Золото"
+        case .default: return String(localized: "Классическая")
+        case .ember: return String(localized: "Огненная")
+        case .sunset: return String(localized: "Закатная")
+        case .night: return String(localized: "Ночная")
+        case .neon: return String(localized: "Неон")
+        case .ocean: return String(localized: "Океан")
+        case .mint: return String(localized: "Мята")
+        case .lavender: return String(localized: "Лаванда")
+        case .gold: return String(localized: "Золото")
         }
     }
 
@@ -104,7 +104,7 @@ struct AppIconPickerRow: View {
         Haptics.shared.selectionChanged()
         UIApplication.shared.setAlternateIconName(option.alternateIconName) { error in
             if let error {
-                errorMessage = "Не удалось сменить иконку: \(error.localizedDescription)"
+                errorMessage = String(localized: "Не удалось сменить иконку: \(error.localizedDescription)")
             } else {
                 errorMessage = nil
                 current = option

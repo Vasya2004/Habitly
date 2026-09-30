@@ -13,7 +13,7 @@ enum ImportError: LocalizedError {
     case unreadableFile
 
     var errorDescription: String? {
-        "Файл повреждён или не является экспортом Habitly в формате JSON."
+        String(localized: "Файл повреждён или не является экспортом Habitly в формате JSON.")
     }
 }
 

@@ -29,8 +29,8 @@ struct WeeklySummaryData {
         let bestStreak = habits.map { $0.streakStatsWithFreezes(asOf: asOf, calendar: calendar).currentStreak }.max() ?? 0
 
         let formatter = DateFormatter()
-        formatter.locale = Locale(identifier: "ru_RU")
-        formatter.dateFormat = "d MMM"
+        formatter.locale = .current
+        formatter.setLocalizedDateFormatFromTemplate("d MMM")
         let rangeText = "\(formatter.string(from: weekStart)) – \(formatter.string(from: today))"
 
         return WeeklySummaryData(
@@ -92,7 +92,7 @@ struct WeeklySummaryCardView: View {
         .clipShape(RoundedRectangle(cornerRadius: Radius.cardLarge, style: .continuous))
     }
 
-    private func metric(value: String, label: String) -> some View {
+    private func metric(value: String, label: LocalizedStringKey) -> some View {
         VStack(alignment: .leading, spacing: 2) {
             Text(value)
                 .font(Typography.roundedFont(size: 30, weight: .heavy))

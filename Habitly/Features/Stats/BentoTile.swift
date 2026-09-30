@@ -4,7 +4,7 @@ import SwiftUI
 struct BentoTile: View {
     var symbol: String
     var value: String
-    var label: String
+    var label: LocalizedStringKey
     var isLarge: Bool = false
 
     @Environment(\.colorScheme) private var scheme

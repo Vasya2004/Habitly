@@ -1,0 +1,23 @@
+{
+  "sourceLanguage": "ru",
+  "strings": {
+    "NSUserNotificationsUsageDescription": {
+      "extractionState": "manual",
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Habitly напоминает о привычках вовремя."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Habitly reminds you about your habits on time."
+          }
+        }
+      }
+    }
+  },
+  "version": "1.0"
+}

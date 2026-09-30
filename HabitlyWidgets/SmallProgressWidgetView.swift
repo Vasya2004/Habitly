@@ -11,8 +11,8 @@ struct SmallProgressWidgetView: View {
     private var isAllDone: Bool { data.total > 0 && data.completed >= data.total }
 
     private var caption: String {
-        if data.total == 0 { return "Нет привычек" }
-        return isAllDone ? "Всё выполнено!" : "Сегодня"
+        if data.total == 0 { return String(localized: "Нет привычек") }
+        return isAllDone ? String(localized: "Всё выполнено!") : String(localized: "Сегодня")
     }
 
     var body: some View {

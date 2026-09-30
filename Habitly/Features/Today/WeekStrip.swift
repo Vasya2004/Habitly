@@ -20,8 +20,8 @@ struct WeekStrip: View {
 
     private let weekdayFormatter: DateFormatter = {
         let formatter = DateFormatter()
-        formatter.locale = Locale(identifier: "ru_RU")
-        formatter.dateFormat = "EE"
+        formatter.locale = .current
+        formatter.setLocalizedDateFormatFromTemplate("EE")
         return formatter
     }()
 

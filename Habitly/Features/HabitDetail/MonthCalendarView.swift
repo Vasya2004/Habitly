@@ -11,12 +11,12 @@ struct MonthCalendarView: View {
 
     private let calendar: Calendar = .current
     private let columns = Array(repeating: GridItem(.flexible(), spacing: 4), count: 7)
-    private let weekdaySymbols = ["П", "В", "С", "Ч", "П", "С", "В"]
+    private let weekdaySymbols = Calendar.current.mondayFirstVeryShortWeekdaySymbols
 
     private var monthTitle: String {
         let formatter = DateFormatter()
-        formatter.locale = Locale(identifier: "ru_RU")
-        formatter.dateFormat = "LLLL yyyy"
+        formatter.locale = .current
+        formatter.setLocalizedDateFormatFromTemplate("LLLL yyyy")
         return formatter.string(from: visibleMonth).capitalized
     }
 
@@ -119,11 +119,13 @@ struct MonthCalendarView: View {
 
     private func dayAccessibilityLabel(_ day: Date, isCompleted: Bool, isFrozen: Bool) -> String {
         let formatter = DateFormatter()
-        formatter.locale = Locale(identifier: "ru_RU")
-        formatter.dateFormat = "d MMMM"
+        formatter.locale = .current
+        formatter.setLocalizedDateFormatFromTemplate("d MMMM")
         let dateText = formatter.string(from: day)
-        if isFrozen { return "\(dateText), защищено заморозкой" }
-        return "\(dateText), \(isCompleted ? "выполнено" : "не выполнено")"
+        if isFrozen { return String(localized: "\(dateText), защищено заморозкой") }
+        return isCompleted
+            ? String(localized: "\(dateText), выполнено")
+            : String(localized: "\(dateText), не выполнено")
     }
 
     private func changeMonth(by value: Int) {

@@ -100,7 +100,7 @@ struct HabitCard: View {
                 .animation(reduceMotion ? nil : Motion.bouncy, value: didBounce)
         }
         .buttonStyle(.plain)
-        .accessibilityLabel(isCompleted ? "Выполнено" : "Отметить выполненным")
+        .accessibilityLabel(isCompleted ? Text("Выполнено") : Text("Отметить выполненным"))
         .accessibilityAddTraits(isCompleted ? [.isButton, .isSelected] : .isButton)
     }
 

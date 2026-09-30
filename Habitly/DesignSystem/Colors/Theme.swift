@@ -54,18 +54,18 @@ struct HabitColor: Identifiable, Equatable {
     }
 
     static let palette: [HabitColor] = [
-        HabitColor(id: 0, name: "Коралл", start: Color(hex: "FF7A59"), end: Color(hex: "FFB259")),
-        HabitColor(id: 1, name: "Бирюза", start: Color(hex: "38E1C4"), end: Color(hex: "3ABEEB")),
-        HabitColor(id: 2, name: "Орхидея", start: Color(hex: "9B5CFF"), end: Color(hex: "FF5CA6")),
-        HabitColor(id: 3, name: "Лайм", start: Color(hex: "A6E13D"), end: Color(hex: "3ED17A")),
-        HabitColor(id: 4, name: "Небо", start: Color(hex: "5C9BFF"), end: Color(hex: "5CE1FF")),
-        HabitColor(id: 5, name: "Малина", start: Color(hex: "FF5C7A"), end: Color(hex: "FF9A5C")),
-        HabitColor(id: 6, name: "Янтарь", start: Color(hex: "FFC65C"), end: Color(hex: "FF8A5C")),
-        HabitColor(id: 7, name: "Индиго", start: Color(hex: "5C6CFF"), end: Color(hex: "9B5CFF")),
-        HabitColor(id: 8, name: "Изумруд", start: Color(hex: "2ED17A"), end: Color(hex: "38E1C4")),
-        HabitColor(id: 9, name: "Роза", start: Color(hex: "FF5CD1"), end: Color(hex: "FF5C7A")),
-        HabitColor(id: 10, name: "Океан", start: Color(hex: "3ABEEB"), end: Color(hex: "5C6CFF")),
-        HabitColor(id: 11, name: "Лаванда", start: Color(hex: "B25CFF"), end: Color(hex: "5C9BFF"))
+        HabitColor(id: 0, name: String(localized: "Коралл"), start: Color(hex: "FF7A59"), end: Color(hex: "FFB259")),
+        HabitColor(id: 1, name: String(localized: "Бирюза"), start: Color(hex: "38E1C4"), end: Color(hex: "3ABEEB")),
+        HabitColor(id: 2, name: String(localized: "Орхидея"), start: Color(hex: "9B5CFF"), end: Color(hex: "FF5CA6")),
+        HabitColor(id: 3, name: String(localized: "Лайм"), start: Color(hex: "A6E13D"), end: Color(hex: "3ED17A")),
+        HabitColor(id: 4, name: String(localized: "Небо"), start: Color(hex: "5C9BFF"), end: Color(hex: "5CE1FF")),
+        HabitColor(id: 5, name: String(localized: "Малина"), start: Color(hex: "FF5C7A"), end: Color(hex: "FF9A5C")),
+        HabitColor(id: 6, name: String(localized: "Янтарь"), start: Color(hex: "FFC65C"), end: Color(hex: "FF8A5C")),
+        HabitColor(id: 7, name: String(localized: "Индиго"), start: Color(hex: "5C6CFF"), end: Color(hex: "9B5CFF")),
+        HabitColor(id: 8, name: String(localized: "Изумруд"), start: Color(hex: "2ED17A"), end: Color(hex: "38E1C4")),
+        HabitColor(id: 9, name: String(localized: "Роза"), start: Color(hex: "FF5CD1"), end: Color(hex: "FF5C7A")),
+        HabitColor(id: 10, name: String(localized: "Океан"), start: Color(hex: "3ABEEB"), end: Color(hex: "5C6CFF")),
+        HabitColor(id: 11, name: String(localized: "Лаванда"), start: Color(hex: "B25CFF"), end: Color(hex: "5C9BFF"))
     ]
 }
 

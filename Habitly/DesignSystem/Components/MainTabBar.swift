@@ -7,10 +7,10 @@ enum MainTab: Int, CaseIterable, Identifiable {
 
     var title: String {
         switch self {
-        case .today: return "Сегодня"
-        case .stats: return "Статистика"
-        case .achievements: return "Награды"
-        case .settings: return "Настройки"
+        case .today: return String(localized: "Сегодня")
+        case .stats: return String(localized: "Статистика")
+        case .achievements: return String(localized: "Награды")
+        case .settings: return String(localized: "Настройки")
         }
     }
 

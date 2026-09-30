@@ -15,27 +15,27 @@ enum AchievementKind: String, Codable, CaseIterable, Identifiable {
 
     var title: String {
         switch self {
-        case .firstWeek: return "Первая неделя"
-        case .streak30: return "Стрик 30 дней"
-        case .streak100: return "Стрик 100 дней"
-        case .completions100: return "100 выполнений"
-        case .earlyBird: return "Ранняя пташка"
-        case .nightOwl: return "Полуночник"
-        case .perfectWeek: return "Идеальная неделя"
-        case .levelFive: return "5 уровень"
+        case .firstWeek: return String(localized: "Первая неделя")
+        case .streak30: return String(localized: "Стрик 30 дней")
+        case .streak100: return String(localized: "Стрик 100 дней")
+        case .completions100: return String(localized: "100 выполнений")
+        case .earlyBird: return String(localized: "Ранняя пташка")
+        case .nightOwl: return String(localized: "Полуночник")
+        case .perfectWeek: return String(localized: "Идеальная неделя")
+        case .levelFive: return String(localized: "5 уровень")
         }
     }
 
     var subtitle: String {
         switch self {
-        case .firstWeek: return "7 дней подряд с приложением"
-        case .streak30: return "Держите стрик 30 дней"
-        case .streak100: return "Держите стрик 100 дней"
-        case .completions100: return "Выполните привычки 100 раз"
-        case .earlyBird: return "10 привычек выполнены до 8 утра"
-        case .nightOwl: return "10 привычек выполнены после 22:00"
-        case .perfectWeek: return "Все привычки за 7 дней подряд"
-        case .levelFive: return "Достигните 5 уровня"
+        case .firstWeek: return String(localized: "7 дней подряд с приложением")
+        case .streak30: return String(localized: "Держите стрик 30 дней")
+        case .streak100: return String(localized: "Держите стрик 100 дней")
+        case .completions100: return String(localized: "Выполните привычки 100 раз")
+        case .earlyBird: return String(localized: "10 привычек выполнены до 8 утра")
+        case .nightOwl: return String(localized: "10 привычек выполнены после 22:00")
+        case .perfectWeek: return String(localized: "Все привычки за 7 дней подряд")
+        case .levelFive: return String(localized: "Достигните 5 уровня")
         }
     }
 
