@@ -34,6 +34,7 @@
 		35AD5BD5A15D8234E57FA534 /* StatTileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78C94F50D0AE704E4000FD77 /* StatTileView.swift */; };
 		36DE4BC985F04F1608FE409B /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = B34D08495A091496F3F834F6 /* Localizable.xcstrings */; };
 		38D20BBA62F23BEFF8BD7ED1 /* Haptics.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4614EE13AB813364DD93D94 /* Haptics.swift */; };
+		39DDED1D8110747242B10C52 /* CompletionEffects.swift in Sources */ = {isa = PBXBuildFile; fileRef = F34957BC7A9147581F0ACF66 /* CompletionEffects.swift */; };
 		3BCD66F1F57EBE3AD5916345 /* HabitTemplate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E853FC364D4B88D1870E850 /* HabitTemplate.swift */; };
 		3D46DC1EC0B9A00684595225 /* Typography.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05BB5C7FACCA8374BAA66A14 /* Typography.swift */; };
 		45868AA1DDEDD7EB66FAF12C /* WeeklySummaryCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F5781F9801CEF747B39EB55 /* WeeklySummaryCardView.swift */; };
@@ -217,6 +218,7 @@
 		E1664B523573982AEACCB77F /* ModelContextProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelContextProvider.swift; sourceTree = "<group>"; };
 		EB34C315138CBA4C6CA6C1E3 /* GamificationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GamificationService.swift; sourceTree = "<group>"; };
 		F23A245303FC520D2D24FC7B /* ReminderEditorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReminderEditorView.swift; sourceTree = "<group>"; };
+		F34957BC7A9147581F0ACF66 /* CompletionEffects.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompletionEffects.swift; sourceTree = "<group>"; };
 		F4381DE446075F187E52E80F /* DataImportTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataImportTests.swift; sourceTree = "<group>"; };
 		F69FB99FE09BE3814FD7C4F8 /* SmallProgressWidgetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SmallProgressWidgetView.swift; sourceTree = "<group>"; };
 		FD211B4524606AD42BD088B6 /* Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
@@ -323,6 +325,7 @@
 			isa = PBXGroup;
 			children = (
 				294C70C3DB43B599E1977D89 /* CapsuleButton.swift */,
+				F34957BC7A9147581F0ACF66 /* CompletionEffects.swift */,
 				3FF0C1E96D84573A1ED98677 /* ConfettiView.swift */,
 				6A34A623B7862DC717BC70DE /* EmptyStateView.swift */,
 				07F1FDE1E3BCE544CECB05B0 /* HabitCard.swift */,
@@ -646,6 +649,7 @@
 				C5A76A368B6BAB1898C51E74 /* CapsuleButton.swift in Sources */,
 				112DC11DC5F5AADC88CDF55A /* CardBackground.swift in Sources */,
 				2B37E3D24D6CCC992E7F8161 /* ColorPickerRow.swift in Sources */,
+				39DDED1D8110747242B10C52 /* CompletionEffects.swift in Sources */,
 				F0064376EB65C0D3B9A8E71F /* ConfettiView.swift in Sources */,
 				032D5D99CE5F7AA88251BA7B /* DataBackup.swift in Sources */,
 				22933D722FCC9DC55BF858B0 /* DataExportService.swift in Sources */,

@@ -18,6 +18,11 @@ struct HabitCard: View {
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @Environment(\.dynamicTypeSize) private var typeSize
     @State private var didBounce = false
+    @State private var checkProgress: CGFloat = 0
+    @State private var burstTrigger = 0
+    @State private var pulse = false
+    /// Эффект показываем только после нажатия пользователя, а не при смене даты или перерисовке списка.
+    @State private var awaitingUserCompletion = false
 
     var body: some View {
         // При крупном шрифте кнопки уходят под текст, иначе название режется посреди слова.
@@ -33,10 +38,10 @@ struct HabitCard: View {
                 VStack(alignment: .leading, spacing: 2) {
                     Text(title)
                         .font(Typography.headline)
-                        .foregroundStyle(Theme.primaryText(for: scheme))
+                        .foregroundStyle(Theme.primaryText(for: scheme).opacity(isCompleted ? 0.7 : 1))
                     Text(subtitle)
                         .font(Typography.caption)
-                        .foregroundStyle(Theme.secondaryText(for: scheme))
+                        .foregroundStyle(isCompleted ? AnyShapeStyle(color.gradient) : AnyShapeStyle(Theme.secondaryText(for: scheme)))
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
             }
@@ -66,8 +71,51 @@ struct HabitCard: View {
             }
         }
         .padding(Spacing.sm)
+        .background {
+            RoundedRectangle(cornerRadius: Radius.card, style: .continuous)
+                .fill(color.gradient.opacity(isCompleted ? 0.14 : 0))
+        }
         .cardStyle()
+        .overlay {
+            RoundedRectangle(cornerRadius: Radius.card, style: .continuous)
+                .strokeBorder(color.gradient.opacity(isCompleted ? 0.6 : 0), lineWidth: 1.5)
+        }
+        .overlay {
+            ShimmerSweep(trigger: burstTrigger, color: color.start)
+                .clipShape(RoundedRectangle(cornerRadius: Radius.card, style: .continuous))
+        }
+        .scaleEffect(pulse ? 1.03 : 1)
+        .animation(reduceMotion ? nil : Motion.spring, value: isCompleted)
+        .onAppear { checkProgress = isCompleted ? 1 : 0 }
+        .onChange(of: isCompleted) { _, done in
+            if done {
+                if awaitingUserCompletion { celebrate() } else { checkProgress = 1 }
+            } else {
+                checkProgress = 0
+            }
+            awaitingUserCompletion = false
+        }
         .accessibilityElement(children: .contain)
+    }
+
+    private func resetAwaitingFlag() {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.8) { awaitingUserCompletion = false }
+    }
+
+    /// Полный эффект выполнения: галочка рисуется, салют, блик и лёгкая «пульсация» карточки.
+    private func celebrate() {
+        guard !reduceMotion else {
+            checkProgress = 1
+            return
+        }
+        burstTrigger += 1
+        checkProgress = 0
+        withAnimation(.easeOut(duration: 0.3).delay(0.08)) { checkProgress = 1 }
+        withAnimation(.easeOut(duration: 0.12)) { pulse = true }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.12) {
+            withAnimation(Motion.bouncy) { pulse = false }
+        }
+        Haptics.shared.success()
     }
 
     private var iconBadge: some View {
@@ -80,24 +128,54 @@ struct HabitCard: View {
             ProgressRing(progress: progress, gradient: color.gradient, lineWidth: 3)
                 .padding(-4)
         )
+        .overlay(alignment: .bottomTrailing) {
+            if showsStepper && isCompleted {
+                Image(systemName: "checkmark.circle.fill")
+                    .font(.system(size: 18))
+                    .foregroundStyle(.white, color.end)
+                    .background(Circle().fill(.white).padding(2))
+                    .offset(x: 6, y: 6)
+                    .transition(.scale.combined(with: .opacity))
+            }
+        }
+        .background { if showsStepper { CompletionBurst(trigger: burstTrigger, color: color) } }
         .accessibilityElement(children: .ignore)
         .accessibilityLabel("\(title), \(subtitle)")
     }
 
     private var completeButton: some View {
         Button {
+            let willComplete = !isCompleted
+            awaitingUserCompletion = willComplete
+            resetAwaitingFlag()
             didBounce = true
             onToggle()
-            Haptics.shared.success()
+            if !willComplete { Haptics.shared.impact(.soft) }
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) { didBounce = false }
         } label: {
-            Image(systemName: isCompleted ? "checkmark.circle.fill" : "circle")
-                .font(.system(size: 28))
-                .frame(minWidth: 44, minHeight: 44)
-                .contentShape(Rectangle())
-                .foregroundStyle(isCompleted ? AnyShapeStyle(color.gradient) : AnyShapeStyle(Color.gray.opacity(0.3)))
-                .scaleEffect(didBounce && !reduceMotion ? 1.25 : 1)
-                .animation(reduceMotion ? nil : Motion.bouncy, value: didBounce)
+            ZStack {
+                Circle()
+                    .strokeBorder(Color.gray.opacity(0.3), lineWidth: 2.5)
+                    .opacity(isCompleted ? 0 : 1)
+
+                Circle()
+                    .fill(color.gradient)
+                    .scaleEffect(isCompleted ? 1 : 0.4)
+                    .opacity(isCompleted ? 1 : 0)
+                    .shadow(color: color.start.opacity(isCompleted ? 0.5 : 0), radius: 8, y: 3)
+
+                CheckmarkShape()
+                    .trim(from: 0, to: checkProgress)
+                    .stroke(.white, style: StrokeStyle(lineWidth: 3.2, lineCap: .round, lineJoin: .round))
+                    .padding(6)
+            }
+            .frame(width: 30, height: 30)
+            .background { CompletionBurst(trigger: burstTrigger, color: color) }
+            .frame(minWidth: 44, minHeight: 44)
+            .contentShape(Rectangle())
+            .scaleEffect(didBounce && !reduceMotion ? 1.22 : 1)
+            .animation(reduceMotion ? nil : Motion.bouncy, value: didBounce)
+            .animation(reduceMotion ? nil : Motion.bouncy, value: isCompleted)
         }
         .buttonStyle(.plain)
         .accessibilityLabel(isCompleted ? Text("Выполнено") : Text("Отметить выполненным"))
@@ -117,6 +195,8 @@ struct HabitCard: View {
             .accessibilityLabel("Уменьшить: \(title)")
 
             Button {
+                awaitingUserCompletion = true
+                resetAwaitingFlag()
                 onIncrement?()
                 Haptics.shared.impact(.soft)
             } label: {
