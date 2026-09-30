@@ -18,11 +18,12 @@ enum AppIconOption: String, CaseIterable, Identifiable {
         }
     }
 
-    var gradient: LinearGradient {
+    /// Имя превью в каталоге ассетов — та же картинка, что и у самой иконки.
+    var previewImageName: String {
         switch self {
-        case .default: return LinearGradient(colors: [Color(hex: "FF5C6C"), Color(hex: "DE2A4E")], startPoint: .topLeading, endPoint: .bottomTrailing)
-        case .ember: return LinearGradient(colors: [Color(hex: "FFB03B"), Color(hex: "E03C28")], startPoint: .topLeading, endPoint: .bottomTrailing)
-        case .sunset: return LinearGradient(colors: [Color(hex: "8250EB"), Color(hex: "E63782")], startPoint: .topLeading, endPoint: .bottomTrailing)
+        case .default: return "IconPreviewClassic"
+        case .ember: return "IconPreviewEmber"
+        case .sunset: return "IconPreviewSunset"
         }
     }
 }
@@ -58,18 +59,19 @@ struct AppIconPickerRow: View {
             select(option)
         } label: {
             VStack(spacing: Spacing.xxs) {
-                RoundedRectangle(cornerRadius: 16, style: .continuous)
-                    .fill(option.gradient)
-                    .frame(width: 56, height: 56)
+                Image(option.previewImageName)
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 60, height: 60)
+                    .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
                     .overlay(
-                        RoundedRectangle(cornerRadius: 16, style: .continuous)
-                            .strokeBorder(.white, lineWidth: current == option ? 2.5 : 0)
+                        RoundedRectangle(cornerRadius: 14, style: .continuous)
+                            .strokeBorder(Color.primary.opacity(0.12), lineWidth: 1)
                     )
+                    .padding(3)
                     .overlay(
-                        Image(systemName: "checkmark")
-                            .font(.system(size: 16, weight: .bold))
-                            .foregroundStyle(.white)
-                            .opacity(current == option ? 1 : 0)
+                        RoundedRectangle(cornerRadius: 17, style: .continuous)
+                            .strokeBorder(Theme.brandGradient, lineWidth: current == option ? 3 : 0)
                     )
                 Text(option.title)
                     .font(Typography.caption)
