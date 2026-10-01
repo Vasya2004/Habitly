@@ -2523,6 +2523,17 @@
         }
       }
     },
+    "Приглушённые привычки сегодня не показываются на главном экране: у них другие дни недели или они на паузе. Лишние можно удалить смахиванием.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dimmed habits aren’t shown on the main screen today: they’re scheduled for other days or paused. Swipe to delete extras."
+          }
+        }
+      }
+    },
     "Прогресс дня и быстрая отметка привычек.": {
       "extractionState": "manual",
       "localizations": {

@@ -10,6 +10,7 @@ struct HabitOrderView: View {
     @AppStorage(DisplayPreferences.groupByTimeKey) private var groupByTime = true
 
     @Query private var allHabits: [Habit]
+    @State private var habitPendingDeletion: Habit?
 
     private var activeHabits: [Habit] {
         HabitOrdering.sorted(allHabits.filter { !$0.isArchived })
@@ -28,6 +29,14 @@ struct HabitOrderView: View {
                         .foregroundStyle(Theme.secondaryText(for: scheme))
                         .listRowBackground(Color.clear)
                         .listRowSeparator(.hidden)
+
+                    if activeHabits.contains(where: { !isShownToday($0) }) {
+                        Text("Приглушённые привычки сегодня не показываются на главном экране: у них другие дни недели или они на паузе. Лишние можно удалить смахиванием.")
+                            .font(Typography.caption)
+                            .foregroundStyle(Theme.secondaryText(for: scheme))
+                            .listRowBackground(Color.clear)
+                            .listRowSeparator(.hidden)
+                    }
                 }
 
                 if groupByTime {
@@ -60,7 +69,48 @@ struct HabitOrderView: View {
                     Button("Готово") { dismiss() }.fontWeight(.semibold)
                 }
             }
+            .alert("Удалить привычку?", isPresented: Binding(
+                get: { habitPendingDeletion != nil },
+                set: { if !$0 { habitPendingDeletion = nil } }
+            )) {
+                Button("Отмена", role: .cancel) { habitPendingDeletion = nil }
+                Button("Удалить", role: .destructive) {
+                    if let habit = habitPendingDeletion { delete(habit) }
+                    habitPendingDeletion = nil
+                }
+            } message: {
+                Text("Вся история выполнения будет удалена без возможности восстановления.")
+            }
         }
+    }
+
+    /// Показывается ли привычка сегодня на главном экране (не на паузе и запланирована на сегодняшний день).
+    private func isShownToday(_ habit: Habit) -> Bool {
+        !habit.isPaused && habit.schedule.isActive(on: .now, calendar: .current)
+    }
+
+    /// Краткое описание расписания: дни недели или «N раз в неделю».
+    private func scheduleSummary(_ habit: Habit) -> String? {
+        switch habit.schedule.type {
+        case .everyDay:
+            return nil
+        case .daysOfWeek:
+            let symbols = Calendar.current.shortStandaloneWeekdaySymbols // индекс 0 = воскресенье
+            return [2, 3, 4, 5, 6, 7, 1]
+                .filter { habit.schedule.weekdays.contains($0) }
+                .map { symbols[$0 - 1] }
+                .joined(separator: ", ")
+        case .timesPerWeek:
+            return String(localized: "\(habit.schedule.timesPerWeek) раз в неделю")
+        }
+    }
+
+    private func delete(_ habit: Habit) {
+        Task { await NotificationService.shared.cancelNotifications(for: habit) }
+        modelContext.delete(habit)
+        try? modelContext.save()
+        WidgetRefreshService.reloadAll()
+        Haptics.shared.warning()
     }
 
     private func orderRows(_ items: [Habit]) -> some View {
@@ -72,6 +122,11 @@ struct HabitOrderView: View {
             try? modelContext.save()
             WidgetRefreshService.reloadAll()
             Haptics.shared.selectionChanged()
+        }
+        .onDelete { offsets in
+            if let index = offsets.first, items.indices.contains(index) {
+                habitPendingDeletion = items[index]
+            }
         }
     }
 
@@ -92,9 +147,15 @@ struct HabitOrderView: View {
                     Text("На паузе")
                         .font(Typography.caption)
                         .foregroundStyle(Theme.secondaryText(for: scheme))
+                } else if let summary = scheduleSummary(habit) {
+                    Text(summary)
+                        .font(Typography.caption)
+                        .foregroundStyle(Theme.secondaryText(for: scheme))
+                        .lineLimit(1)
                 }
             }
         }
+        .opacity(isShownToday(habit) ? 1 : 0.5)
         .padding(.vertical, 2)
     }
 }
