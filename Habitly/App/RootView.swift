@@ -9,6 +9,7 @@ struct RootView: View {
 
     @State private var selection: MainTab = .today
     @State private var visitedTabs: Set<MainTab> = [.today]
+    @State private var isWarmingUp = true
     @State private var isPresentingEditor = false
 
     private var profile: Profile? { profiles.first }
@@ -63,8 +64,30 @@ struct RootView: View {
                 addFloatingButton
                     .transition(.scale.combined(with: .opacity))
             }
+
+            // Заставка на время прогрева: пока она закрывает экран, вкладки по очереди создаются в фоне.
+            if isWarmingUp {
+                Theme.backgroundGradient(for: scheme)
+                    .ignoresSafeArea()
+                    .transition(.opacity)
+            }
         }
         .animation(.spring(response: 0.35, dampingFraction: 0.8), value: selection)
+        .task { await warmUpTabs() }
+    }
+
+    /// Первое открытие вкладки — самое тяжёлое (создание экрана, графика, шрифтов). Делаем его один раз при запуске
+    /// под заставкой, чтобы пользователь потом переключался между уже готовыми экранами без подвисаний.
+    @available(iOS 26.0, *)
+    private func warmUpTabs() async {
+        guard isWarmingUp else { return }
+        var transaction = Transaction()
+        transaction.disablesAnimations = true
+        for tab in [MainTab.stats, .achievements, .settings, .today] {
+            withTransaction(transaction) { selection = tab }
+            try? await Task.sleep(for: .milliseconds(140))
+        }
+        withAnimation(.easeOut(duration: 0.25)) { isWarmingUp = false }
     }
 
     /// «+» — плавающая стеклянная кнопка над меню (как в системных приложениях iOS 26).

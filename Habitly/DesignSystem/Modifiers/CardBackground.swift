@@ -7,7 +7,13 @@ struct CardBackground: ViewModifier {
 
     func body(content: Content) -> some View {
         content
-            .background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: cornerRadius, style: .continuous))
+            // Заливка вместо .ultraThinMaterial: фон приложения — ровный градиент, размытию под карточкой
+            // нечего показывать, а полупрозрачный блюр на каждой карточке заметно грузит видеокарту при прокрутке
+            // и переходах между вкладками.
+            .background(
+                RoundedRectangle(cornerRadius: cornerRadius, style: .continuous)
+                    .fill(scheme == .dark ? Color.white.opacity(0.11) : Color.black.opacity(0.04))
+            )
             .overlay(
                 RoundedRectangle(cornerRadius: cornerRadius, style: .continuous)
                     .strokeBorder(Theme.cardStroke(for: scheme), lineWidth: 1)

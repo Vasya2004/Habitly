@@ -66,10 +66,37 @@ enum StatsCalculator {
         return symbols[weekday - 1].capitalized
     }
 
+    /// Предрасчитанные данные привычки для быстрых обходов по дням: расписание декодируется один раз,
+    /// выполненные дни лежат во множестве — вместо JSON-декодирования и линейного поиска на каждый день.
+    private struct HabitIndex {
+        let habit: Habit
+        let schedule: HabitSchedule
+        let createdDay: Date
+        let timeOfDay: TimeOfDay
+        let completedDays: Set<Date>
+
+        init(_ habit: Habit, calendar: Calendar) {
+            self.habit = habit
+            schedule = habit.schedule
+            createdDay = calendar.startOfDay(for: habit.createdAt)
+            timeOfDay = habit.timeOfDay
+            var done = Set<Date>()
+            for log in habit.logs where habit.isLogCompleted(log) {
+                done.insert(calendar.startOfDay(for: log.date))
+            }
+            completedDays = done
+        }
+
+        func isScheduled(on day: Date, calendar: Calendar) -> Bool {
+            day >= createdDay && schedule.isActive(on: day, calendar: calendar)
+        }
+    }
+
     static func summary(habits: [Habit], period: StatsPeriod, asOf: Date = .now, calendar: Calendar = .current) -> StatsSummary {
         let active = habits.filter { !$0.isArchived }
         guard !active.isEmpty else { return .empty }
         let (start, end) = period.range(asOf: asOf, calendar: calendar)
+        let indexes = active.map { HabitIndex($0, calendar: calendar) }
 
         var totalScheduled = 0
         var totalCompleted = 0
@@ -79,19 +106,18 @@ enum StatsCalculator {
 
         var bestHabits: [HabitRateEntry] = []
 
-        for habit in active {
+        for index in indexes {
             var scheduled = 0
             var completed = 0
-            var cursor = max(start, calendar.startOfDay(for: habit.createdAt))
+            var cursor = max(start, index.createdDay)
             while cursor <= end {
-                if habit.schedule.isActive(on: cursor, calendar: calendar) {
+                if index.schedule.isActive(on: cursor, calendar: calendar) {
                     scheduled += 1
-                    if habit.isCompleted(on: cursor, calendar: calendar) {
+                    if index.completedDays.contains(cursor) {
                         completed += 1
                         totalCompletions += 1
-                        let weekday = calendar.component(.weekday, from: cursor)
-                        weekdayCounts[weekday, default: 0] += 1
-                        timeOfDayCounts[habit.timeOfDay, default: 0] += 1
+                        weekdayCounts[calendar.component(.weekday, from: cursor), default: 0] += 1
+                        timeOfDayCounts[index.timeOfDay, default: 0] += 1
                     }
                 }
                 guard let next = calendar.date(byAdding: .day, value: 1, to: cursor) else { break }
@@ -100,7 +126,7 @@ enum StatsCalculator {
             totalScheduled += scheduled
             totalCompleted += completed
             if scheduled > 0 {
-                bestHabits.append(HabitRateEntry(habit: habit, rate: Double(completed) / Double(scheduled)))
+                bestHabits.append(HabitRateEntry(habit: index.habit, rate: Double(completed) / Double(scheduled)))
             }
         }
 
@@ -111,8 +137,8 @@ enum StatsCalculator {
 
         let useMonthlyBuckets = period == .year
         let chartPoints = useMonthlyBuckets
-            ? monthlyChartPoints(habits: active, start: start, end: end, calendar: calendar)
-            : dailyChartPoints(habits: active, start: start, end: end, calendar: calendar)
+            ? monthlyChartPoints(indexes: indexes, start: start, end: end, calendar: calendar)
+            : dailyChartPoints(indexes: indexes, start: start, end: end, calendar: calendar)
 
         return StatsSummary(
             overallRate: totalScheduled > 0 ? Double(totalCompleted) / Double(totalScheduled) : 0,
@@ -127,30 +153,29 @@ enum StatsCalculator {
         )
     }
 
-    private static func dayRate(habits: [Habit], on day: Date, calendar: Calendar) -> Double? {
+    private static func dayRate(indexes: [HabitIndex], on day: Date, calendar: Calendar) -> Double? {
         var scheduled = 0
         var completed = 0
-        for habit in habits {
-            guard day >= calendar.startOfDay(for: habit.createdAt), habit.schedule.isActive(on: day, calendar: calendar) else { continue }
+        for index in indexes where index.isScheduled(on: day, calendar: calendar) {
             scheduled += 1
-            if habit.isCompleted(on: day, calendar: calendar) { completed += 1 }
+            if index.completedDays.contains(day) { completed += 1 }
         }
         guard scheduled > 0 else { return nil }
         return Double(completed) / Double(scheduled)
     }
 
-    private static func dailyChartPoints(habits: [Habit], start: Date, end: Date, calendar: Calendar) -> [ChartPoint] {
+    private static func dailyChartPoints(indexes: [HabitIndex], start: Date, end: Date, calendar: Calendar) -> [ChartPoint] {
         var points: [ChartPoint] = []
         var cursor = start
         while cursor <= end {
-            points.append(ChartPoint(date: cursor, rate: dayRate(habits: habits, on: cursor, calendar: calendar) ?? 0))
+            points.append(ChartPoint(date: cursor, rate: dayRate(indexes: indexes, on: cursor, calendar: calendar) ?? 0))
             guard let next = calendar.date(byAdding: .day, value: 1, to: cursor) else { break }
             cursor = next
         }
         return points
     }
 
-    private static func monthlyChartPoints(habits: [Habit], start: Date, end: Date, calendar: Calendar) -> [ChartPoint] {
+    private static func monthlyChartPoints(indexes: [HabitIndex], start: Date, end: Date, calendar: Calendar) -> [ChartPoint] {
         var points: [ChartPoint] = []
         guard var cursor = calendar.dateInterval(of: .month, for: start)?.start else { return [] }
         while cursor <= end {
@@ -160,10 +185,9 @@ enum StatsCalculator {
             var day = max(monthInterval.start, start)
             let monthEnd = min(monthInterval.end, calendar.date(byAdding: .day, value: 1, to: end) ?? monthInterval.end)
             while day < monthEnd {
-                for habit in habits {
-                    guard day >= calendar.startOfDay(for: habit.createdAt), habit.schedule.isActive(on: day, calendar: calendar) else { continue }
+                for index in indexes where index.isScheduled(on: day, calendar: calendar) {
                     scheduled += 1
-                    if habit.isCompleted(on: day, calendar: calendar) { completed += 1 }
+                    if index.completedDays.contains(day) { completed += 1 }
                 }
                 guard let next = calendar.date(byAdding: .day, value: 1, to: day) else { break }
                 day = next

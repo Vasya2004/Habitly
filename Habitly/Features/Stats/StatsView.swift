@@ -18,8 +18,11 @@ struct StatsView: View {
             : [GridItem(.flexible()), GridItem(.flexible())]
     }
 
+    @State private var summaryCache = StatsSummaryCache()
+
+    /// Сводка считается один раз на набор данных и период, а не при каждом обращении из подпредставлений.
     private var summary: StatsSummary {
-        StatsCalculator.summary(habits: habits, period: period)
+        summaryCache.summary(habits: habits, period: period)
     }
 
     var body: some View {
@@ -28,13 +31,16 @@ struct StatsView: View {
                 if habits.isEmpty {
                     emptyState
                 } else {
+                    // Сводка берётся один раз на отрисовку и передаётся вниз — раньше её запрашивали
+                    // десятки раз (по разу на каждую точку графика).
+                    let summary = summary
                     VStack(alignment: .leading, spacing: Spacing.lg) {
                         header
-                        overallTile
-                        secondaryTiles
-                        bestHabitsSection
-                        chartSection
-                        insightsSection
+                        overallTile(summary)
+                        secondaryTiles(summary)
+                        bestHabitsSection(summary)
+                        chartSection(summary)
+                        insightsSection(summary)
                     }
                     .padding(Spacing.md)
                     .padding(.bottom, Spacing.xl)
@@ -62,7 +68,7 @@ struct StatsView: View {
         .frame(maxWidth: .infinity, alignment: .leading)
     }
 
-    private var overallTile: some View {
+    private func overallTile(_ summary: StatsSummary) -> some View {
         BentoTile(
             symbol: "percent",
             value: "\(Int((summary.overallRate * 100).rounded()))%",
@@ -71,7 +77,7 @@ struct StatsView: View {
         )
     }
 
-    private var secondaryTiles: some View {
+    private func secondaryTiles(_ summary: StatsSummary) -> some View {
         LazyVGrid(columns: tileColumns, spacing: Spacing.sm) {
             BentoTile(
                 symbol: "calendar",
@@ -96,7 +102,7 @@ struct StatsView: View {
         }
     }
 
-    private var bestHabitsSection: some View {
+    private func bestHabitsSection(_ summary: StatsSummary) -> some View {
         VStack(alignment: .leading, spacing: Spacing.sm) {
             Text("Лучшие привычки")
                 .font(Typography.headline)
@@ -139,7 +145,7 @@ struct StatsView: View {
         }
     }
 
-    private var chartSection: some View {
+    private func chartSection(_ summary: StatsSummary) -> some View {
         VStack(alignment: .leading, spacing: Spacing.sm) {
             Text("Динамика выполнения")
                 .font(Typography.headline)
@@ -148,14 +154,14 @@ struct StatsView: View {
             Chart(summary.chartPoints) { point in
                 AreaMark(
                     x: .value("Дата", point.date, unit: summary.isMonthlyBucketed ? .month : .day),
-                    y: .value("%", animateChart ? point.rate : 0)
+                    y: .value("%", point.rate)
                 )
                 .foregroundStyle(Theme.brandGradient.opacity(0.3))
                 .interpolationMethod(.catmullRom)
 
                 LineMark(
                     x: .value("Дата", point.date, unit: summary.isMonthlyBucketed ? .month : .day),
-                    y: .value("%", animateChart ? point.rate : 0)
+                    y: .value("%", point.rate)
                 )
                 .foregroundStyle(Theme.brandGradient)
                 .interpolationMethod(.catmullRom)
@@ -174,20 +180,28 @@ struct StatsView: View {
             .chartXAxis {
                 AxisMarks(values: .automatic(desiredCount: 4))
             }
+            // Появление графика — раскрытие маской слева направо: это преобразование на уровне слоя (видеокарта),
+            // а не пересчёт самого графика на каждом кадре, как при анимации значений.
+            .mask(alignment: .leading) {
+                GeometryReader { geo in
+                    Rectangle()
+                        .frame(width: geo.size.width * (animateChart || reduceMotion ? 1 : 0.001))
+                }
+            }
             .animation(reduceMotion ? nil : .easeOut(duration: 0.9), value: animateChart)
         }
         .padding(Spacing.md)
         .cardStyle()
     }
 
-    private var insightsSection: some View {
+    private func insightsSection(_ summary: StatsSummary) -> some View {
         VStack(alignment: .leading, spacing: Spacing.sm) {
             Text("Инсайты")
                 .font(Typography.headline)
                 .foregroundStyle(Theme.primaryText(for: scheme))
 
             VStack(alignment: .leading, spacing: Spacing.xs) {
-                ForEach(Array(insights.enumerated()), id: \.offset) { _, insight in
+                ForEach(Array(insights(summary).enumerated()), id: \.offset) { _, insight in
                     HStack(alignment: .top, spacing: Spacing.xs) {
                         Image(systemName: "lightbulb.fill")
                             .foregroundStyle(Theme.brandGradient)
@@ -204,7 +218,7 @@ struct StatsView: View {
         }
     }
 
-    private var insights: [String] {
+    private func insights(_ summary: StatsSummary) -> [String] {
         var result: [String] = []
         if let weekday = summary.bestWeekday, summary.bestWeekdayCount > 0 {
             result.append(String(localized: "Самый продуктивный день недели — \(StatsCalculator.weekdayName(weekday))"))

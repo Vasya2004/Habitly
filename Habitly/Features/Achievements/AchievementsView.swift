@@ -9,8 +9,6 @@ struct AchievementsView: View {
     @Query private var profiles: [Profile]
     @Query(sort: \Achievement.unlockedAt, order: .reverse) private var achievements: [Achievement]
 
-    @State private var cardImage: UIImage?
-
     private var profile: Profile? { profiles.first }
     private var levelInfo: LevelInfo { GamificationService.levelInfo(for: profile?.xp ?? 0) }
     private var unlockedByKind: [AchievementKind: Date] {
@@ -34,11 +32,7 @@ struct AchievementsView: View {
                 }
             }
             .navigationBarHidden(true)
-            .onAppear {
-                refillFreezesIfNeeded()
-                renderCard()
-            }
-            .onChange(of: habits) { renderCard() }
+            .onAppear { refillFreezesIfNeeded() }
         }
     }
 
@@ -105,18 +99,20 @@ struct AchievementsView: View {
     }
 
     private var weeklySummarySection: some View {
-        VStack(alignment: .leading, spacing: Spacing.sm) {
+        let weekly = WeeklySummaryData.compute(habits: habits)
+        return VStack(alignment: .leading, spacing: Spacing.sm) {
             Text("Итоги недели")
                 .font(Typography.headline)
                 .foregroundStyle(Theme.primaryText(for: scheme))
 
-            WeeklySummaryCardView(data: WeeklySummaryData.compute(habits: habits), profileName: profile?.name ?? "")
+            WeeklySummaryCardView(data: weekly, profileName: profile?.name ?? "")
                 .frame(maxWidth: .infinity)
 
-            if let cardImage {
+            do {
+                // Картинка рисуется в момент «Поделиться», а не заранее при открытии вкладки.
                 ShareLink(
-                    item: Image(uiImage: cardImage),
-                    preview: SharePreview("Итоги недели в Habitly", image: Image(uiImage: cardImage))
+                    item: WeeklyCardShare(data: weekly, profileName: profile?.name ?? ""),
+                    preview: SharePreview("Итоги недели в Habitly")
                 ) {
                     HStack(spacing: Spacing.xs) {
                         Image(systemName: "square.and.arrow.up")
@@ -159,14 +155,6 @@ struct AchievementsView: View {
             )
             Spacer()
         }
-    }
-
-    private func renderCard() {
-        let renderer = ImageRenderer(content:
-            WeeklySummaryCardView(data: WeeklySummaryData.compute(habits: habits), profileName: profile?.name ?? "")
-        )
-        renderer.scale = 3
-        cardImage = renderer.uiImage
     }
 
     private func refillFreezesIfNeeded() {
