@@ -8,6 +8,7 @@ struct RootView: View {
     @Query private var profiles: [Profile]
 
     @State private var selection: MainTab = .today
+    @State private var visitedTabs: Set<MainTab> = [.today]
     @State private var isPresentingEditor = false
 
     private var profile: Profile? { profiles.first }
@@ -32,18 +33,35 @@ struct RootView: View {
         .preferredColorScheme(preferredScheme)
     }
 
+    @ViewBuilder
+    private func screen(for tab: MainTab) -> some View {
+        switch tab {
+        case .today: TodayView()
+        case .stats: StatsView()
+        case .achievements: AchievementsView()
+        case .settings: SettingsView()
+        }
+    }
+
     private var mainTabs: some View {
         ZStack(alignment: .bottom) {
             Theme.backgroundGradient(for: scheme).ignoresSafeArea()
 
-            Group {
-                switch selection {
-                case .today: TodayView()
-                case .stats: StatsView()
-                case .achievements: AchievementsView()
-                case .settings: SettingsView()
+            // Экраны вкладок создаются при первом открытии и дальше не пересоздаются: переключение
+            // не перестраивает запросы к базе, а прокрутка и открытые детали сохраняются.
+            ZStack {
+                ForEach(MainTab.allCases) { tab in
+                    if visitedTabs.contains(tab) || selection == tab {
+                        screen(for: tab)
+                            .opacity(selection == tab ? 1 : 0)
+                            .allowsHitTesting(selection == tab)
+                            .accessibilityHidden(selection != tab)
+                            .zIndex(selection == tab ? 1 : 0)
+                    }
                 }
             }
+            .animation(.easeInOut(duration: 0.2), value: selection)
+            .onChange(of: selection) { _, tab in visitedTabs.insert(tab) }
 
             MainTabBar(selection: $selection) {
                 isPresentingEditor = true

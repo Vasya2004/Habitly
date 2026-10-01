@@ -34,7 +34,16 @@ struct MainTabBar: View {
     private let rightTabs: [MainTab] = [.achievements, .settings]
 
     @Namespace private var selectionNamespace
-    @State private var tabFrames: [MainTab: CGRect] = [:]
+
+    private enum BarItem: Hashable {
+        case tab(MainTab)
+        case add
+    }
+
+    /// Горизонтальные границы элементов меню (в координатах бара) — по ним определяем, куда попал палец.
+    @State private var frames: [BarItem: CGRect] = [:]
+    @State private var isDragging = false
+    @State private var addPressed = false
 
     var body: some View {
         Group {
@@ -49,22 +58,47 @@ struct MainTabBar: View {
 
     private var items: some View {
         HStack(spacing: 0) {
-            ForEach(leftTabs) { tab in tabButton(tab) }
-            addButton
-            ForEach(rightTabs) { tab in tabButton(tab) }
+            ForEach(leftTabs) { tab in tabItem(tab) }
+            addItem
+            ForEach(rightTabs) { tab in tabItem(tab) }
         }
         .padding(.horizontal, Spacing.sm)
         .padding(.vertical, Spacing.xs)
         .coordinateSpace(name: "tabBar")
-        // Можно вести пальцем по меню — стеклянный индикатор перетекает за пальцем.
-        .simultaneousGesture(
-            DragGesture(minimumDistance: 8, coordinateSpace: .named("tabBar"))
-                .onChanged { drag in
-                    if let tab = tabFrames.first(where: { $0.value.contains(drag.location) })?.key {
-                        select(tab)
-                    }
+        // Вся капсула — одна зона касания: нажатие в любом месте ячейки срабатывает, а не только на иконке.
+        .contentShape(Capsule())
+        .gesture(barGesture)
+    }
+
+    /// Единый жест на всё меню: короткое касание — выбор вкладки (или «+»), движение пальцем — индикатор едет за ним.
+    /// Одна точка обработки вместо кнопок + отдельного перетаскивания: жесты больше не мешают друг другу.
+    private var barGesture: some Gesture {
+        DragGesture(minimumDistance: 0, coordinateSpace: .named("tabBar"))
+            .onChanged { value in
+                let moved = hypot(value.translation.width, value.translation.height) > 10
+                if moved { isDragging = true }
+                let item = item(atX: value.location.x)
+                addPressed = !isDragging && item == .add
+                if isDragging, case .tab(let tab)? = item { select(tab) }
+            }
+            .onEnded { value in
+                defer { isDragging = false; addPressed = false }
+                guard !isDragging else { return }
+                switch item(atX: value.location.x) {
+                case .add?:
+                    Haptics.shared.impact(.rigid)
+                    onAdd()
+                case .tab(let tab)?:
+                    select(tab)
+                case nil:
+                    break
                 }
-        )
+            }
+    }
+
+    /// Элемент под пальцем определяем только по X: бар — одна строка, так надёжнее, чем попадание по точке.
+    private func item(atX x: CGFloat) -> BarItem? {
+        frames.first { $0.value.minX <= x && x <= $0.value.maxX }?.key
     }
 
     private func select(_ tab: MainTab) {
@@ -89,26 +123,25 @@ struct MainTabBar: View {
             .shadow(color: .black.opacity(scheme == .dark ? 0.2 : 0.12), radius: 20, x: 0, y: 10)
     }
 
-    private func tabButton(_ tab: MainTab) -> some View {
-        Button {
-            select(tab)
-        } label: {
-            VStack(spacing: 2) {
-                Image(systemName: tab.symbol)
-                    .font(.system(size: 20, weight: .semibold))
-                    .symbolVariant(selection == tab ? .fill : .none)
-                Text(tab.title)
-                    .font(.system(size: 10, weight: .semibold))
-            }
-            .frame(maxWidth: .infinity)
-            .foregroundStyle(tabColor(selected: selection == tab))
-            .padding(.vertical, Spacing.xs)
-            .background { selectionIndicator(for: tab) }
+    private func tabItem(_ tab: MainTab) -> some View {
+        VStack(spacing: 2) {
+            Image(systemName: tab.symbol)
+                .font(.system(size: 20, weight: .semibold))
+                .symbolVariant(selection == tab ? .fill : .none)
+            Text(tab.title)
+                .font(.system(size: 10, weight: .semibold))
         }
-        .buttonStyle(.plain)
-        .onGeometryChange(for: CGRect.self) { $0.frame(in: .named("tabBar")) } action: { tabFrames[tab] = $0 }
+        .frame(maxWidth: .infinity)
+        .foregroundStyle(tabColor(selected: selection == tab))
+        .padding(.vertical, Spacing.xs)
+        .frame(minHeight: 52)
+        .background { selectionIndicator(for: tab) }
+        .onGeometryChange(for: CGRect.self) { $0.frame(in: .named("tabBar")) } action: { frames[.tab(tab)] = $0 }
+        // Касания обрабатывает жест всего меню, а для VoiceOver элемент остаётся кнопкой.
+        .accessibilityElement(children: .ignore)
         .accessibilityLabel(tab.title)
         .accessibilityAddTraits(selection == tab ? [.isButton, .isSelected] : .isButton)
+        .accessibilityAction { select(tab) }
     }
 
     /// Индикатор выбранной вкладки: на iOS 26 — стеклянная «капля», которая перетекает между вкладками.
@@ -136,22 +169,22 @@ struct MainTabBar: View {
         return selected ? Color(hex: "7C5CFF") : Color.black.opacity(0.45)
     }
 
-    private var addButton: some View {
-        Button {
-            Haptics.shared.impact(.rigid)
-            onAdd()
-        } label: {
-            Image(systemName: "plus")
-                .font(.system(size: 22, weight: .bold))
-                .foregroundStyle(.white)
-                .frame(width: 52, height: 52)
-                .background(Theme.brandGradient, in: Circle())
-                .shadow(color: Color(hex: "9B5CFF").opacity(0.5), radius: 12, x: 0, y: 6)
-        }
-        .buttonStyle(.plain)
-        .pressableScale()
-        .offset(y: -6)
-        .accessibilityLabel("Добавить привычку")
+    private var addItem: some View {
+        Image(systemName: "plus")
+            .font(.system(size: 22, weight: .bold))
+            .foregroundStyle(.white)
+            .frame(width: 52, height: 52)
+            .background(Theme.brandGradient, in: Circle())
+            .shadow(color: Color(hex: "9B5CFF").opacity(0.5), radius: 12, x: 0, y: 6)
+            .scaleEffect(addPressed ? 0.9 : 1)
+            .animation(.spring(response: 0.25, dampingFraction: 0.6), value: addPressed)
+            .offset(y: -6)
+            .padding(.horizontal, 6)
+            .onGeometryChange(for: CGRect.self) { $0.frame(in: .named("tabBar")) } action: { frames[.add] = $0 }
+            .accessibilityElement(children: .ignore)
+            .accessibilityLabel("Добавить привычку")
+            .accessibilityAddTraits(.isButton)
+            .accessibilityAction { onAdd() }
     }
 }
 
