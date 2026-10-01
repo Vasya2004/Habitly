@@ -43,12 +43,55 @@ struct RootView: View {
         }
     }
 
-    private var mainTabs: some View {
+    /// iOS 26+: штатный TabView — родной Liquid Glass, плавное перетекание индикатора и перетаскивание пальцем.
+    @available(iOS 26.0, *)
+    private var nativeTabs: some View {
+        ZStack(alignment: .bottomTrailing) {
+            Theme.backgroundGradient(for: scheme).ignoresSafeArea()
+
+            TabView(selection: $selection) {
+                ForEach(MainTab.allCases) { tab in
+                    Tab(tab.title, systemImage: tab.symbol, value: tab) {
+                        screen(for: tab)
+                    }
+                }
+            }
+            .tint(Color(hex: "7C5CFF"))
+
+            // «+» нужен там, где список привычек; на остальных экранах он перекрывал бы содержимое.
+            if selection == .today {
+                addFloatingButton
+                    .transition(.scale.combined(with: .opacity))
+            }
+        }
+        .animation(.spring(response: 0.35, dampingFraction: 0.8), value: selection)
+    }
+
+    /// «+» — плавающая стеклянная кнопка над меню (как в системных приложениях iOS 26).
+    @available(iOS 26.0, *)
+    private var addFloatingButton: some View {
+        Button {
+            Haptics.shared.impact(.rigid)
+            isPresentingEditor = true
+        } label: {
+            Image(systemName: "plus")
+                .font(.system(size: 22, weight: .bold))
+                .foregroundStyle(.white)
+                .frame(width: 58, height: 58)
+        }
+        .buttonStyle(.plain)
+        .glassEffect(.regular.tint(Color(hex: "7C5CFF").opacity(0.85)).interactive(), in: .circle)
+        .padding(.trailing, Spacing.lg)
+        .padding(.bottom, 96)
+        .accessibilityLabel("Добавить привычку")
+    }
+
+    /// iOS 17–25: своё меню с кнопкой «+» в центре.
+    private var customTabs: some View {
         ZStack(alignment: .bottom) {
             Theme.backgroundGradient(for: scheme).ignoresSafeArea()
 
-            // Экраны вкладок создаются при первом открытии и дальше не пересоздаются: переключение
-            // не перестраивает запросы к базе, а прокрутка и открытые детали сохраняются.
+            // Экраны вкладок создаются при первом открытии и дальше не пересоздаются.
             ZStack {
                 ForEach(MainTab.allCases) { tab in
                     if visitedTabs.contains(tab) || selection == tab {
@@ -66,8 +109,17 @@ struct RootView: View {
             MainTabBar(selection: $selection) {
                 isPresentingEditor = true
             }
-            // Ниже обычного: бар «парит» у самого нижнего края, рядом с индикатором «Домой».
             .padding(.bottom, -Spacing.xs)
+        }
+    }
+
+    private var mainTabs: some View {
+        Group {
+            if #available(iOS 26.0, *) {
+                nativeTabs
+            } else {
+                customTabs
+            }
         }
         .sheet(isPresented: $isPresentingEditor) {
             HabitEditorView(mode: .create)

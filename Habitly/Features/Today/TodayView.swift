@@ -19,6 +19,12 @@ struct TodayView: View {
     @State private var showOrderEditor = false
     @AppStorage(DisplayPreferences.groupByTimeKey) private var groupByTime = true
 
+    /// На iOS 26+ меню штатное и само добавляет нижний отступ; на старых системах — своё, нужен запас.
+    private var usesNativeTabBar: Bool {
+        if #available(iOS 26.0, *) { return true }
+        return false
+    }
+
     private var profile: Profile? { profiles.first }
     private var calendar: Calendar { .current }
 
@@ -137,7 +143,7 @@ struct TodayView: View {
         .scrollContentBackground(.hidden)
         .background(Color.clear)
         // Список идёт под стеклянное меню; отступ нужен только чтобы последняя карточка не оставалась под ним.
-        .contentMargins(.bottom, 96, for: .scrollContent)
+        .contentMargins(.bottom, usesNativeTabBar ? 16 : 96, for: .scrollContent)
     }
 
     private var header: some View {
