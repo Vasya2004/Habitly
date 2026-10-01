@@ -15,6 +15,8 @@ struct HabitCard: View {
     var onToggle: () -> Void
     /// Награда, всплывающая при выполнении; nil — не показывать.
     var xpReward: Int? = GamificationService.xpPerCompletion
+    /// Иконка времени суток рядом с подписью — нужна, когда привычки идут одним списком без блоков.
+    var timeSymbol: String? = nil
 
     @Environment(\.colorScheme) private var scheme
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
@@ -44,9 +46,15 @@ struct HabitCard: View {
                     Text(title)
                         .font(Typography.headline)
                         .foregroundStyle(Theme.primaryText(for: scheme).opacity(isCompleted ? 0.85 : 1))
-                    Text(subtitle)
-                        .font(Typography.caption)
-                        .foregroundStyle(subtitleStyle)
+                    HStack(spacing: 4) {
+                        if let timeSymbol {
+                            Image(systemName: timeSymbol)
+                                .font(.system(size: 10, weight: .semibold))
+                        }
+                        Text(subtitle)
+                    }
+                    .font(Typography.caption)
+                    .foregroundStyle(subtitleStyle)
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
             }

@@ -15,6 +15,8 @@ struct SettingsView: View {
     @State private var exportFileURL: URL?
     @State private var exportFileName = ""
     @State private var showImporter = false
+    @State private var showOrderEditor = false
+    @AppStorage(DisplayPreferences.groupByTimeKey) private var groupByTime = true
     @State private var importMessage: String?
 
     private static let avatarEmojis = ["🙂", "😎", "🦊", "🐼", "🐨", "🦁", "🐸", "🌸", "🚀", "⭐️", "🌱", "🔥"]
@@ -34,6 +36,7 @@ struct SettingsView: View {
                     profileSection(profile)
                     appearanceSection(profile)
                     weekSection(profile)
+                    habitsListSection
                     notificationsSection
                     hapticsSection(profile)
                     dataSection
@@ -139,6 +142,44 @@ struct SettingsView: View {
             }
             .pickerStyle(.segmented)
         }
+    }
+
+    // MARK: - Список привычек
+
+    private var habitsListSection: some View {
+        section(title: "Список привычек") {
+            VStack(spacing: Spacing.sm) {
+                Toggle(isOn: $groupByTime) {
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text("Разделять по времени суток")
+                            .foregroundStyle(Theme.primaryText(for: scheme))
+                        Text("Утро, день, вечер и «в любое время» — отдельными блоками. Если выключить, привычки идут одним списком.")
+                            .font(Typography.caption)
+                            .foregroundStyle(Theme.secondaryText(for: scheme))
+                    }
+                }
+                .tint(Color(hex: "9B5CFF"))
+                .padding(Spacing.md)
+                .cardStyle()
+
+                Button {
+                    showOrderEditor = true
+                } label: {
+                    HStack {
+                        Label("Порядок привычек", systemImage: "arrow.up.arrow.down")
+                            .foregroundStyle(Theme.primaryText(for: scheme))
+                        Spacer()
+                        Image(systemName: "chevron.right")
+                            .font(.system(size: 13, weight: .semibold))
+                            .foregroundStyle(Theme.secondaryText(for: scheme))
+                    }
+                    .padding(Spacing.md)
+                    .cardStyle()
+                }
+                .buttonStyle(.plain)
+            }
+        }
+        .sheet(isPresented: $showOrderEditor) { HabitOrderView() }
     }
 
     // MARK: - Уведомления

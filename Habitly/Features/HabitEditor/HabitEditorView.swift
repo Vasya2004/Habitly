@@ -201,6 +201,8 @@ struct HabitEditorView: View {
                 reminders: draft.reminders,
                 note: draft.note
             )
+            let existingHabits = (try? modelContext.fetch(FetchDescriptor<Habit>())) ?? []
+            habit.sortOrder = HabitOrdering.nextSortOrder(among: existingHabits)
             modelContext.insert(habit)
         case .edit(let existing):
             habit = existing

@@ -61,14 +61,17 @@ final class TodayViewModel {
     /// Активные (не в архиве, не на паузе) привычки, запланированные на выбранный день,
     /// сгруппированные по времени суток в порядке утро → день → вечер → в любое время.
     func groupedHabits(from habits: [Habit]) -> [(time: TimeOfDay, habits: [Habit])] {
-        let relevant = habits
-            .filter { !$0.isArchived && !$0.isPaused && isScheduled($0) }
-            .sorted { $0.sortOrder < $1.sortOrder }
+        let relevant = HabitOrdering.sorted(habits.filter { !$0.isArchived && !$0.isPaused && isScheduled($0) })
         let order: [TimeOfDay] = [.morning, .afternoon, .evening, .anytime]
         return order.compactMap { time in
             let items = relevant.filter { $0.timeOfDay == time }
             return items.isEmpty ? nil : (time, items)
         }
+    }
+
+    /// Те же привычки одним списком (без разделения по времени суток) в общем порядке.
+    func flatHabits(from habits: [Habit]) -> [Habit] {
+        HabitOrdering.sorted(habits.filter { !$0.isArchived && !$0.isPaused && isScheduled($0) })
     }
 
     func dayProgress(for habits: [Habit]) -> (completed: Int, total: Int) {

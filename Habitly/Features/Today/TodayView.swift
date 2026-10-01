@@ -16,6 +16,8 @@ struct TodayView: View {
     @State private var habitPendingEdit: Habit?
     @State private var showConfetti = false
     @State private var navigationPath = NavigationPath()
+    @State private var showOrderEditor = false
+    @AppStorage(DisplayPreferences.groupByTimeKey) private var groupByTime = true
 
     private var profile: Profile? { profiles.first }
     private var calendar: Calendar { .current }
@@ -67,6 +69,7 @@ struct TodayView: View {
                 HabitDetailView(habit: habit)
             }
         }
+        .sheet(isPresented: $showOrderEditor) { HabitOrderView() }
         .onAppear(perform: ensureProfile)
         .onChange(of: viewModel.celebrationTrigger) {
             showConfetti = true
@@ -112,13 +115,21 @@ struct TodayView: View {
                     .plainRow(bottom: Spacing.sm)
             }
 
-            ForEach(groups, id: \.time) { group in
-                Section {
-                    ForEach(group.habits) { habit in
-                        row(for: habit)
+            if groupByTime {
+                ForEach(groups, id: \.time) { group in
+                    Section {
+                        ForEach(group.habits) { habit in
+                            row(for: habit)
+                        }
+                    } header: {
+                        sectionHeader(group)
                     }
-                } header: {
-                    sectionHeader(group)
+                }
+            } else {
+                Section {
+                    ForEach(viewModel.flatHabits(from: habits)) { habit in
+                        row(for: habit, showsTimeSymbol: true)
+                    }
                 }
             }
         }
@@ -130,18 +141,34 @@ struct TodayView: View {
     }
 
     private var header: some View {
-        VStack(alignment: .leading, spacing: 2) {
-            Text(greeting)
-                .font(Typography.largeTitle)
-                .foregroundStyle(Theme.primaryText(for: scheme))
-                .lineLimit(2)
-                .minimumScaleFactor(0.6)
-                .accessibilityAddTraits(.isHeader)
-            Text(dateText)
-                .font(Typography.subheadline)
-                .foregroundStyle(Theme.secondaryText(for: scheme))
+        HStack(alignment: .top, spacing: Spacing.sm) {
+            VStack(alignment: .leading, spacing: 2) {
+                Text(greeting)
+                    .font(Typography.largeTitle)
+                    .foregroundStyle(Theme.primaryText(for: scheme))
+                    .lineLimit(2)
+                    .minimumScaleFactor(0.6)
+                    .accessibilityAddTraits(.isHeader)
+                Text(dateText)
+                    .font(Typography.subheadline)
+                    .foregroundStyle(Theme.secondaryText(for: scheme))
+            }
+            .frame(maxWidth: .infinity, alignment: .leading)
+
+            Button {
+                Haptics.shared.selectionChanged()
+                showOrderEditor = true
+            } label: {
+                Image(systemName: "arrow.up.arrow.down")
+                    .font(.system(size: 15, weight: .semibold))
+                    .foregroundStyle(Theme.primaryText(for: scheme))
+                    .frame(width: 40, height: 40)
+                    .background(.ultraThinMaterial, in: Circle())
+                    .overlay(Circle().strokeBorder(Theme.cardStroke(for: scheme), lineWidth: 1))
+            }
+            .buttonStyle(.plain)
+            .accessibilityLabel("Изменить порядок привычек")
         }
-        .frame(maxWidth: .infinity, alignment: .leading)
     }
 
     private var progressRingSection: some View {
@@ -210,7 +237,7 @@ struct TodayView: View {
         .foregroundStyle(Theme.primaryText(for: scheme))
     }
 
-    private func row(for habit: Habit) -> some View {
+    private func row(for habit: Habit, showsTimeSymbol: Bool = false) -> some View {
         HabitCard(
             icon: habit.icon,
             title: habit.name,
@@ -222,7 +249,8 @@ struct TodayView: View {
             showsStepper: habit.type != .boolean,
             onIncrement: { viewModel.increment(habit, context: modelContext, allHabits: habits, profile: profile) },
             onDecrement: { viewModel.decrement(habit, context: modelContext, profile: profile) },
-            onToggle: { viewModel.toggleBoolean(habit, context: modelContext, allHabits: habits, profile: profile) }
+            onToggle: { viewModel.toggleBoolean(habit, context: modelContext, allHabits: habits, profile: profile) },
+            timeSymbol: showsTimeSymbol ? habit.timeOfDay.symbol : nil
         )
         .contentShape(Rectangle())
         .onTapGesture {

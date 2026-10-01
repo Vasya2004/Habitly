@@ -1370,6 +1370,17 @@
         }
       }
     },
+    "Изменить порядок привычек": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Change habit order"
+          }
+        }
+      }
+    },
     "Изменить привычку": {
       "extractionState": "manual",
       "localizations": {
@@ -1740,6 +1751,17 @@
           "stringUnit": {
             "state": "translated",
             "value": "Mint"
+          }
+        }
+      }
+    },
+    "На паузе": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Paused"
           }
         }
       }
@@ -2325,6 +2347,28 @@
         }
       }
     },
+    "Перетащите привычки за ручку справа, чтобы изменить порядок на экране «Сегодня».": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Drag habits by the handle on the right to change their order on the Today screen."
+          }
+        }
+      }
+    },
+    "Перетащите привычки за ручку справа. Порядок меняется внутри каждого блока времени суток.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Drag habits by the handle on the right. The order changes within each time-of-day block."
+          }
+        }
+      }
+    },
     "Период": {
       "extractionState": "manual",
       "localizations": {
@@ -2442,6 +2486,17 @@
           "stringUnit": {
             "state": "translated",
             "value": "Time to begin"
+          }
+        }
+      }
+    },
+    "Порядок привычек": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Habit order"
           }
         }
       }
@@ -2585,6 +2640,17 @@
           "stringUnit": {
             "state": "translated",
             "value": "Clear inbox"
+          }
+        }
+      }
+    },
+    "Разделять по времени суток": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Group by time of day"
           }
         }
       }
@@ -2750,6 +2816,17 @@
           "stringUnit": {
             "state": "translated",
             "value": "Sleep 8 hours"
+          }
+        }
+      }
+    },
+    "Список привычек": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Habit list"
           }
         }
       }
@@ -3111,6 +3188,17 @@
           "stringUnit": {
             "state": "translated",
             "value": "Morning"
+          }
+        }
+      }
+    },
+    "Утро, день, вечер и «в любое время» — отдельными блоками. Если выключить, привычки идут одним списком.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Morning, afternoon, evening and “anytime” as separate blocks. Turn off to show habits in a single list."
           }
         }
       }

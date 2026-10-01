@@ -227,12 +227,15 @@ struct OnboardingView: View {
         profile.name = name.trimmingCharacters(in: .whitespacesAndNewlines)
         profile.hasCompletedOnboarding = true
 
+        var nextOrder = HabitOrdering.nextSortOrder(among: (try? modelContext.fetch(FetchDescriptor<Habit>())) ?? [])
         for template in suggestedTemplates where selectedTemplateIDs.contains(template.id) {
             let habit = Habit(
                 name: template.name, icon: template.icon, colorIndex: template.colorIndex,
                 type: template.type, goalValue: template.goalValue, unit: template.unit,
                 schedule: template.schedule, timeOfDay: template.timeOfDay
             )
+            habit.sortOrder = nextOrder
+            nextOrder += 1
             modelContext.insert(habit)
         }
 
