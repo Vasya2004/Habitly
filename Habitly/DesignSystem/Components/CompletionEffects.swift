@@ -148,10 +148,10 @@ struct ParticleBurst: View {
 
 // MARK: - Перелив цвета
 
-/// Цвет привычки один раз перетекает по карточке слева направо и остаётся подкраской.
-/// Идёт строго в одну сторону: вместе с фронтом бежит светлая полоса и гаснет у правого края.
+/// Подкраска карточки акцентным цветом привычки + яркий блик, один раз пробегающий слева направо.
+/// Подкраска появляется сразу; блик идёт строго в одну сторону и в конце пути исчезает.
 struct CompletionWash: View {
-    /// 0 — карточка чистая, 1 — залита полностью.
+    /// Положение блика: 0 — за левым краем, 1 — за правым.
     var progress: CGFloat
     var color: HabitColor
 
@@ -159,36 +159,33 @@ struct CompletionWash: View {
         GeometryReader { geo in
             let w = geo.size.width
             let h = geo.size.height
-            let feather = w * 0.3           // мягкость переднего края
-            let span = w + feather
+            let band = w * 0.5
 
-            ZStack(alignment: .leading) {
-                // постоянная подкраска, открывающаяся слева направо
-                Rectangle()
-                    .fill(color.gradient.opacity(0.34))
-                    .mask(alignment: .leading) {
-                        LinearGradient(
-                            stops: [
-                                .init(color: .black, location: 0),
-                                .init(color: .black, location: w / span),
-                                .init(color: .clear, location: 1)
-                            ],
-                            startPoint: .leading, endPoint: .trailing
-                        )
-                        .frame(width: span)
-                        .offset(x: progress * span - span)
-                    }
+            let sheen = sin(Double.pi * Double(min(max(progress, 0), 1)))
+            let x = -band / 2 + progress * (w + band)
 
-                // светлая полоса на переднем крае
+            ZStack {
+                Rectangle().fill(color.gradient.opacity(0.24))
+
+                // цветная полоса
                 LinearGradient(
-                    colors: [color.start.opacity(0), color.end.opacity(0.7), color.start.opacity(0)],
+                    colors: [color.start.opacity(0), color.end.opacity(0.75), color.start.opacity(0)],
                     startPoint: .leading, endPoint: .trailing
                 )
-                .frame(width: w * 0.5, height: h)
-                .position(x: progress * span - feather / 2, y: h / 2)
-                .opacity(sin(Double.pi * Double(min(max(progress, 0), 1))))
+                .frame(width: band, height: h)
+                .position(x: x, y: h / 2)
+                .opacity(sheen)
+
+                // светлое ядро — «проход света», чтобы перелив читался на подкраске
+                LinearGradient(
+                    colors: [Color.white.opacity(0), Color.white.opacity(0.6), Color.white.opacity(0)],
+                    startPoint: .leading, endPoint: .trailing
+                )
+                .frame(width: band * 0.5, height: h)
+                .position(x: x, y: h / 2)
+                .opacity(sheen)
             }
-            .frame(width: w, height: h, alignment: .leading)
+            .frame(width: w, height: h)
         }
         .allowsHitTesting(false)
         .accessibilityHidden(true)

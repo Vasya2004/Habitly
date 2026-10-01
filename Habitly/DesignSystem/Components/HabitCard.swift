@@ -130,16 +130,14 @@ struct HabitCard: View {
         }
     }
 
-    /// Медленный перелив слева направо, один раз.
+    /// Подкраска появляется сразу, поверх — блик один раз слева направо (быстро, без возврата).
     private func startWash() {
         var transaction = Transaction()
         transaction.disablesAnimations = true
-        withTransaction(transaction) {
-            washProgress = 0
-            washVisible = true
-        }
+        withTransaction(transaction) { washProgress = 0 }
+        withAnimation(.easeOut(duration: 0.25)) { washVisible = true }
         DispatchQueue.main.async {
-            withAnimation(.easeInOut(duration: 1.6)) { washProgress = 1 }
+            withAnimation(.easeInOut(duration: 1.0)) { washProgress = 1 }
         }
     }
 
