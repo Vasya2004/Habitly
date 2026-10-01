@@ -43,9 +43,6 @@ struct SettingsView: View {
                     aboutSection
                 }
 
-                #if DEBUG
-                debugSection
-                #endif
             }
             .padding(Spacing.md)
             .padding(.bottom, Spacing.xl)
@@ -323,16 +320,6 @@ struct SettingsView: View {
             .cardStyle()
         }
     }
-
-    #if DEBUG
-    private var debugSection: some View {
-        section(title: "Отладка") {
-            CapsuleButton(title: "Добавить тестовые привычки", systemImage: "sparkles", isProminent: false) {
-                SampleDataSeeder.seed(into: modelContext)
-            }
-        }
-    }
-    #endif
 
     private func section<Content: View>(title: LocalizedStringKey, @ViewBuilder content: () -> Content) -> some View {
         VStack(alignment: .leading, spacing: Spacing.xs) {

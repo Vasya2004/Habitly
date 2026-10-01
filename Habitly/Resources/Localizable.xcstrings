@@ -1029,17 +1029,6 @@
         }
       }
     },
-    "Добавить тестовые привычки": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Add sample habits"
-          }
-        }
-      }
-    },
     "Добавлено привычек: %lld, дополнено: %lld, новых записей истории: %lld.": {
       "extractionState": "manual",
       "localizations": {
@@ -2255,17 +2244,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "Open details"
-          }
-        }
-      }
-    },
-    "Отладка": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Debug"
           }
         }
       }

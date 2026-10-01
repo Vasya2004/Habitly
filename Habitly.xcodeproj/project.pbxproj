@@ -66,7 +66,6 @@
 		89A140082DEA4807103D7C64 /* ModelContextProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1664B523573982AEACCB77F /* ModelContextProvider.swift */; };
 		9111E344FE9F9A90D48A1057 /* Habit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 247142A0D185896FDDFBFE21 /* Habit.swift */; };
 		92198D0817A5BC63AF76F8C1 /* Habit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 247142A0D185896FDDFBFE21 /* Habit.swift */; };
-		962CD7F203F2A0145A7B9996 /* SampleDataSeeder.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3DD1358BD4657CC3F41CD83 /* SampleDataSeeder.swift */; };
 		9BE275DFC6F2B6B7A4243C62 /* HeatmapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A82D057F7E39AABCB524BDC1 /* HeatmapView.swift */; };
 		A0747541D59401DC7B085E79 /* BentoTile.swift in Sources */ = {isa = PBXBuildFile; fileRef = B41B27BA7CD35FFBCA7C14BC /* BentoTile.swift */; };
 		A17F941DDE1F425D34C85CE1 /* HabitlySnapshot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DD8433586DA219CDD7AB52C /* HabitlySnapshot.swift */; };
@@ -209,7 +208,6 @@
 		B34D08495A091496F3F834F6 /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
 		B41B27BA7CD35FFBCA7C14BC /* BentoTile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BentoTile.swift; sourceTree = "<group>"; };
 		BC6EFA92B351663B1B32EE6A /* WidgetRefreshService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WidgetRefreshService.swift; sourceTree = "<group>"; };
-		C3DD1358BD4657CC3F41CD83 /* SampleDataSeeder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SampleDataSeeder.swift; sourceTree = "<group>"; };
 		C5C07A9207121C194603A1EF /* Habitly.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = Habitly.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		CA433836DADB32860A0675D6 /* MainTabBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabBar.swift; sourceTree = "<group>"; };
 		D045D5C8303C061AD1E0B486 /* HabitlyWidgets.appex */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = "wrapper.app-extension"; path = HabitlyWidgets.appex; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -458,7 +456,6 @@
 				D4614EE13AB813364DD93D94 /* Haptics.swift */,
 				5F655E87FDADA3DC0ADA5041 /* NotificationDelegate.swift */,
 				79B8C7A4457779BED272F2DE /* NotificationService.swift */,
-				C3DD1358BD4657CC3F41CD83 /* SampleDataSeeder.swift */,
 				3D348B4A8C392A21EEE00044 /* StatsCalculator.swift */,
 				0A997E87972ACD98C8DE6376 /* StreakCalculator.swift */,
 				BC6EFA92B351663B1B32EE6A /* WidgetRefreshService.swift */,
@@ -699,7 +696,6 @@
 				E9F9BD4FC4E6C5D0EB37F9A1 /* ProgressRing.swift in Sources */,
 				BDFF20DDDEEE6A166708261F /* ReminderEditorView.swift in Sources */,
 				BDC8585BF73925B7482546B6 /* RootView.swift in Sources */,
-				962CD7F203F2A0145A7B9996 /* SampleDataSeeder.swift in Sources */,
 				823D4B7E8CBB857944EB8CF7 /* ScheduleEditorView.swift in Sources */,
 				D9BBB53D117E3E83AC41E92C /* SettingsView.swift in Sources */,
 				194537A19BFE4899E1429D54 /* SharedModelContainer.swift in Sources */,
