@@ -148,45 +148,125 @@ struct ParticleBurst: View {
 
 // MARK: - Перелив цвета
 
-/// Подкраска карточки акцентным цветом привычки + яркий блик, один раз пробегающий слева направо.
-/// Подкраска появляется сразу; блик идёт строго в одну сторону и в конце пути исчезает.
-struct CompletionWash: View {
-    /// Положение блика: 0 — за левым краем, 1 — за правым.
+/// Цвет привычки «переливается» по карточке слева направо один раз: широкая мягкая световая полоса
+/// с цветным шлейфом и светлым ядром; за ней карточка остаётся насыщенно подкрашенной.
+struct CompletionWash: View, Animatable {
+    /// Положение света: 0 — за левым краем, 1 — за правым.
     var progress: CGFloat
     var color: HabitColor
+
+    /// Без этого SwiftUI не интерполирует progress между кадрами и анимация «прыгает» в конечное состояние.
+    var animatableData: CGFloat {
+        get { progress }
+        set { progress = newValue }
+    }
+
+    @Environment(\.colorScheme) private var scheme
 
     var body: some View {
         GeometryReader { geo in
             let w = geo.size.width
             let h = geo.size.height
-            let band = w * 0.5
-
-            let sheen = sin(Double.pi * Double(min(max(progress, 0), 1)))
-            let x = -band / 2 + progress * (w + band)
+            let band = w * 0.75
+            let p = min(max(progress, 0), 1)
+            let sheen = sin(Double.pi * Double(p))
+            let x = -band / 2 + p * (w + band)
+            let isDark = scheme == .dark
 
             ZStack {
-                Rectangle().fill(color.gradient.opacity(0.24))
+                // базовая подкраска — есть сразу
+                Rectangle().fill(color.gradient.opacity(isDark ? 0.18 : 0.20))
 
-                // цветная полоса
+                // более насыщенный «шлейф»: заливается позади светового фронта и остаётся.
+                // Передний край мягкий (градиентная маска), без резкой вертикальной границы.
+                Rectangle()
+                    .fill(color.gradient.opacity(isDark ? 0.22 : 0.18))
+                    .mask {
+                        let center = Double((x + band * 0.1) / max(w, 1))
+                        let feather = 0.34
+                        LinearGradient(
+                            stops: [
+                                .init(color: .black, location: 0),
+                                .init(color: .black, location: min(max(center - feather / 2, 0), 1)),
+                                .init(color: .clear, location: min(max(center + feather / 2, 0.0001), 1))
+                            ],
+                            startPoint: .leading, endPoint: .trailing
+                        )
+                    }
+
+                // широкая цветная полоса — «жидкий» цвет, чуть наклонённая и размытая
                 LinearGradient(
-                    colors: [color.start.opacity(0), color.end.opacity(0.75), color.start.opacity(0)],
+                    stops: [
+                        .init(color: color.start.opacity(0), location: 0),
+                        .init(color: color.start.opacity(0.55), location: 0.30),
+                        .init(color: color.end.opacity(0.95), location: 0.58),
+                        .init(color: color.end.opacity(0.35), location: 0.82),
+                        .init(color: color.end.opacity(0), location: 1)
+                    ],
                     startPoint: .leading, endPoint: .trailing
                 )
-                .frame(width: band, height: h)
+                .frame(width: band, height: h * 2.2)
+                .rotationEffect(.degrees(14))
+                .blur(radius: 10)
                 .position(x: x, y: h / 2)
                 .opacity(sheen)
 
-                // светлое ядро — «проход света», чтобы перелив читался на подкраске
+                // светлое ядро — «проход света»
                 LinearGradient(
-                    colors: [Color.white.opacity(0), Color.white.opacity(0.6), Color.white.opacity(0)],
+                    stops: [
+                        .init(color: .white.opacity(0), location: 0),
+                        .init(color: .white.opacity(isDark ? 0.55 : 0.85), location: 0.5),
+                        .init(color: .white.opacity(0), location: 1)
+                    ],
                     startPoint: .leading, endPoint: .trailing
                 )
-                .frame(width: band * 0.5, height: h)
-                .position(x: x, y: h / 2)
+                .frame(width: band * 0.3, height: h * 2.2)
+                .rotationEffect(.degrees(14))
+                .blur(radius: 6)
+                .position(x: x + band * 0.05, y: h / 2)
+                .blendMode(isDark ? .plusLighter : .normal)
                 .opacity(sheen)
             }
             .frame(width: w, height: h)
         }
+        .allowsHitTesting(false)
+        .accessibilityHidden(true)
+    }
+}
+
+/// Светящаяся кромка карточки: яркое пятно света бежит по контуру один круг и гаснет.
+struct CompletionEdgeGlow: View, Animatable {
+    var progress: CGFloat
+    var color: HabitColor
+    var cornerRadius: CGFloat
+
+    var animatableData: CGFloat {
+        get { progress }
+        set { progress = newValue }
+    }
+
+    var body: some View {
+        let p = min(max(progress, 0), 1)
+        let envelope = sin(Double.pi * Double(p))
+        let gradient = AngularGradient(
+            stops: [
+                .init(color: color.start.opacity(0), location: 0.00),
+                .init(color: color.start.opacity(0), location: 0.45),
+                .init(color: color.end, location: 0.75),
+                .init(color: .white, location: 0.92),
+                .init(color: color.start.opacity(0), location: 1.00)
+            ],
+            center: .center,
+            angle: .degrees(-90 + 360 * Double(p))
+        )
+        let shape = RoundedRectangle(cornerRadius: cornerRadius, style: .continuous)
+
+        ZStack {
+            shape.strokeBorder(gradient, lineWidth: 12).blur(radius: 10)   // широкое мягкое свечение
+            shape.strokeBorder(gradient, lineWidth: 5).blur(radius: 3)     // ближнее свечение
+            shape.strokeBorder(gradient, lineWidth: 2.5)                   // яркая кромка
+        }
+        .opacity(min(1, envelope * 1.4))
         .allowsHitTesting(false)
         .accessibilityHidden(true)
     }

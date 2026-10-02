@@ -41,3 +41,22 @@ final class DayRolloverTests: XCTestCase {
         XCTAssertTrue(DayRollover.hasDayChanged(since: a, now: b, calendar: nsk))
     }
 }
+
+final class AchievementQueueTests: XCTestCase {
+    func test_finishAchievement_isIdempotent() {
+        let vm = TodayViewModel()
+        vm.pendingAchievements = [.completions100]
+        vm.finishAchievement(.completions100)
+        vm.finishAchievement(.completions100)   // раньше второй вызов падал на пустой очереди
+        XCTAssertTrue(vm.pendingAchievements.isEmpty)
+    }
+
+    func test_finishAchievement_onlyRemovesTheShownOne() {
+        let vm = TodayViewModel()
+        vm.pendingAchievements = [.completions100, .levelFive]
+        vm.finishAchievement(.levelFive)         // не то, что показано — очередь не меняется
+        XCTAssertEqual(vm.pendingAchievements, [.completions100, .levelFive])
+        vm.finishAchievement(.completions100)
+        XCTAssertEqual(vm.pendingAchievements, [.levelFive])
+    }
+}

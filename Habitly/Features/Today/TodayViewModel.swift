@@ -170,6 +170,12 @@ final class TodayViewModel {
         pendingAchievements.append(contentsOf: newlyUnlocked)
     }
 
+    /// Убирает показанное достижение из очереди. Идемпотентно: повторный вызов или вызов для другого
+    /// достижения ничего не удаляет.
+    func finishAchievement(_ kind: AchievementKind) {
+        if pendingAchievements.first == kind { pendingAchievements.removeFirst() }
+    }
+
     private func cancelTodayNotificationIfNeeded(for habit: Habit) {
         guard calendar.isDate(selectedDate, inSameDayAs: .now) else { return }
         Task { await NotificationService.shared.cancelTodayNotification(for: habit) }

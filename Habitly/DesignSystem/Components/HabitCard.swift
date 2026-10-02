@@ -94,6 +94,10 @@ struct HabitCard: View {
             RoundedRectangle(cornerRadius: Radius.card, style: .continuous)
                 .strokeBorder(color.gradient.opacity(isCompleted ? 0.6 : 0), lineWidth: 1.5)
         }
+        .overlay {
+            CompletionEdgeGlow(progress: washProgress, color: color, cornerRadius: Radius.card)
+                .opacity(washVisible ? 1 : 0)
+        }
         .scaleEffect(pulse ? 1.03 : 1)
         .animation(reduceMotion ? nil : Motion.spring, value: isCompleted)
         .onAppear {
@@ -145,7 +149,7 @@ struct HabitCard: View {
         withTransaction(transaction) { washProgress = 0 }
         withAnimation(.easeOut(duration: 0.25)) { washVisible = true }
         DispatchQueue.main.async {
-            withAnimation(.easeInOut(duration: 1.0)) { washProgress = 1 }
+            withAnimation(.easeInOut(duration: 1.25)) { washProgress = 1 }
         }
     }
 

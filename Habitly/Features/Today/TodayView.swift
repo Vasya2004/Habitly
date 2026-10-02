@@ -23,6 +23,7 @@ struct TodayView: View {
     @State private var showConfetti = false
     @State private var navigationPath = NavigationPath()
     @State private var showOrderEditor = false
+    @State private var presentedAchievement: AchievementKind?
     /// «Сейчас» для приветствия и ленты недели; обновляется при возвращении в приложение и смене дня.
     @State private var clock = Date.now
     @State private var lastKnownToday = Calendar.current.startOfDay(for: .now)
@@ -115,15 +116,31 @@ struct TodayView: View {
         .sheet(item: $habitPendingEdit) { habit in
             HabitEditorView(mode: .edit(habit))
         }
-        .fullScreenCover(isPresented: Binding(
-            get: { !viewModel.pendingAchievements.isEmpty },
-            set: { if !$0 { viewModel.pendingAchievements.removeFirst() } }
-        )) {
-            if let kind = viewModel.pendingAchievements.first {
-                AchievementUnlockedView(kind: kind) {
-                    viewModel.pendingAchievements.removeFirst()
-                }
+        // Достижения показываются по одному через item: закрытие по кнопке и по свайпу идёт одним путём,
+        // а удаление из очереди идемпотентно (раньше двойное removeFirst() ронял приложение).
+        .fullScreenCover(item: $presentedAchievement) { kind in
+            AchievementUnlockedView(kind: kind) {
+                presentedAchievement = nil
             }
+        }
+        .onChange(of: viewModel.pendingAchievements) { presentNextAchievementIfNeeded() }
+        .onChange(of: presentedAchievement) { old, new in
+            guard new == nil, let old else { return }
+            viewModel.finishAchievement(old)
+            presentNextAchievementIfNeeded(afterDelay: 0.45)
+        }
+    }
+
+    /// Показывает следующее достижение из очереди, если сейчас ничего не показано.
+    private func presentNextAchievementIfNeeded(afterDelay delay: Double = 0) {
+        let show = {
+            guard presentedAchievement == nil, let next = viewModel.pendingAchievements.first else { return }
+            presentedAchievement = next
+        }
+        if delay > 0 {
+            DispatchQueue.main.asyncAfter(deadline: .now() + delay, execute: show)
+        } else {
+            show()
         }
     }
 
