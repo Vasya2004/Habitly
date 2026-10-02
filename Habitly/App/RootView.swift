@@ -10,6 +10,12 @@ struct RootView: View {
     @State private var selection: MainTab = .today
     @State private var visitedTabs: Set<MainTab> = [.today]
     @State private var isWarmingUp = true
+    /// День, который считался «сегодняшним» при последней проверке.
+    @State private var lastActiveDay = Calendar.current.startOfDay(for: .now)
+    @State private var dayChange = DayChange()
+    #if DEBUG
+    @State private var debugDayArmed = false
+    #endif
     @State private var isPresentingEditor = false
 
     private var profile: Profile? { profiles.first }
@@ -37,7 +43,7 @@ struct RootView: View {
     @ViewBuilder
     private func screen(for tab: MainTab) -> some View {
         switch tab {
-        case .today: TodayView()
+        case .today: TodayView(dayChange: dayChange, onAdd: { isPresentingEditor = true })
         case .stats: StatsView()
         case .achievements: AchievementsView()
         case .settings: SettingsView()
@@ -59,12 +65,6 @@ struct RootView: View {
             }
             .tint(Color(hex: "7C5CFF"))
 
-            // «+» нужен там, где список привычек; на остальных экранах он перекрывал бы содержимое.
-            if selection == .today {
-                addFloatingButton
-                    .transition(.scale.combined(with: .opacity))
-            }
-
             // Заставка на время прогрева: пока она закрывает экран, вкладки по очереди создаются в фоне.
             if isWarmingUp {
                 Theme.backgroundGradient(for: scheme)
@@ -72,7 +72,6 @@ struct RootView: View {
                     .transition(.opacity)
             }
         }
-        .animation(.spring(response: 0.35, dampingFraction: 0.8), value: selection)
         .task { await warmUpTabs() }
     }
 
@@ -88,25 +87,6 @@ struct RootView: View {
             try? await Task.sleep(for: .milliseconds(140))
         }
         withAnimation(.easeOut(duration: 0.25)) { isWarmingUp = false }
-    }
-
-    /// «+» — плавающая стеклянная кнопка над меню (как в системных приложениях iOS 26).
-    @available(iOS 26.0, *)
-    private var addFloatingButton: some View {
-        Button {
-            Haptics.shared.impact(.rigid)
-            isPresentingEditor = true
-        } label: {
-            Image(systemName: "plus")
-                .font(.system(size: 22, weight: .bold))
-                .foregroundStyle(.white)
-                .frame(width: 58, height: 58)
-        }
-        .buttonStyle(.plain)
-        .glassEffect(.regular.tint(Color(hex: "7C5CFF").opacity(0.85)).interactive(), in: .circle)
-        .padding(.trailing, Spacing.lg)
-        .padding(.bottom, 96)
-        .accessibilityLabel("Добавить привычку")
     }
 
     /// iOS 17–25: своё меню с кнопкой «+» в центре.
@@ -136,6 +116,29 @@ struct RootView: View {
         }
     }
 
+    /// Проверяет, не наступил ли новый день. Вернулись из фона в новый день — возвращаем на «Сегодня».
+    /// Новый день наступил при открытом приложении — тихо обновляем выбранную дату.
+    private func handleDayChange(returningFromBackground: Bool) {
+        #if DEBUG
+        // Проверка вручную: с аргументом запуска -debugPretendYesterday первое открытие «взводит» вчерашнюю дату,
+        // и следующее возвращение из фона ведёт себя так, будто наступил новый день.
+        if ProcessInfo.processInfo.arguments.contains("-debugPretendYesterday"), !debugDayArmed {
+            debugDayArmed = true
+            lastActiveDay = Calendar.current.date(byAdding: .day, value: -1, to: Calendar.current.startOfDay(for: .now)) ?? lastActiveDay
+            return
+        }
+        #endif
+        guard DayRollover.hasDayChanged(since: lastActiveDay) else { return }
+        lastActiveDay = Calendar.current.startOfDay(for: .now)
+
+        if returningFromBackground {
+            selection = .today
+            isPresentingEditor = false
+        }
+        dayChange = DayChange(token: dayChange.token + 1, isFullReset: returningFromBackground)
+        WidgetRefreshService.reloadAll()
+    }
+
     private var mainTabs: some View {
         Group {
             if #available(iOS 26.0, *) {
@@ -147,8 +150,15 @@ struct RootView: View {
         .sheet(isPresented: $isPresentingEditor) {
             HabitEditorView(mode: .create)
         }
+        .onReceive(NotificationCenter.default.publisher(for: .NSCalendarDayChanged)) { _ in
+            handleDayChange(returningFromBackground: scenePhase != .active)
+        }
+        .onReceive(NotificationCenter.default.publisher(for: UIApplication.significantTimeChangeNotification)) { _ in
+            handleDayChange(returningFromBackground: scenePhase != .active)
+        }
         .task(id: scenePhase) {
             guard scenePhase == .active else { return }
+            handleDayChange(returningFromBackground: true)
             WidgetRefreshService.applyPendingWidgetToggles()
             WidgetRefreshService.reloadAll()
             Haptics.shared.isEnabled = profile?.hapticsEnabled ?? true

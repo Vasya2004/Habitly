@@ -74,6 +74,7 @@
 		A1F28E8658892E3EB38E6A6C /* PlainRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CC3A82205F03E77D8BAB08F /* PlainRow.swift */; };
 		A2CFDF09BD00EDB037B8F346 /* WidgetSnapshotKeychain.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9CAA4DCD9A6C989ABDD20FA /* WidgetSnapshotKeychain.swift */; };
 		A33941BFE380DDF7DF5D7A6F /* StatsSummaryCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD563F6CF796D469C393C04D /* StatsSummaryCache.swift */; };
+		A4BB4647A944F33C95A6B858 /* DayRollover.swift in Sources */ = {isa = PBXBuildFile; fileRef = 234004D56C9E70E6BD57CE46 /* DayRollover.swift */; };
 		A6364B26732EFE20097A5EBC /* TemplateGalleryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D19EDD84F041EB95383DB525 /* TemplateGalleryView.swift */; };
 		A68FDAD81DC03DC77009FC56 /* Habit+Streak.swift in Sources */ = {isa = PBXBuildFile; fileRef = 981B7C46D6757EFFD0B924F8 /* Habit+Streak.swift */; };
 		A74C045B0EA88972CCDC3260 /* OnboardingIllustration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 365FFD0B08C076CA74E53769 /* OnboardingIllustration.swift */; };
@@ -93,6 +94,7 @@
 		DBCDDC39C2D9783AEC5D2A3D /* Profile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 323C9567A3F2C1B0F9A0C878 /* Profile.swift */; };
 		DD9CE6975B338603ACC2B9AE /* WeekStrip.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47F5BB93C9DCC318F6A814F8 /* WeekStrip.swift */; };
 		DE00C5F9DED31B8BC9540A57 /* Achievement.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B635B78B64899D06480BABA /* Achievement.swift */; };
+		DEB031D170D11F10B96437C5 /* DayRolloverTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AB9A1A32FB316C46EC996C5 /* DayRolloverTests.swift */; };
 		E2D96193B4998416439506C8 /* SmallProgressWidgetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F69FB99FE09BE3814FD7C4F8 /* SmallProgressWidgetView.swift */; };
 		E404B61DFF2B89E563F8F874 /* WidgetRefreshService.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC6EFA92B351663B1B32EE6A /* WidgetRefreshService.swift */; };
 		E56414E87CB70D8079AC6657 /* HabitToggler.swift in Sources */ = {isa = PBXBuildFile; fileRef = D82C3EF56283D3D2545E5A1D /* HabitToggler.swift */; };
@@ -153,6 +155,7 @@
 		1B635B78B64899D06480BABA /* Achievement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Achievement.swift; sourceTree = "<group>"; };
 		225C989CE63331D978F8E4CD /* ToggleHabitIntent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToggleHabitIntent.swift; sourceTree = "<group>"; };
 		22CD060CB14ACAFE93D6CA2A /* HabitlyTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = HabitlyTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		234004D56C9E70E6BD57CE46 /* DayRollover.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DayRollover.swift; sourceTree = "<group>"; };
 		244E6786AD030AB5A7CD421F /* Spacing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Spacing.swift; sourceTree = "<group>"; };
 		247142A0D185896FDDFBFE21 /* Habit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Habit.swift; sourceTree = "<group>"; };
 		26424D1CF671320D8B524498 /* DataImportService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataImportService.swift; sourceTree = "<group>"; };
@@ -160,6 +163,7 @@
 		291C0EE7896C5B6C2BC5A703 /* HabitLog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HabitLog.swift; sourceTree = "<group>"; };
 		294C70C3DB43B599E1977D89 /* CapsuleButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CapsuleButton.swift; sourceTree = "<group>"; };
 		2A2361731C2BDB37AA20E9D7 /* DayLogEditorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DayLogEditorView.swift; sourceTree = "<group>"; };
+		2AB9A1A32FB316C46EC996C5 /* DayRolloverTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DayRolloverTests.swift; sourceTree = "<group>"; };
 		323C9567A3F2C1B0F9A0C878 /* Profile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Profile.swift; sourceTree = "<group>"; };
 		365FFD0B08C076CA74E53769 /* OnboardingIllustration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingIllustration.swift; sourceTree = "<group>"; };
 		3777B6D55653852D3C6F2814 /* HabitlyWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HabitlyWidget.swift; sourceTree = "<group>"; };
@@ -378,6 +382,7 @@
 			isa = PBXGroup;
 			children = (
 				F4381DE446075F187E52E80F /* DataImportTests.swift */,
+				2AB9A1A32FB316C46EC996C5 /* DayRolloverTests.swift */,
 				8106DCE0C0CB9B4C1A06EED1 /* HabitOrderingTests.swift */,
 				F58A0BB631BD347C91AD7D69 /* PerformanceTests.swift */,
 				0616941846C2BD0094123553 /* StreakCalculatorTests.swift */,
@@ -457,6 +462,7 @@
 				39680B1EC27B12AD2943CE6A /* DataBackup.swift */,
 				5EFF8E0FCF916F3E23966E32 /* DataExportService.swift */,
 				26424D1CF671320D8B524498 /* DataImportService.swift */,
+				234004D56C9E70E6BD57CE46 /* DayRollover.swift */,
 				EB34C315138CBA4C6CA6C1E3 /* GamificationService.swift */,
 				981B7C46D6757EFFD0B924F8 /* Habit+Streak.swift */,
 				821861577634A683D50FEA0F /* HabitOrdering.swift */,
@@ -646,6 +652,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				1EA31379B56B5D0E47F1A4D1 /* DataImportTests.swift in Sources */,
+				DEB031D170D11F10B96437C5 /* DayRolloverTests.swift in Sources */,
 				F9534D78AE4B4D1BFC889558 /* HabitOrderingTests.swift in Sources */,
 				7AF4A24E513B2E3025C8A822 /* PerformanceTests.swift in Sources */,
 				C392CFA4F80969559D780BA8 /* StreakCalculatorTests.swift in Sources */,
@@ -672,6 +679,7 @@
 				22933D722FCC9DC55BF858B0 /* DataExportService.swift in Sources */,
 				D6AFEE5D23B67959AD85DD2E /* DataImportService.swift in Sources */,
 				48122F8CC69985E372696C66 /* DayLogEditorView.swift in Sources */,
+				A4BB4647A944F33C95A6B858 /* DayRollover.swift in Sources */,
 				C084F10579441577F7479310 /* EmptyStateView.swift in Sources */,
 				570006A3EB5CC6C934974DE8 /* GamificationService.swift in Sources */,
 				A68FDAD81DC03DC77009FC56 /* Habit+Streak.swift in Sources */,

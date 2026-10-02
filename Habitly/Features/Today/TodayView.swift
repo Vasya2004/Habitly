@@ -2,6 +2,12 @@ import SwiftUI
 import SwiftData
 
 struct TodayView: View {
+    /// Сигнал о смене календарного дня от корневого экрана.
+    var dayChange = DayChange()
+    /// Открыть форму новой привычки (для плавающей кнопки «+» на iOS 26).
+    var onAdd: () -> Void = {}
+
+    @Environment(\.scenePhase) private var scenePhase
     @Environment(\.modelContext) private var modelContext
     @Environment(\.colorScheme) private var scheme
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
@@ -17,6 +23,9 @@ struct TodayView: View {
     @State private var showConfetti = false
     @State private var navigationPath = NavigationPath()
     @State private var showOrderEditor = false
+    /// «Сейчас» для приветствия и ленты недели; обновляется при возвращении в приложение и смене дня.
+    @State private var clock = Date.now
+    @State private var lastKnownToday = Calendar.current.startOfDay(for: .now)
     @AppStorage(DisplayPreferences.groupByTimeKey) private var groupByTime = true
 
     /// На iOS 26+ меню штатное и само добавляет нижний отступ; на старых системах — своё, нужен запас.
@@ -29,7 +38,7 @@ struct TodayView: View {
     private var calendar: Calendar { .current }
 
     private var greeting: String {
-        let hour = calendar.component(.hour, from: .now)
+        let hour = calendar.component(.hour, from: clock)
         let base: String
         switch hour {
         case 5..<12: base = String(localized: "Доброе утро")
@@ -74,8 +83,16 @@ struct TodayView: View {
             .navigationDestination(for: Habit.self) { habit in
                 HabitDetailView(habit: habit)
             }
+            // Плавающий «+» принадлежит корневому экрану списка: на экранах деталей он не показывается.
+            .overlay(alignment: .bottomTrailing) {
+                if #available(iOS 26.0, *) { addFloatingButton }
+            }
         }
         .sheet(isPresented: $showOrderEditor) { HabitOrderView() }
+        .onChange(of: dayChange) { _, change in applyDayChange(change) }
+        .onChange(of: scenePhase) { _, phase in
+            if phase == .active { clock = .now }
+        }
         .onAppear(perform: ensureProfile)
         .onChange(of: viewModel.celebrationTrigger) {
             showConfetti = true
@@ -116,6 +133,7 @@ struct TodayView: View {
                 header
                     .plainRow(top: Spacing.sm, bottom: Spacing.md)
                 WeekStrip(selectedDate: $viewModel.selectedDate, weekStartsMonday: profile?.weekStartsMonday ?? true)
+                    .id(calendar.startOfDay(for: clock))
                     .plainRow(bottom: Spacing.md)
                 progressRingSection
                     .plainRow(bottom: Spacing.sm)
@@ -144,6 +162,43 @@ struct TodayView: View {
         .background(Color.clear)
         // Список идёт под стеклянное меню; отступ нужен только чтобы последняя карточка не оставалась под ним.
         .contentMargins(.bottom, usesNativeTabBar ? 16 : 96, for: .scrollContent)
+    }
+
+    /// «+» — плавающая стеклянная кнопка над меню (как в системных приложениях iOS 26).
+    @available(iOS 26.0, *)
+    private var addFloatingButton: some View {
+        Button {
+            Haptics.shared.impact(.rigid)
+            onAdd()
+        } label: {
+            Image(systemName: "plus")
+                .font(.system(size: 22, weight: .bold))
+                .foregroundStyle(.white)
+                .frame(width: 58, height: 58)
+        }
+        .buttonStyle(.plain)
+        .glassEffect(.regular.tint(Color(hex: "7C5CFF").opacity(0.85)).interactive(), in: .circle)
+        .padding(.trailing, Spacing.lg)
+        .padding(.bottom, Spacing.sm)
+        .accessibilityLabel("Добавить привычку")
+    }
+
+    /// Новый день: возвращаемся к сегодняшней дате. При возвращении из фона дополнительно закрываем
+    /// открытые детали привычки, редакторы и диалоги — пользователь видит «главную страницу» нового дня.
+    private func applyDayChange(_ change: DayChange) {
+        let today = calendar.startOfDay(for: .now)
+        clock = .now
+        if change.isFullReset {
+            navigationPath = NavigationPath()
+            habitPendingEdit = nil
+            habitPendingDeletion = nil
+            showOrderEditor = false
+            withAnimation(Motion.spring) { viewModel.selectedDate = today }
+        } else if calendar.isDate(viewModel.selectedDate, inSameDayAs: lastKnownToday) {
+            // Смотрели «сегодня» — переходим на новое «сегодня»; если листали другой день, не мешаем.
+            withAnimation(Motion.spring) { viewModel.selectedDate = today }
+        }
+        lastKnownToday = today
     }
 
     private var header: some View {
