@@ -84,10 +84,6 @@ struct TodayView: View {
             .navigationDestination(for: Habit.self) { habit in
                 HabitDetailView(habit: habit)
             }
-            // Плавающий «+» принадлежит корневому экрану списка: на экранах деталей он не показывается.
-            .overlay(alignment: .bottomTrailing) {
-                if #available(iOS 26.0, *) { addFloatingButton }
-            }
         }
         .sheet(isPresented: $showOrderEditor) { HabitOrderView() }
         .onChange(of: dayChange) { _, change in applyDayChange(change) }
@@ -181,25 +177,6 @@ struct TodayView: View {
         .contentMargins(.bottom, usesNativeTabBar ? 16 : 96, for: .scrollContent)
     }
 
-    /// «+» — плавающая стеклянная кнопка над меню (как в системных приложениях iOS 26).
-    @available(iOS 26.0, *)
-    private var addFloatingButton: some View {
-        Button {
-            Haptics.shared.impact(.rigid)
-            onAdd()
-        } label: {
-            Image(systemName: "plus")
-                .font(.system(size: 22, weight: .bold))
-                .foregroundStyle(.white)
-                .frame(width: 58, height: 58)
-        }
-        .buttonStyle(.plain)
-        .glassEffect(.regular.tint(Color(hex: "7C5CFF").opacity(0.85)).interactive(), in: .circle)
-        .padding(.trailing, Spacing.lg)
-        .padding(.bottom, Spacing.sm)
-        .accessibilityLabel("Добавить привычку")
-    }
-
     /// Новый день: возвращаемся к сегодняшней дате. При возвращении из фона дополнительно закрываем
     /// открытые детали привычки, редакторы и диалоги — пользователь видит «главную страницу» нового дня.
     private func applyDayChange(_ change: DayChange) {
@@ -233,19 +210,29 @@ struct TodayView: View {
             }
             .frame(maxWidth: .infinity, alignment: .leading)
 
-            Button {
-                Haptics.shared.selectionChanged()
-                showOrderEditor = true
+            Menu {
+                Button {
+                    Haptics.shared.impact(.rigid)
+                    onAdd()
+                } label: {
+                    Label("Добавить привычку", systemImage: "plus")
+                }
+                Button {
+                    Haptics.shared.selectionChanged()
+                    showOrderEditor = true
+                } label: {
+                    Label("Изменить порядок", systemImage: "arrow.up.arrow.down")
+                }
             } label: {
-                Image(systemName: "arrow.up.arrow.down")
-                    .font(.system(size: 15, weight: .semibold))
+                Image(systemName: "ellipsis")
+                    .font(.system(size: 17, weight: .bold))
                     .foregroundStyle(Theme.primaryText(for: scheme))
                     .frame(width: 40, height: 40)
                     .background(.ultraThinMaterial, in: Circle())
                     .overlay(Circle().strokeBorder(Theme.cardStroke(for: scheme), lineWidth: 1))
+                    .contentShape(Circle())
             }
-            .buttonStyle(.plain)
-            .accessibilityLabel("Изменить порядок привычек")
+            .accessibilityLabel("Действия")
         }
     }
 
